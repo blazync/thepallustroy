@@ -33,6 +33,7 @@ ul.vipodha_megamenu > li > a {
   font-size: 18px;
   padding: 23px 0;
   text-transform: capitalize;
+  color: var(--secondary-light-color);
 }
 ul.vipodha_megamenu > li > a .fa {
   font-size: 14px;
@@ -44,7 +45,7 @@ ul.vipodha_megamenu > li > a strong {
 ul.vipodha_megamenu > li > a:hover,
 ul.vipodha_megamenu > li.active > a,
 ul.vipodha_megamenu > li:hover > a {
-  color: var(--primary-hover-color);
+  color: var(--secondary-light-color);
 }
 ul.vipodha_megamenu > li > a img {
   margin-right: 10px;
@@ -968,7 +969,7 @@ ul.vipodha_megamenu ul.subcategory {
   }
   .vipodha_megamenu-style-dev .navbar-default .navbar-toggle {
     margin: 0;
-    color: var(--primary-color);
+    color: var(--secondary-color);
     background: transparent;
     border: none;
     float: left;
@@ -985,6 +986,7 @@ ul.vipodha_megamenu ul.subcategory {
     padding: 0 25px 0 0;
     font-size: 14px;
     margin: 0;
+    color: var(--primary-color);
   }
   ul.vipodha_megamenu > li > a strong {
     font-weight: 500;
@@ -1473,6 +1475,7 @@ ul.vipodha_megamenu ul.subcategory {
     text-align: left;
     font-weight: 500;
     display: inline-block;
+    color: var(--primary-color);
   }
   ul.vipodha_megamenu > li span.labeloffer {
     position: unset;

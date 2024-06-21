@@ -4,9 +4,9 @@
 }
 :root {
   --primary-color: black;
-  --primary-hover-color: white;
+  --primary-hover-color: black;
   --secondary-color:white ;
-  --secondary-light-color: black;
+  --secondary-light-color: white;
   --background-color: white;
   --border-color: cadetblue;
 }
@@ -504,8 +504,8 @@ header.home {
   text-shadow: none;
 }
 #cart-total {
-  background: var(--primary-hover-color);
-  color: var(--secondary-color);
+  background: var(--secondary-color);
+  color: var(--primary-color);
   border-radius: 50%;
   padding: 0 3px;
   line-height: 15px;
@@ -816,7 +816,7 @@ ul li .btn-link {
 }
 header.header-fixed {
   position: fixed;
-  background: var(--background-color);
+  background: #836b46;
   top: 0;
   left: 0;
   right: 0;
@@ -1512,10 +1512,12 @@ Start Banners
 }
 .html1 .banner-outer .btn-info {
   margin-top: 20px;
+  background-color: var(--secondary-color);
+  color: var(--primary-color);
 }
 .html1 .banner-outer .btn-info:hover {
-  background: var(--primary-color);
-  color: var(--secondary-color);
+   background-color: var(--secondary-color);
+  color: var(--primary-color);
 }
 .html1 .banner1 .inner2 {
   position: absolute;
@@ -2513,7 +2515,7 @@ p.copyright {
     width: 100%;
     /* background: var(--border-color); */
     display: block;
-    margin: 12px 0;
+    /* margin: 12px 0; */
   }
   .toggled .toggle-open {
     position: absolute;
@@ -3395,7 +3397,7 @@ Information Page
 }
 
 .information-information .description {
-  color: var(--secondary-light-color);
+  color: var(--primary-color);
   margin: 0 0 25px;
   font-size: 16px;
   line-height: 26px;

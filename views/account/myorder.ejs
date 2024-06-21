@@ -29,7 +29,7 @@
                                     <td class="text-center">Total Amount</td>
                                     <td class="text-center">Shipping Address</td>
                                     <td class="text-center">Status</td>
-                                    <td class="text-center">Payment Status</td>
+                                    <td class="text-center">Payment Id</td>
                                     <td class="text-center">Action</td>
                                 </tr>
                             </thead>
@@ -39,11 +39,11 @@
                                 orders.forEach(order => { %>
                                 <tr>
                                     <td class="text-center"><%= i %></td>
-                                    <td class="text-center">Order #<%= (order.id).slice(0,4) %></td>
+                                    <td class="text-center"><%= (order.order_id) %></td>
                                     <td class="text-center">₹ <%= order.total_amount %></td>
                                     <td class="text-center"><%= order.shipping_address %></td>
-                                    <td class="text-center"><%= order.status %></td>
                                     <td class="text-center"><%= order.payment_status %></td>
+                                    <td class="text-center"><%= order.payment_id%></td>
                                     <td class="text-center">
                                         <a href="/orderDetails/<%= order.id %>">Track</a>
                                         <a href="/orderDetails/<%= order.id %>">View</a>
@@ -65,6 +65,15 @@
             </div>
         </div>
     </div>
+
+  <% if (typeof paymentSuccess !== 'undefined' && paymentSuccess) { %>
+    <script>
+        localStorage.removeItem('cartItems');
+    </script>
+<% } %>
+
+
+
     <!-- .My Account -->
 	 <!-- Toastr notification handling -->
      <% if (typeof error !== 'undefined') { %>

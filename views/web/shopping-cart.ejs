@@ -63,7 +63,7 @@
                                 <div class="input-group cart_quantity">
                                     <button type="button" class="btn btn-outline-secondary" onclick="updateQuantity('<%= cartData.product._id %>', -1)">-</button>
                                     <input type="text" id="quantityInput_<%= cartData.product._id %>" name="quantity" value="<%= cartData.quantity %>" size="1" class="form-control text-center">
-                                    <button type="button" class="btn btn-outline-secondary" onclick="updateQuantity('<%= cartData.product._id %>', 1)">+</button>
+                                    <button type="button" class="btn btn-outline-secondary" onclick="deleteProductFromCart('<%= cartData.product._id %>', 1)">+</button>
                                     <input type="hidden" id="keyInput_<%= cartData.product._id %>" name="key" value="<%= cartData.product._id %>">
                                 </div>
                             </td>
@@ -153,14 +153,14 @@
 						const shippingFormData = new FormData(document.getElementById('form-quote'));
 
 						// Collect data from the coupon form
-						const couponFormData = new FormData(document.getElementById('form-coupon'));
+						// const couponFormData = new FormData(document.getElementById('form-coupon'));
 
 						// Combine all form data into a single object
 						let combinedData = {};
 						
 						cartFormData.forEach((value, key) => { combinedData[key] = value });
 						shippingFormData.forEach((value, key) => { combinedData[key] = value });
-						couponFormData.forEach((value, key) => { combinedData[key] = value });
+						// couponFormData.forEach((value, key) => { combinedData[key] = value });
 						// Add user data
 						combinedData['customer_id'] = "<%= userData.userId %>";
 						combinedData['customer_phone'] = "<%= userData.phone %>";

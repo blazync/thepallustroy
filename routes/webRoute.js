@@ -40,12 +40,12 @@ router.post('/register', authController.postregister);
 
 
 router.post('/addtocart', controller.addtocart);
-router.post('/update-cart', controller.updateCartFinalValue);
+router.post('/deletefromcart', controller.deletefromcart);
 // router.post('/order',controller.postOrder);
 router.get('/checkout',controller.checkout);
 // Route to create order
 router.post('/create-order', createOrder);
-router.post('/verify-order/:order_id', verifyOrder);
+router.get('/order-confirmation', verifyOrder);
 router.post('/payment/webhook', paymentWebhook);
 
 

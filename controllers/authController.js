@@ -36,7 +36,9 @@ exports.postlogin = async (req, res) => {
             email: user.email,
             name: user.name?user.name:user.role,
             role: user.role,
-            isLoggedIn: true
+            isLoggedIn: true,
+            wishlistCount: user.wishlist.length,
+            cartCount: user.cart.length
         });
 
         // Save token in a cookie

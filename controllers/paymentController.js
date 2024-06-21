@@ -1,4 +1,5 @@
 const Order = require('../models/orders');
+const User = require('../models/user');
 const { Cashfree } = require("cashfree-pg");
 const { decodeToken } =  require('../middlewares/decodeJwt');
 require('dotenv').config();
@@ -58,15 +59,17 @@ const createOrder = async (req, res) => {
         // Calculate total amount from products
         const totalAmount = orderItems.reduce((total, item) => total + item.total_value, 0)+settings.serviceFee+deliveryCharge;
         const totalOrderAmount = totalAmount;
-
+        const order_id = generateOrderId();
         // Create order object
         const order = new Order({
             user_id: userData.userId,
+            order_id:order_id,
             products: orderItems,
             total_amount: totalOrderAmount,
             shipping_address, // Replace with actual shipping address if available
             status: "receiving_orders",
             payment_status: "Pending",
+            payment_id:null,
             serviceFee,
             deliveryCharges,
             created_at: new Date(),
@@ -77,7 +80,7 @@ const createOrder = async (req, res) => {
         // Save the order in the database within the transaction
         await order.save({ session });
 
-        const order_id = generateOrderId();
+        
 
         // Create order request object for Cashfree
         const request = {
@@ -91,7 +94,7 @@ const createOrder = async (req, res) => {
                 customer_email: customer_email || userData.email
             },
             order_meta: {
-                return_url: "http://localhost:5000/myorder",
+                return_url: "http://localhost:5000/order-confirmation/?order_id={order_id}",
                 notify_url: "http://localhost:5000/payment/webhook",
                 payment_methods: "cc,dc,ppc,ccc,emi,paypal,upi,nb,app,paylater"
             },
@@ -126,31 +129,99 @@ const createOrder = async (req, res) => {
     }
 };
 const verifyOrder = async (req, res) => {
-    const { order_id } = req.query;
-
+    const order_id = req.query.order_id;
+    console.log(order_id);
+    const userData = decodeToken(req.cookies.token);
     try {
-        // Fetch order details from Cashfree
-        const response = await Cashfree.PGFetchOrder(new Date().toISOString().split('T')[0], order_id);
-        const { order_status } = response.data;
-
-        if (order_status === 'PAID') {
-            // Update order status in database
-            await Order.findOneAndUpdate({ _id: order_id }, { status: 'Completed', payment_status: 'Paid' });
-
-            // Redirect to "My Orders" page
-            res.redirect('/my-orders');
+        // Fetch order payments from Cashfree
+        const response = await Cashfree.PGOrderFetchPayments('2023-08-01', order_id);
+        console.log(response.data);
+        
+        // Process the response data to determine the order status
+        const transactions = response.data || [];
+        let orderStatus;
+  
+        console.log(transactions);
+        if (transactions.filter(transaction => transaction.payment_status === 'SUCCESS').length > 0) {
+            orderStatus = 'Success';
+        } else if (transactions.filter(transaction => transaction.payment_status === 'PENDING').length > 0) {
+            orderStatus = 'Pending';
         } else {
-            // Handle payment failure or other statuses
-            await Order.findOneAndUpdate({ _id: order_id }, { status: 'Failed', payment_status: 'Failed' });
+            orderStatus = 'Failure';
+        }
+        
+        // Extract the payment_id from the successful transaction, if exists
+        const successfulTransaction = transactions.find(transaction => transaction.payment_status === 'SUCCESS');
+        const payment_id = successfulTransaction ? successfulTransaction.cf_payment_id : null;
 
-            // Redirect to an error/failure page
-            res.redirect('/payment-failed');
+        // Update order status in the database
+        if (orderStatus === 'Success') {
+            await Order.findOneAndUpdate(
+                { order_id: order_id },
+                { 
+                    status: 'Completed', 
+                    payment_status: 'Paid',
+                    payment_id: payment_id 
+                }
+            );
+             if (userData) {
+
+            // Find the user by their email
+            const user = await User.findOne({ email: userData.email });
+            if (!user) {
+                return res.status(404).json({ message: 'User not found' });
+            }
+
+            if (userData) {
+                const user = await User.findOne({ email: userData.email });
+                if (!user) {
+                return res.status(404).json({ message: 'User not found' });
+                }
+
+                // Clear the user's cart entirely after successful payment
+                user.cart = [];
+
+                await user.save();
+            } else {
+                res.redirect('/shopping-cart');
+            }
+
+            // Save the updated user document
+            await user.save();
+        } else {
+            res.redirect('/shopping-cart');
+        }
+        let paymentSuccess = true;
+            // Redirect to the order page
+            res.redirect('/account');
+        } else if (orderStatus === 'Pending') {
+            await Order.findOneAndUpdate(
+                { order_id: order_id },
+                { 
+                    status: 'Pending', 
+                    payment_status: 'Pending' 
+                }
+            );
+            // Redirect to the order page with pending status
+            res.redirect('/web/shopping-cart');
+        } else {
+            await Order.findOneAndUpdate(
+                { order_id: order_id },
+                { 
+                    status: 'Failed', 
+                    payment_status: 'Failed' 
+                }
+            );
+            // Redirect to a payment failure page
+            res.redirect('/web/shopping-cart');
         }
     } catch (error) {
         console.error('Payment verification failed:', error.message);
         res.status(500).send('Payment verification failed');
     }
 };
+
+
  
 const paymentWebhook = async (req, res) => {
     try {

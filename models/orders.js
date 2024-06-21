@@ -11,9 +11,10 @@ const orderItemSchema = new Schema({
 const orderSchema = new Schema({
     user_id: { type: Schema.Types.ObjectId, ref: 'User' },
     products: [orderItemSchema],
+    order_id:String,
     total_amount: Number,
     shipping_address: String,
-    status: String,
+    payment_id: String,
     payment_status: String,
     serviceFee:Number,
     deliveryCharges:Number,

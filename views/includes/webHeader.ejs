@@ -283,7 +283,7 @@
 																				</div>
 																				<div class="product-description">
 																					<div class="caption">
-																						<h4><a href="/product"><%= navProduct.name %></a>
+																						<h4><a href="/product/<%= navProduct.name.replace(/ /g, '-') %>"><%= navProduct.name %></a>
 																						</h4>
 																						<p class="price">
 																							₹ <%= navProduct.discountedPrice %>
@@ -333,7 +333,7 @@
 																							</div>
 																							<div class="product-description">
 																								<div class="caption">
-																									<h4><a href="/product"><%= navProduct.name %></a></h4>
+																									<h4><a href="/product/<%= navProduct.name.replace(/ /g, '-') %>"><%= navProduct.name %></a></h4>
 																									<div class="rating">
 																										<span class="fa fa-stack"><i class="fa fa-star fa-stack-2x"></i><i class="fa fa-star-o fa-stack-2x"></i></span>
 																										<span class="fa fa-stack"><i class="fa fa-star fa-stack-2x"></i><i class="fa fa-star-o fa-stack-2x"></i></span>
@@ -457,44 +457,15 @@
 					<% if (userData && userData.isLoggedIn) { %>
 						
 					<div class="cart-content">
-							<div id="cart" class="btn-group btn-block">
-									<button type="button" data-toggle="dropdown" data-loading-text="<i class='fa fa-spinner fa-spin' aria-hidden='true'></i>" class="btn btn-inverse btn-block btn-lg dropdown-toggle">
-										<img width="25" height="25" src="https://img.icons8.com/ios/50/ffffff/shopping-bag--v1.png" alt="shopping-bag--v1"/> 
-										<span id="cart-total">0</span>
-									</button>
-									<ul class="dropdown-menu pull-right header-cart-toggle">
-									
-										<li>
-											<div>
-												<table class="table table-bordered">
-													<tbody>
-														<tr>
-															<td class="text-left"><strong>Sub-Total</strong></td>
-															<td class="text-right">₹ 0.00</td>
-														</tr>
-														<tr>
-															<td class="text-left"><strong>Eco Tax (-2.00)</strong></td>
-															<td class="text-right">₹ 0.00</td>
-														</tr>
-														<tr>
-															<td class="text-left"><strong>VAT (20%)</strong></td>
-															<td class="text-right">₹ 0.00</td>
-														</tr>
-														<tr>
-															<td class="text-left"><strong>Total</strong></td>
-															<td class="text-right">₹ 0.00</td>
-														</tr>
-													</tbody>
-												</table>
-												<p class="text-right product-cart-button">
-													<a href="/shopping-cart" class="btn cart-btn addtocart-btn"><i class="fa fa-shopping-cart hidden"></i>View Cart</a>
-													&nbsp;&nbsp;&nbsp;<a href="/shopping-cart" class="btn cart-btn checkout-btn"><i class="fa fa-share hidden"></i>Checkout</a>
-												</p>
-											</div>
-										</li>
-									</ul>
-					
-							</div>
+							<a href="/shopping-cart">
+									<div id="cart" class="btn-group btn-block">
+										<button type="button" class="btn btn-inverse btn-block btn-lg ">
+											<img width="25" height="25" src="https://img.icons8.com/ios/50/ffffff/shopping-bag--v1.png" alt="shopping-bag--v1"/> 
+											<span id="cart-total">0</span>
+										
+						
+								</div>
+							</a>
 					</div>
 					<div class="dashboard-content">
 						<div id="header_ac" class="dropdown">

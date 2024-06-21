@@ -4,6 +4,7 @@ const { decodeToken } =  require('../middlewares/decodeJwt');
 require('dotenv').config();
 const mongoose = require('mongoose');
 const base_url = "";
+const Settings = require('../models/setting');
 
 // Set Cashfree credentials and environment
 Cashfree.XClientId = process.env.XClientId;
@@ -22,6 +23,7 @@ const createOrder = async (req, res) => {
     try {
         // Decode user data from token
         const userData = decodeToken(req.cookies.token);
+        const settings = await Settings.findOne();
 
         // Extract order details from request body
         const { customer_id, customer_phone, customer_name, customer_email, products, serviceFee, deliveryCharges,shipping_address,totalprice } = req.body;
@@ -45,8 +47,16 @@ const createOrder = async (req, res) => {
             total_value: (parseFloat(product.price) * parseInt(product.quantity)) 
         }));
 
+        let deliveryCharge = settings.deliveryCharges;
+
+        if (totalprice > 299) {
+            deliveryCharge = 0;
+        }
+        
+
+
         // Calculate total amount from products
-        const totalAmount = orderItems.reduce((total, item) => total + item.total_value, 0);
+        const totalAmount = orderItems.reduce((total, item) => total + item.total_value, 0)+settings.serviceFee+deliveryCharge;
         const totalOrderAmount = totalAmount;
 
         // Create order object

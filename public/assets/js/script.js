@@ -109,6 +109,18 @@ function addToCart({ userData, productId, productName, productImage, quantity })
 }
 
 
+function updateQuantity(productId, change) {
+    const quantityInput = document.getElementById(`quantityInput_${productId}`);
+    let currentQuantity = parseInt(quantityInput.value);
+
+    if (!isNaN(currentQuantity)) {
+        currentQuantity += change;
+        if (currentQuantity < 1) currentQuantity = 1; // Ensure minimum quantity is 1
+        quantityInput.value = currentQuantity;
+        updateQuantityWithValue(currentQuantity, productId);
+    }
+}
+
 function updateQuantityWithValue(quantity, productId) {
     const button = $('#button-cart');
     let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
@@ -127,12 +139,12 @@ function updateQuantityWithValue(quantity, productId) {
         },
         success: function (response) {
             button.button('reset');
-            toastr.success('Product added to cart successfully!');
+            toastr.success('Product quantity updated successfully!');
             updateLocalStorage(cartItems);
         },
         error: function (error) {
             button.button('reset');
-            toastr.error('Failed to add product to cart.');
+            toastr.error('Failed to update product quantity.');
         }
     });
     // Update to Local Storage
@@ -140,9 +152,7 @@ function updateQuantityWithValue(quantity, productId) {
 
     if (index !== -1) {
         // Product found, update its quantity
-        console.log( cartItems[index].quantity,parsedQuantity)
         cartItems[index].quantity = parsedQuantity;
-        console.log( cartItems[index].quantity)
 
         // Update local storage
         localStorage.setItem('cartItems', JSON.stringify(cartItems));

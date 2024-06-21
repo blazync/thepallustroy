@@ -23,7 +23,7 @@
 	<div class="blog-section">
 		<div id="checkout-cart" class="container">
 			<div class="row">
-				<%- include('../includes/webSidebar.ejs') %>
+				<%- include('../includes/customerSidebar.ejs') %>
 				<div id="content" class="col-sm-9  all-blog">
 					<form id="cartForm" action="#" method="post" enctype="multipart/form-data">
     <div class="table-responsive">
@@ -52,7 +52,7 @@
                         <tr id="<%= cartData.product._id %>">
                             <td class="text-center">
                                 <a href="#">
-                                    <img src="../../upload/<%= cartData.product.images %>" alt="<%= cartData.product.name %>"
+                                    <img src="<%= cartData.product.images ? `../../upload/${cartData.product.images}` : '../../assets/images/products/noimage.png' %>" alt="<%= cartData.product.name %>"
                                         title="<%= cartData.product.name %>" class="img-thumbnail checkout-img">
                                 </a>
                             </td>
@@ -61,32 +61,18 @@
                             </td>
                             <td class="text-center">
                                 <div class="input-group cart_quantity">
-                                    <input type="text" id="quantityInput_<%= cartData.product._id %>" name="quantity" value="<%= cartData.quantity %>" size="1" class="form-control">
+                                    <button type="button" class="btn btn-outline-secondary" onclick="updateQuantity('<%= cartData.product._id %>', -1)">-</button>
+                                    <input type="text" id="quantityInput_<%= cartData.product._id %>" name="quantity" value="<%= cartData.quantity %>" size="1" class="form-control text-center">
+                                    <button type="button" class="btn btn-outline-secondary" onclick="updateQuantity('<%= cartData.product._id %>', 1)">+</button>
                                     <input type="hidden" id="keyInput_<%= cartData.product._id %>" name="key" value="<%= cartData.product._id %>">
-
-                                    <button type="button" onclick="submitForm();" data-bs-toggle="tooltip" title="Update" class="btn btn-primary" data-bs-original-title="Update" aria-label="Update">
-                                        <i class="fa-solid fa-rotate"></i> 
-                                    </button>
-
-                                    <!-- Remove Product -->
-                                    <button type="submit" onclick='deleteProductFromCart("<%= cartData.product._id %>");' data-bs-toggle="tooltip" title="Remove" class="btn btn-danger" data-bs-original-title="Remove" aria-label="Remove">
-                                        <i class="fa-solid fa-circle-xmark"></i>
-                                    </button>
                                 </div>
                             </td>
+                            
+                            
                             <td class="text-center">₹ <%= cartData.product.price %></td>
                             <td class="text-center">₹ <%= (cartData.product.price * cartData.quantity).toFixed(2) %></td>
                         </tr>
-                        <script>
-                            function submitForm() {
-                                const quantity = document.getElementById('quantityInput_<%= cartData.product._id %>').value;
-                                const productId = document.getElementById('keyInput_<%= cartData.product._id %>').value;
-                                updateQuantityWithValue(quantity, productId);
-                            }
-                            userId = "<%- userData.userId %>";
-                            cartData = <%- JSON.stringify(cartData) %>;
-                            getCartData({ userId, cartData });
-                        </script>
+                        
                     <% }); %>
                 <% } else { %>
                     <tr>
@@ -128,37 +114,20 @@
                 <form id="form-quote">
                     <p>Enter your destination to get a shipping estimate.</p>
                     <div>
-                        <input type="checkbox" id="addressCheckbox" checked>
                         <label for="addressCheckbox">
-                            <%= settings.address %>
+                            <% if(settings.address){ %>
+                                <input type="checkbox" id="addressCheckbox" checked>
+                                <%= settings.address %>
+                            <% }else{ %>
+                                <a href="/myprofile">Add Your Address</a>
+                            <% } %>
                         </label>
                     </div>
                 </form>
             </div>
         </div>
     </div>
-    <div class="accordion-item">
-        <h2 class="accordion-header">
-            <button type="button" class="accordion-button" data-bs-toggle="collapse" data-bs-target="#collapse-coupon">
-                Use Coupon Code
-            </button>
-        </h2>
-        <div id="collapse-coupon" class="accordion-collapse collapse show" data-bs-parent="#accordion">
-            <div class="accordion-body">
-                <form id="form-coupon" method="post">
-                    <div class="row mb-3">
-                        <label for="input-coupon" class="col-md-4 col-form-label">Enter your coupon here</label>
-                        <div class="col-md-8">
-                            <input type="text" name="coupon" value="" placeholder="Enter your coupon here" id="input-coupon" class="form-control">
-                        </div>
-                    </div>
-                    <div class="text-end">
-                        <button type="submit" class="btn btn-primary">Apply Coupon</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
+   
 </div>
 
 <div class="row">

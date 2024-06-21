@@ -3840,5 +3840,42 @@ div.required .control-label:before {
 }
 
 
-/* Order Confirmation */
+/* Order */
 
+.cart-btn-quantity {
+  border: 1px solid cadetblue;
+  display: inline-flex;
+  background:white;
+  border-radius: 50px;
+} 
+.cart-btn-quantity button {
+  height: 30px;
+  width: 30px;
+  margin: 10px;
+  color: var(--secondary-color);
+  background: var(--primary-color);
+  border-radius: 50%;
+  border: none;
+}
+.cart-btn-quantity button:hover,
+.cart-btn-quantity button:focus {
+  color: var(--secondary-color);
+  background: var(--primary-hover-color);
+}
+.cart-btn-quantity #input-quantity {
+  border: none;
+  text-align: center;
+  border-radius: 10px;
+  background: var(--background-color);
+}
+.update-cart-btn {
+  color: var(--primary-color);
+  text-shadow: none;
+  background-color: cadetblue;
+  background-image: none;
+  background-repeat: unset;
+  border: none;
+  border-radius: 100px;
+  padding: 15px 30px;
+  line-height: 20px;
+}

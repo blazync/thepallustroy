@@ -461,12 +461,13 @@
 									<div id="cart" class="btn-group btn-block">
 										<button type="button" class="btn btn-inverse btn-block btn-lg ">
 											<img width="25" height="25" src="https://img.icons8.com/ios/50/ffffff/shopping-bag--v1.png" alt="shopping-bag--v1"/> 
-											<span id="cart-total"><%= userData.cartCount %></span>
+											<!-- <span id="cart-total">0</span> -->
 										
 						
 								</div>
 							</a>
 					</div>
+					
 					<div class="dashboard-content">
 						<div id="header_ac" class="dropdown">
 							<a href="#" title="My Account" class="dropdown-toggle" data-toggle="dropdown">
@@ -504,14 +505,5 @@
 		</div>
 	</header>
 
-	<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Fetch cartCount from the DOM
-        const cartTotal = document.getElementById('cart-total').textContent;
-
-        // Update localStorage
-        localStorage.setItem('cartTotal', cartTotal);
-    });
-</script>
 
 	<!-- .HEADER -->

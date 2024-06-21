@@ -1,6 +1,8 @@
 <%- include('../includes/webHeader.ejs') %>
 
 	<!-- Shopping Cart -->
+     	<% if (userData && userData.isLoggedIn) { %>
+            
 	<section>
 		<div class="breadcrumb-main">
 			<div class="container">
@@ -20,11 +22,12 @@
 			</div>
 		</div>
 	</section>
-	<div class="blog-section">
+	<div class="checkout-section">
 		<div id="checkout-cart" class="container">
 			<div class="row">
 				<%- include('../includes/customerSidebar.ejs') %>
 				<div id="content" class="col-sm-9  all-blog">
+                
 					<form id="cartForm" action="#" method="post" enctype="multipart/form-data">
     <div class="table-responsive">
         <table class="table table-bordered">
@@ -61,18 +64,27 @@
                             </td>
                             <td class="text-center">
                                 <div class="input-group cart_quantity">
-                                    <button type="button" class="btn btn-outline-secondary" onclick="updateQuantity('<%= cartData.product._id %>', -1)">-</button>
-                                    <input type="text" id="quantityInput_<%= cartData.product._id %>" name="quantity" value="<%= cartData.quantity %>" size="1" class="form-control text-center">
-                                    <button type="button" class="btn btn-outline-secondary" onclick="deleteProductFromCart('<%= cartData.product._id %>', 1)">+</button>
-                                    <input type="hidden" id="keyInput_<%= cartData.product._id %>" name="key" value="<%= cartData.product._id %>">
+                                    <div class="cart-btn-quantity">
+                                    <button class="minus"><i class="fa fa-minus"></i></button>
+                                    <input type="text" name="quantity" value="<%= cartData.quantity %>" size="2" id="input-quantity" >
+                                    <input type="hidden" class="productId" name="productId" value="<%= cartData.product._id %>">
+                                    <button class="plus"><i class="fa fa-plus"></i></button>
+                                </div>
+                                <a onclick="location.reload()" title="Update" class="update-cart-btn" ><i class="fa-solid fa-rotate"></i></a>
+                                <!-- <a
+                                     onclick="deleteProductFromCart('<%= cartData.product._id %>', 1)"
+                                    class="btn btn-danger"><i class="fa-solid fa-circle-xmark"></i></a> -->
+                            
+                                <input type="hidden" id="keyInput_<%= cartData.product._id %>" name="key" value="<%= cartData.product._id %>">
+                    
                                 </div>
                             </td>
                             
                             
-                            <td class="text-center">₹ <%= cartData.product.price %></td>
-                            <td class="text-center">₹ <%= (cartData.product.price * cartData.quantity).toFixed(2) %></td>
+                            <td class="text-center" id="productPrice_<%= cartData.product._id %>">₹ <%= cartData.product.price %></td>
+                            <td class="text-center" id="productTotalPrice_<%= cartData.product._id %>"">₹ <%= (cartData.product.price * cartData.quantity).toFixed(2) %></td>
                         </tr>
-                        
+
                     <% }); %>
                 <% } else { %>
                     <tr>
@@ -80,10 +92,12 @@
                     </tr>
                 <% } %>
             </tbody>
+
+            
             <tfoot id="checkout-cart-foot">
                 <tr>
-                    <td colspan="4" class="text-end">Sub-Total:</td>
-                    <td class="text-end">₹ <%= totalprice.toFixed(2) %></td>
+                    <td colspan="4" class="text-end" id="subtotalPrice">Sub-Total:</td>
+                    <td class="text-end" id="toalprice">₹ <%= totalprice.toFixed(2) %></td>
                 </tr>
                 <tr>
                     <td colspan="4" class="text-end">Service Tax Charge:</td>
@@ -226,5 +240,10 @@
 		</div>
 	</div>
 	<!-- .Shopping Cart -->
+
+
+    	<% }else{ %>
+            <script>window.location.href="/my-account"</script>
+            <%}%>
 
 <%- include('../includes/webFooter.ejs') %>

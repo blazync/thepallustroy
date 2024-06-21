@@ -41,6 +41,7 @@ router.post('/register', authController.postregister);
 
 router.post('/addtocart', controller.addtocart);
 router.post('/deletefromcart', controller.deletefromcart);
+router.post('/update-cart-quantity',controller.updateCartQuantityDirectly)
 // router.post('/order',controller.postOrder);
 router.get('/checkout',controller.checkout);
 // Route to create order

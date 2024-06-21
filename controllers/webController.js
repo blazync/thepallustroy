@@ -110,7 +110,7 @@ exports.product = async (req, res) => {
 
 exports.addtocart = async (req, res) => {
     try {
-        const { productId, quantity } = req.body;
+        const { productId, quantity,operation } = req.body;
         const userData = decodeToken(req.cookies.token);
         console.log(userData)
         if (userData) {
@@ -133,7 +133,75 @@ exports.addtocart = async (req, res) => {
 
             if (cartItemIndex > -1) {
                 // If the product is already in the cart, update the quantity
-                user.cart[cartItemIndex].quantity += parseInt(quantity, 10);
+                if(operation==='plus'){
+                    user.cart[cartItemIndex].quantity += parseInt(quantity, 10);
+                }
+                 else if(operation==='minus'){
+                    if( user.cart[cartItemIndex].quantity <=1){
+                         // Remove the product from the cart
+                        user.cart.splice(cartItemIndex, 1);
+
+                        // Save the updated user document
+                        await user.save();
+                    }else{
+                        user.cart[cartItemIndex].quantity -= parseInt(quantity, 10);
+                    }
+                }
+            } else {
+                // If the product is not in the cart, add a new cart item
+                user.cart.push({
+                    product_id: productId,
+                    quantity: parseInt(quantity, 10)
+                });
+            }
+
+            // Save the updated user document
+            await user.save();
+
+            res.status(200).json({ message: 'Product added to cart successfully' });
+        } else {
+            res.redirect('my-account');
+        }
+    } catch (error) {
+        console.error("Error adding product to cart:", error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+};
+
+exports.updateCartQuantityDirectly = async (req, res) => {
+    try {
+        const { productId, quantity,operation } = req.body;
+        const userData = decodeToken(req.cookies.token);
+        console.log(userData)
+        if (userData) {
+            console.log(`Product ID: ${productId}, Quantity: ${quantity}`);
+
+            // Find the user by their email
+            const user = await User.findOne({ email: userData.email });
+            if (!user) {
+                return res.status(404).json({ message: 'User not found' });
+            }
+
+            // Check if the product exists
+            const product = await Product.findById(productId);
+            if (!product) {
+                return res.status(404).json({ message: 'Product not found' });
+            }
+
+            // Check if the product is already in the user's cart
+            const cartItemIndex = user.cart.findIndex(item => item.product_id.toString() === productId);
+
+            if (cartItemIndex > -1) {
+                 if( quantity ===0){
+                         // Remove the product from the cart
+                        user.cart.splice(cartItemIndex, 1);
+
+                        // Save the updated user document
+                        await user.save();
+                    }
+                // If the product is already in the cart, update the quantity
+                    user.cart[cartItemIndex].quantity = parseInt(quantity, 10);
+
             } else {
                 // If the product is not in the cart, add a new cart item
                 user.cart.push({

@@ -530,6 +530,54 @@ let prevWidth = null;
         return false;
     });
 
+    // Cart Quantity setter
+    /*----------
+    quantity seter
+    ----------*/
+    $(document).on('click', '.plus, .minus', function (e) {
+        e.preventDefault();
+        var parent = $(this).parents('.cart-btn-quantity');
+        var quantity = parent.find('[name="quantity"]');
+        var productId = parent.find('[name="productId"]').val()
+
+        var val = quantity.val();
+        if ($(this).hasClass('plus')) {
+            val = parseInt(val) + 1
+        } else {
+            if (val ===0 || val===undefined || val===null || !val) {
+                deleteProductFromCart(productId)
+            } else {
+                val = val >= 1 ? parseInt(val) - 1 : deleteProductFromCart(productId);
+            }
+        }
+        const parsedQuantity = parseInt(val, 10);
+    
+    // Update to Backend
+        $.ajax({
+        url: '/update-cart-quantity',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({
+            productId: productId,
+            quantity: parsedQuantity
+        }),
+        success: function (response) {
+            toastr.success('Cart Quantity Updated!');
+            // Update local storage
+          
+        },
+        error: function (error) {
+            button.button('reset');
+            toastr.error('Failed to add product to cart.');
+        }
+    });
+
+        quantity.val(val);
+        quantity.trigger("change");
+        // location.reload();
+        return false;
+    });
+
     /*----------
     Hide Tooltip After Click
     ----------*/

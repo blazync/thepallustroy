@@ -3,7 +3,7 @@ function handleAddToCart({ userData, productId, productName,productImage,quantit
      var userData = userData || {};
     if (userData && userData.isLoggedIn) {
         // User is logged in, proceed to add to cart
-            addToCart({ userData, productId, productName,productImage,quantity });
+            addToCart(productId,quantity,'plus');
        } else {
             // User is not logged in, redirect to login page
                 toastr.error('Please login to continue with cart.');
@@ -13,7 +13,7 @@ function handleAddToCart({ userData, productId, productName,productImage,quantit
              }
     }
 
-function addToCart({ userData, productId, productName, productImage, quantity }) {
+function addToCart(productId,quantity,operation='plus') {
     const button = $('#button-cart');
     const parsedQuantity = parseInt(quantity, 10);
     
@@ -23,10 +23,8 @@ function addToCart({ userData, productId, productName, productImage, quantity })
         type: 'POST',
         contentType: 'application/json',
         data: JSON.stringify({
-            userData: userData,
+            operation:operation,
             productId: productId,
-            productName: productName,
-            productImage: productImage,
             quantity: parsedQuantity
         }),
         beforeSend: function () {
@@ -36,10 +34,7 @@ function addToCart({ userData, productId, productName, productImage, quantity })
             button.button('reset');
             toastr.success('Product added to cart successfully!');
             // Update local storage
-            updateLocalStorage(parsedQuantity);
-
-            // Update DOM
-            updateCartTotalDOM();
+         
         },
         error: function (error) {
             button.button('reset');
@@ -52,7 +47,6 @@ function addToCart({ userData, productId, productName, productImage, quantity })
 
 
 function deleteProductFromCart(productId) {
- const button = $('#button-remove-cart');
     
     // Update to Backend
     $.ajax({
@@ -62,62 +56,25 @@ function deleteProductFromCart(productId) {
         data: JSON.stringify({
             productId: productId
         }),
-        beforeSend: function () {
-            button.button('loading');
-        },
+
         success: function (response) {
-            button.button('reset');
             toastr.success('Product removed from cart successfully!');
             // Update local storage
             updateLocalStorage(-1);
 
             // Update DOM
             updateCartTotalDOM();
+            document.getElementById(productId).remove()
+            location.reload()
         },
         error: function (error) {
-            button.button('reset');
             toastr.error('Failed to remove product from cart.');
         }
     });
 }
 
 
-function updateLocalStorage(quantity) {
-    // Get the current cart total from local storage
-    let cartTotal = localStorage.getItem('cartTotal');
-    if (cartTotal) {
-        cartTotal = parseInt(cartTotal, 10);
-    } else {
-        cartTotal = 0;
-    }
-    // Add the new quantity to the current cart total
-    cartTotal += quantity;
 
-    // Store the updated cart total back to local storage
-    localStorage.setItem('cartTotal', cartTotal);
-}
-
-function updateCartTotalDOM() {
-    // Get the current cart total from local storage
-    let cartTotal = localStorage.getItem('cartTotal');
-    if (cartTotal) {
-        cartTotal = parseInt(cartTotal, 10);
-    } else {
-        cartTotal = 0;
-    }
-
-    // Update the cart-total span in the DOM
-    document.getElementById('cart-total').textContent =  cartTotal;
-}
-
-
-
-
-function clearCart() {
-    // Clear the cartItems from local storage
-    localStorage.removeItem('cartTotal');
-    console.log('Cart cleared.');
-}
 
 
 

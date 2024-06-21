@@ -191,9 +191,9 @@ const verifyOrder = async (req, res) => {
         } else {
             res.redirect('/shopping-cart');
         }
-        let paymentSuccess = true;
+        
             // Redirect to the order page
-            res.redirect('/account');
+            res.render('web/order-confirmation',{paymentSuccess:true});
         } else if (orderStatus === 'Pending') {
             await Order.findOneAndUpdate(
                 { order_id: order_id },

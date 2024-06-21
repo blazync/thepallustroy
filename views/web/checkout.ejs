@@ -1,0 +1,274 @@
+
+<script src="https://sdk.cashfree.com/js/v3/cashfree.js"></script>
+<%- include('../includes/webHeader.ejs') %>
+
+	<!-- Shopping Cart -->
+	<section>
+		<div class="breadcrumb-main">
+			<div class="container">
+				<div class="breadcrumb-container">
+					<h2 class="page-title">Checkout</h2>
+					<ul class="breadcrumb">
+						<li class="breadcrumb-item">
+							<a href="/">
+								<i class="fas fa-home"></i>
+							</a>
+						</li>
+						<li class="breadcrumb-item">
+							<a href="/shopping-cart">Shopping Cart</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</section>
+	<div class="blog-section">
+		<div id="checkout-cart" class="container">
+			<div class="row">
+				<%- include('../includes/webSidebar.ejs') %>
+				<div id="content" class="col-sm-9  all-blog">
+					<form action="#" method="post" enctype="multipart/form-data">
+						<div class="table-responsive">
+							<table class="table table-bordered">
+								<thead>
+									<tr>
+										<td class="text-center">Image</td>
+										<td class="text-center">Product Name</td>
+										<td class="text-center">Quantity</td>
+										<td class="text-center">Total</td>
+									</tr>
+								</thead>
+								<tbody>
+									<% navCategories.forEach(navCategory => { %>
+										
+									<% }); %>
+									<tr>
+										<td class="text-center">
+											<a href="#">
+												<img src="assets/images/products/9.jpg" alt="Tussar Sarees"
+													title="Tussar Sarees" class="img-thumbnail checkout-img">
+											</a>
+										</td>
+										<td class="text-center"><a href="#">Tussar Sarees</a> <br>
+										</td>
+						
+										<td class="text-center">
+											<!-- <div class="input-group btn-block"> -->
+												<div class="input-group cart_quantity">
+													<input type="text" name="quantity" value="1" size="1" class="form-control"> <input type="hidden" name="key" value="22">
+													<button type="submit" data-bs-toggle="tooltip" title="Update" class="btn btn-primary" data-bs-original-title="Update" aria-label="Update"><i class="fa-solid fa-rotate"></i></button>
+													<button type="submit" data-bs-toggle="tooltip" title="Remove" class="btn btn-danger" data-bs-original-title="Remove" aria-label="Remove"><i class="fa-solid fa-circle-xmark"></i></button>
+													</div>
+											<!-- </div> -->
+										</td>
+							
+										<td class="text-center">$123.20</td>
+									</tr>
+								</tbody>
+								<tfoot id="checkout-cart-foot">
+									<tr>
+										<td colspan="3" class="text-end">Sub-Total:</td>
+										<td class="text-end">$101.00</td>
+									</tr>
+									<tr>
+										<td colspan="3" class="text-end">Eco Tax (-2.00):</td>
+										<td class="text-end">$2.00</td>
+									</tr>
+									<tr>
+										<td colspan="3" class="text-end">VAT (20%):</td>
+										<td class="text-end">$40.00</td>
+									</tr>
+									<tr>
+										<td colspan="3" class="text-end">Total:</td>
+										<td class="text-end">$200</td>
+									</tr>
+								</tfoot>
+							</table>
+						</div>
+					</form>
+					<h2>What would you like to do next?</h2>
+					<p>Choose if you have a discount code or reward points you want to use or would like to estimate your delivery cost.</p>
+					<div id="accordion" class="accordion">
+						<div class="accordion-item">
+							<h2 class="accordion-header"><button type="button" class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#collapse-shipping">Estimate Shipping &amp; Taxes</button></h2>
+							<div id="collapse-shipping" class="accordion-collapse collapse" data-bs-parent="#accordion">
+								<div class="accordion-body">
+									<form id="form-quote">
+									<p>Enter your destination to get a shipping estimate.</p>
+									<div class="row mb-3 required">
+										<label for="input-country" class="col-md-4 col-form-label">Country</label>
+										<div class="col-md-8">
+											<select name="country_id" id="input-country" class="form-select">
+												<option value="99">India</option>
+											</select>
+											<div id="error-country" class="invalid-feedback"></div>
+										</div>
+									</div>
+									<div class="row mb-3 required">
+										<label for="input-zone" class="col-md-4 col-form-label">Region / State</label>
+										<div class="col-md-8">
+											<select name="zone_id" id="input-state" class="form-select">
+                                                <option value=""> --- Please Select --- </option>
+                                                <option value="Andaman and Nicobar Islands">Andaman and Nicobar Islands</option>
+                                                <option value="Andhra Pradesh">Andhra Pradesh</option>
+                                                <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                                                <option value="Assam">Assam</option>
+                                                <option value="Bihar">Bihar</option>
+                                                <option value="Chandigarh">Chandigarh</option>
+                                                <option value="Chhattisgarh">Chhattisgarh</option>
+                                                <option value="Dadra and Nagar Haveli">Dadra and Nagar Haveli</option>
+                                                <option value="Daman and Diu">Daman and Diu</option>
+                                                <option value="Delhi">Delhi</option>
+                                                <option value="Goa">Goa</option>
+                                                <option value="Gujarat">Gujarat</option>
+                                                <option value="Haryana">Haryana</option>
+                                                <option value="Himachal Pradesh">Himachal Pradesh</option>
+                                                <option value="Jammu and Kashmir">Jammu and Kashmir</option>
+                                                <option value="Jharkhand">Jharkhand</option>
+                                                <option value="Karnataka">Karnataka</option>
+                                                <option value="Kerala">Kerala</option>
+                                                <option value="Ladakh">Ladakh</option>
+                                                <option value="Lakshadweep">Lakshadweep</option>
+                                                <option value="Madhya Pradesh">Madhya Pradesh</option>
+                                                <option value="Maharashtra">Maharashtra</option>
+                                                <option value="Manipur">Manipur</option>
+                                                <option value="Meghalaya">Meghalaya</option>
+                                                <option value="Mizoram">Mizoram</option>
+                                                <option value="Nagaland">Nagaland</option>
+                                                <option value="Odisha">Odisha</option>
+                                                <option value="Puducherry">Puducherry</option>
+                                                <option value="Punjab">Punjab</option>
+                                                <option value="Rajasthan">Rajasthan</option>
+                                                <option value="Sikkim">Sikkim</option>
+                                                <option value="Tamil Nadu">Tamil Nadu</option>
+                                                <option value="Telangana">Telangana</option>
+                                                <option value="Tripura">Tripura</option>
+                                                <option value="Uttar Pradesh">Uttar Pradesh</option>
+                                                <option value="Uttarakhand">Uttarakhand</option>
+                                                <option value="West Bengal">West Bengal</option>
+                                            </select>
+
+											<div id="error-zone" class="invalid-feedback"></div>
+										</div>
+									</div>
+                                    <div class="row mb-3 required">
+										<label for="input-city" class="col-md-4 col-form-label">City</label>
+										<div class="col-md-8">
+											<input type="text" name="city" value="" placeholder="City" id="input-postcode" class="form-control">
+											<div id="error-city" class="invalid-feedback"></div>
+										</div>
+									</div>
+									<div class="row mb-3 required">
+										<label for="input-postcode" class="col-md-4 col-form-label">Post Code</label>
+										<div class="col-md-8">
+											<input type="text" name="postcode" value="" placeholder="Post Code" id="input-postcode" class="form-control">
+											<div id="error-postcode" class="invalid-feedback"></div>
+										</div>
+									</div>
+									<div class="text-end">
+										<button type="submit" id="button-quote" class="btn btn-primary">Update Address</button>
+									</div>
+									</form>
+								</div>
+							</div>
+						</div>
+						<div class="accordion-item">
+							<h2 class="accordion-header"><button type="button" class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#collapse-coupon">Use Coupon Code</button></h2>
+							<div id="collapse-coupon" class="accordion-collapse collapse" data-bs-parent="#accordion">
+								<div class="accordion-body">
+									<form id="form-coupon" method="post" data-oc-toggle="ajax" data-oc-load="" data-oc-target="#shopping-cart">
+									<div class="row mb-3">
+										<label for="input-coupon" class="col-md-4 col-form-label">Enter your coupon here</label>
+										<div class="col-md-8">
+											<input type="text" name="coupon" value="" placeholder="Enter your coupon here" id="input-coupon" class="form-control">
+										</div>
+									</div>
+									<div class="text-end"><button type="submit" class="btn btn-primary">Apply Coupon</button></div>
+									</form>
+								</div>
+							</div>
+						</div>
+						<div class="accordion-item">
+							<h2 class="accordion-header"><button type="button" class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#collapse-account">Personal Details</button></h2>
+							<div id="collapse-account" class="accordion-collapse collapse" data-bs-parent="#accordion">
+								<div class="accordion-body">
+									 <div class="row">
+                        <form action="/register" method="post" class="form-horizontal well">
+                            <p>If you already have an account with us, please login at the
+                                 <a href="/my-account">login page</a>.</p>
+                            <fieldset id="account">
+                               <legend>Your Personal Details</legend>
+                               <div class="form-group required row">
+                                  <label class="col-sm-2 control-label" for="input-firstname">Name</label>
+                                  <div class="col-sm-10">
+                                     <input required type="text" name="username" value="" placeholder="Enter Your Name"
+                                        id="input-firstname" class="form-control">
+                                  </div>
+                               </div>
+                               <div class="form-group required row">
+                                  <label class="col-sm-2 control-label" for="input-email">E-Mail</label>
+                                  <div class="col-sm-10">
+                                     <input required type="email" name="email" value="" placeholder="E-Mail"
+                                        id="input-email" class="form-control">
+                                  </div>
+                               </div>
+                            </fieldset>
+                            <fieldset id="password">
+                               <legend>Your Password</legend>
+                               <div class="form-group required row">
+                                  <label class="col-sm-2 control-label" for="input-password">Password</label>
+                                  <div class="col-sm-10">
+                                     <input required type="password" name="password" value="" placeholder="Password"
+                                        id="input-password" class="form-control">
+                                  </div>
+                               </div>
+                            </fieldset>
+                            <fieldset id="password">
+                                <div class="form-group required row">
+                                   <label class="col-sm-2 control-label" for="input-password">Confirm Password</label>
+                                   <div class="col-sm-10">
+                                      <input required type="cpassword" name="cpassword" value="" placeholder="Confirm Your Password"
+                                         id="input-password" class="form-control">
+                                   </div>
+                                </div>
+                             </fieldset>
+                            
+							<div class="buttons clearfix">
+								<div class="float-end text-right">
+									<div class="form-check form-check-inline">
+										<label class="form-check-label">I have read and agree to the <a href="#" class="modal-link"><b>Privacy Policy</b></a></label> <input required type="checkbox" name="agree" value="1" class="form-check-input">
+									</div>
+									<button type="submit" class="btn btn-primary">Continue</button>
+								</div>
+							</div>
+                         </form>
+                    </div>
+								</div>
+							</div>
+						</div>
+						</div>
+					<div class="row">
+						<div class="buttons clearfix">
+							<div class="pull-left"><a href="/" class="btn btn-default">Continue Shopping</a></div>
+							<form id="checkoutForm" action="/create-order" method="POST">
+								<input type="hidden" name="amount" value="200"> <!-- Replace with dynamic amount -->
+									<input type="hidden" name="order_currency" value="INR">
+									<input type="hidden" name="customer_id" value="<%= userData.userId %>">
+									<input type="hidden" name="customer_phone" value="<%= userData.phone %>">
+									<input type="hidden" name="customer_name" value="<%= userData.name %>">
+									<input type="hidden" name="customer_email" value="<%= userData.email %>">
+								<div class="pull-right">
+								  <button type="submit" class="btn btn-primary">Checkout</button>
+								</div>
+							  </form>
+							  
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+        
+	<!-- .Shopping Cart -->
+
+<%- include('../includes/webFooter.ejs') %>

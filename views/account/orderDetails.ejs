@@ -1,0 +1,248 @@
+<%- include('../includes/webHeader.ejs') %>
+
+<style>
+
+
+    .main {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 0 5em;
+    }
+    
+    .horizontal.timeline {
+      display: flex;
+      position: relative;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+    }
+    .horizontal.timeline:before {
+      content: "";
+      display: block;
+      position: absolute;
+      width: 100%;
+      height: 0.2em;
+      background-color: #f2f2f2;
+    }
+    .horizontal.timeline .line {
+      display: block;
+      position: absolute;
+      height: 0.2em;
+      background-color: #8897ec;
+    }
+    .horizontal.timeline .steps {
+      display: flex;
+      position: relative;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+    }
+    .horizontal.timeline .steps .step {
+      display: block;
+      position: relative;
+      bottom: calc(100% + 1em);
+      padding: 0.33em;
+      margin: 0 2em;
+      box-sizing: content-box;
+      color: #8897ec;
+      background-color: currentColor;
+      border: 0.25em solid white;
+      border-radius: 50%;
+      z-index: 500;
+    }
+    .horizontal.timeline .steps .step:first-child {
+      margin-left: 0;
+    }
+    .horizontal.timeline .steps .step:last-child {
+      margin-right: 0;
+      color: #71CB35;
+    }
+    .horizontal.timeline .steps .step span {
+      position: absolute;
+      top: calc(100% + 1em);
+      left: 50%;
+      transform: translateX(-50%);
+      white-space: nowrap;
+      color: #000;
+      opacity: 0.4;
+    }
+    .horizontal.timeline .steps .step.current:before {
+      content: "";
+      display: block;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 1em;
+      background-color: currentColor;
+      border-radius: 50%;
+      opacity: 0;
+      z-index: -1;
+      animation-name: animation-timeline-current;
+      animation-duration: 2s;
+      animation-iteration-count: infinite;
+      animation-timing-function: ease-out;
+    }
+    .horizontal.timeline .steps .step.current span {
+      opacity: 0.8;
+    }
+    
+    @keyframes animation-timeline-current {
+      from {
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 1;
+      }
+      to {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 0;
+      }
+    }
+    </style>
+    <!-- My Account -->
+    <section>
+		<div class="breadcrumb-main">
+			<div class="container">
+				<div class="breadcrumb-container">
+					<ul class="breadcrumb">
+						<li><a href="index"><i class="fa fa-home"></i></a></li>
+                                <li><a href="my-account">Account </a></li>
+                                <li><a href="my-account">My Orders</a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</section>
+    <div class="blog-section">
+        <div class="container">
+            <div class="row">
+                <%- include('../includes/customerSidebar.ejs') %>
+                <div id="content" class="col-sm-9  all-blog my-account">
+                    <h1>Order Details : <b>Order #<%= (orderDetails.id).slice(0,4) %></b></h1>
+                  <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card p-4">
+                            <div class="card-body">
+                                <h5 class="card-title">Order Details</h5>
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <p><strong>Total Amount:</strong> ₹ <%= orderDetails.total_amount %></p>
+                                        <p><strong>Shipping Address:</strong> <%= orderDetails.shipping_address %></p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p><strong>Status:</strong> <%= orderDetails.status %></p>
+                                        <p><strong>Payment Status:</strong> <%= orderDetails.payment_status %></p>
+                                        <p><strong>Service Fee:</strong> ₹ <%= orderDetails.serviceFee %></p>
+                                        <p><strong>Delivery Charges:</strong> ₹ <%= orderDetails.deliveryCharges %></p>
+                                    </div>
+                                </div>
+                                <p class="text-muted">Created At: <%= orderDetails.created_at.toLocaleString() %></p>
+                                <p class="text-muted">Updated At: <%= orderDetails.updated_at.toLocaleString() %></p>
+                        
+                                <div class="table-responsive">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>Product Name</th>
+                                                <th>Quantity</th>
+                                                <th>Unit Price</th>
+                                                <th>Total Price</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <% orderDetails.products.forEach(item => { %>
+                                                <tr>
+                                                    <td><%= item.name %></td>
+                                                    <td><%= item.quantity %></td>
+                                                    <td>₹ <%= item.price %></td>
+                                                    <td>₹ <%= item.price*item.quantity %></td>
+                                                </tr>
+                                            <% }); %>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-12">
+                        <div class="card p-5 shadow">
+                                <div class="mb-3">
+                                    <h6 class="mb-10">Detail</h6>
+                                    <div class="body-text">Your item is on the way. Tracking information will be available within 24 hours.</div>
+                                </div>
+                                <div class="main">
+                                    <div class="horizontal timeline">
+                                        <div class="steps">
+                                            <div class="step <%= orderDetails.status === 'receiving_orders'? ' current' : '' %>">
+                                                <span>Receiving orders</span>
+                                            </div>
+                                            <div class="step <%= orderDetails.status === 'order_processing'? ' current' : '' %>">
+                                                <span>Order processing</span>
+                                            </div>
+                                            <div class="step <%= orderDetails.status === 'being_delivered'? ' current' : '' %>">
+                                                <span>Being delivered</span>
+                                            </div>
+                                            <div class="step <%= orderDetails.status === 'delivered'? ' current' : '' %>">
+                                                <span>Delivered</span>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="line" style="width: 
+    <% if (orderDetails.status === 'receiving_orders') { %>
+        25%
+    <% } else if (orderDetails.status === 'order_processing') { %>
+        50%
+    <% } else if (orderDetails.status === 'being_delivered') { %>
+        75%
+    <% } else if (orderDetails.status === 'delivered') { %>
+        100%
+    <% } else { %>
+        0%
+    <% } %>;
+"></div>
+
+                                    </div>
+                            
+                                </div>
+                            </div>
+                    </div>
+                  </div>  
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- .My Account -->
+	 <!-- Toastr notification handling -->
+     <% if (typeof error !== 'undefined') { %>
+        <script>
+            toastr.error('<%= error %>');
+        </script>
+    <% } %>
+    <% if (typeof success !== 'undefined') { %>
+        <script>
+            toastr.success('<%= success %>');
+        </script>
+    <% } %>
+    <!-- Toastr notification handling -->
+    <% if (typeof error !== 'undefined') { %>
+        <script>
+            toastr.error('<%= error %>');
+        </script>
+    <% } %>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+       
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+    
+    <script>
+    $(document).ready(function() {
+        $('#orderTable').DataTable();
+    });
+    </script>
+<%- include('../includes/webFooter.ejs') %>

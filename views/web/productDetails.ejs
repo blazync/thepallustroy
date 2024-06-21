@@ -1,0 +1,394 @@
+<%- include('../includes/webHeader.ejs') %>
+
+	<section>
+		<div class="breadcrumb-main">
+			<div class="container">
+				<div class="breadcrumb-container">
+					<h2 class="page-title">
+						<%= product.name %>
+					</h2>
+					<ul class="breadcrumb">
+						<li class="breadcrumb-item">
+							<a href="/">
+								<i class="fas fa-home"></i>
+							</a>
+						</li>
+						<li class="breadcrumb-item">
+							<a href="category">
+								<%= product.name %>
+							</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</section>
+	<div class="blog-section Chikankari Saree">
+		<div class="container">
+			<div class="row">
+				<div id="content" class="col-sm-12">
+					<div class="pro-deatil product-content">
+						<div class="row">
+							<div class="col-md-6 product-left">
+								<div class="thumbnails">
+									<div class="pro-image" id="img-1">
+										<a class="thumbnail" href="#">
+											<img src="<%= product.images[0] ? '../../upload/' + product.images[0] : '../../assets/images/products/noimage.png' %>"
+												title="Chikankari Saree" id="prozoom" alt="Chikankari Saree"
+												data-zoom-image="assets/images/products/7-570x570.jpg" class="product-main-image">
+										</a>
+									</div>
+									<div id="additional-carousel" class="additional-carousel owl-carousel">
+										<div class="category-layout col-xs-12">
+											<div class="image-additional">
+												<a href="#" title="Chikankari Saree" class="elevatezoom-gallery"
+													data-image="assets/images/products/7.jpg"
+													data-zoom-image="assets/images/products/7.jpg">
+													<img src="<%= product.images[0] ? '../../upload/' + product.images[0] : '../../assets/images/products/noimage.png' %>"
+														title="Chikankari Saree" alt="Chikankari Saree" class="w-100">
+												</a>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-6 product-right">
+								<h1 class="product-details-title">
+									<%= product.name %>
+								</h1>
+								<div>
+									<% if (!product.inStock) { %>
+										<span class="label label-in-stock">In Stock</span>
+										<% } %>
+									<% if (!product.bestSeller) { %>
+										<span class="label label-best-seller">Best Seller</span>
+									<% } %>
+								
+								</div>
+								<div class="rating">
+									<span class="fa fa-stack"><i
+											class="fa fa-star fa-stack-2x"></i><i
+											class="fa fa-star-o fa-stack-2x"></i></span>
+									<span class="fa fa-stack"><i
+											class="fa fa-star fa-stack-2x"></i><i
+											class="fa fa-star-o fa-stack-2x"></i></span>
+									<span class="fa fa-stack"><i
+											class="fa fa-star fa-stack-2x"></i><i
+											class="fa fa-star-o fa-stack-2x"></i></span>
+									<span class="fa fa-stack"><i
+											class="fa fa-star fa-stack-2x"></i><i
+											class="fa fa-star-o fa-stack-2x"></i></span>
+									<span class="fa fa-stack"><i
+											class="fa fa-star fa-stack-2x"></i><i
+											class="fa fa-star-o fa-stack-2x"></i></span>
+								</div>
+									
+						
+								<ul class="list-unstyled manufacturer-listpro">
+									<li><span class="disc">Brand:</span> <a class="disc1" href="#">
+											<%= product.brand %>
+										</a></li>
+									<li><span class="disc">Product Code:</span> <span class="disc1">Product <%=
+												product.id.slice(0,5) %></span>
+									</li>
+									<li><span class="disc">Availability:</span> <span class="disc1">
+											<%= product.status %>
+										</span></li>
+									<li><span class="disc">SKU:</span> <span class="">
+											<%= product.sku %>
+										</span></li>
+								
+									
+								</ul>
+								<hr>
+								<ul class="list-unstyled">
+									<li>
+										<div class="prduct-detail-price">
+											<h2 class="pro_price">₹ <%= product.discountedPrice %> <small
+													class="discount">₹ <%= product.price %>
+												</small></h2>
+												<div class="form-group-wishlist">
+													<div class="btn-group pro-buttons">
+														<button type="button" class="btn pro-wishlist" title="Add to Wish List"><i
+													class="icon-like"></i></button>
+												</div>
+										</div>
+									</li>
+									<!-- <li class="tax">Ex Tax: $100.00
+									</li>
+									<li>Price in reward points: 100
+									</li>									 -->
+								</ul>
+								<hr>
+								<div id="product" class="product-option">
+									<div class="form-group">
+										<div class="quantity-addcart">
+											<div class="proquantity-detail">
+												<label class="control-label quantity-label" for="input-quantity">Qty</label>
+												<div class="product-btn-quantity">
+													<button class="minus"><i class="fa fa-minus"></i></button>
+													<input type="text" name="quantity" value="1" size="2" id="input-quantity" class="form-control">
+													<button class="plus"><i class="fa fa-plus"></i></button>
+												</div>
+											</div>
+											<input type="hidden" name="product_id" value="32">
+											<div class="pro-cart">
+												<button type="button" id="button-cart" 
+														data-id="<%= product._id %>" 
+														data-name="<%= product.name %>" 
+														data-image="<%= product.images[0] %>" 
+														class="btn btn-primary btn-lg btn-block" 
+														onclick='handleAddToCart({
+															userData: <%= JSON.stringify(userData) %>, 
+															productId: "<%= product._id %>", 
+															productName: "<%= product.name %>", 
+															productImage: "<%= product.images[0] %>", 
+															quantity: document.getElementById("input-quantity").value
+														})'>
+													<i class="icon-bag"></i><span>Add To Cart</span>
+												</button>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<hr>
+								<div>
+									<h1>Other Informations</h1>
+									<ul class="list-unstyled">	
+										<li><span class="disc">Occasion:</span> <span class="">
+											<%= product.occasion %>
+											</span>
+										</li>
+										<li><span class="disc">Color:</span> <span class="">
+											<%= product.color %>
+											</span>
+										</li>
+										<li><span class="disc">Fit:</span> <span class="">
+											<%= product.fit %>
+											</span>
+										</li>
+										<li><span class="disc">Material:</span> <span class="">
+											<%= product.material %>
+											</span>
+										</li>
+										<li><span class="disc">Categories:</span> <span class="">
+											<%= product.categories%>
+											</span>
+										</li>
+										<li><span class="disc">Collection:</span> <span class="">
+											<%= product.collection %>
+											</span>
+										</li>
+										<li><span class="disc">Caution:</span> <span class="">
+											<%= product.caution %>
+											</span>
+										</li>
+										
+										<li><span class="disc">Contents:</span> <span class="">
+											<%= product.contents %>
+											</span>
+										</li>
+										<li><span class="disc">Place of manufacture:</span> <span class="">
+											<%= product.place_of_manufacture %>
+											</span>
+										</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div id="tabs_1" class="propage-tab top-margin-all">
+					<ul class="nav nav-tabs" id="myTab" role="tablist">
+						<li class="nav-item" role="presentation">
+							<a href="#description" class="nav-link active hscp-hover" id="description-tab" data-bs-toggle="tab"
+								data-bs-target="#description" role="tab" aria-controls="description"
+								aria-selected="true"><span>Description </span></a>
+						</li>
+						<li class="nav-item" role="presentation">
+							<a href="#reviews" class="nav-link hscp-hover" id="reviews-tab" data-bs-toggle="tab"
+								data-bs-target="#reviews" role="tab" aria-controls="reviews"
+								aria-selected="false"><span>Reviews (0)</span></a>
+						</li>
+					</ul>
+				</div>
+				<div class="tab-content" id="myTabContent">
+					<div class="tab-pane fade show active" id="description" role="tabpanel" aria-labelledby="description-tab">
+						<div class="tab-pane " id="tab-description">
+							<h1><strong>Description</strong></h1>
+							<p>
+								<%= product.description%>
+							</p>
+							<h1><strong>Caution</strong></h1>
+							<p>
+								<%= product.caution %>
+							</p>
+						</div>
+					</div>
+					<div class="tab-pane fade " id="reviews" role="tabpanel" aria-labelledby="reviews-tab">
+						    <div class="reviews">
+								<h2>Product Reviews</h2>
+								<% if (productReviews.length > 0) { %>
+									<% productReviews.forEach(review => { %>
+										<div class="review">
+											<h3>Review by: <%= review.user_id.name %></h3>
+											<p>Rating: <%= review.rating %> stars</p>
+											<p><%= review.review %></p>
+										</div>
+									<% }); %>
+								<% } else { %>
+									<p>No reviews yet.</p>
+								<% } %>
+							</div>
+						<form class="form-horizontal" id="form-review">
+							<h2 class="review-title">Write a review</h2>
+							<div class="form-group required">
+								<input type="hidden" name="productId" value="<%= product._id %>">
+							</div>
+							<div class="form-group required">
+								<div class="col-sm-12">
+									<label class="control-label" for="input-review">Your Review</label>
+									<textarea name="reviewText" rows="5" id="input-review" class="form-control"></textarea>
+								</div>
+							</div>
+							<div class="form-group required">
+								<div class="col-sm-12 rating">
+									<label class="control-label">Rating</label>
+									<div id="input-rating" class="rate">
+										<input type="radio" id="star5" name="rate" value="5" />
+										<label for="star5" title="5 stars" onclick="return false;">5 stars</label>
+										<input type="radio" id="star4" name="rate" value="4" />
+										<label for="star4" title="4 stars" onclick="return false;">4 stars</label>
+										<input type="radio" id="star3" name="rate" value="3" />
+										<label for="star3" title="3 stars" onclick="return false;">3 stars</label>
+										<input type="radio" id="star2" name="rate" value="2" />
+										<label for="star2" title="2 stars" onclick="return false;">2 stars</label>
+										<input type="radio" id="star1" name="rate" value="1" />
+										<label for="star1" title="1 star" onclick="return false;">1 star</label>
+									</div>
+								</div>
+							</div>
+							<div class="buttons clearfix">
+								<div class="pull-right">
+									<input class="btn btn-primary" type="submit" value="Submit Review">
+								</div>
+							</div>
+						</form>
+
+					</div>
+				</div>
+				<div class="box related-products top-margin-all">
+					<div class="page-title">
+						<h3>Related Products</h3>
+					</div>
+					<!-- <div class="row"> -->
+					<div id="related-carousel"
+						class="box-product product-carousel clearfix owl-carousel owl-theme owl-loaded owl-drag">
+						<!-- <div class="related-products-1 owl-stage"> -->
+						<% categories.forEach(relateddata=> { %>
+							<div class="owl-item">
+								<div class="product-layout col-xs-12">
+									<div class="product-thumb transition">
+										<div class="image">
+											<a href="/product/<%= relateddata.name.replace(/ /g, '-') %>"
+												class="thumb-image">
+												<img src="<%= relateddata.images && relateddata.images.length > 0 ? '../../upload/' + relateddata.images[0] : '../../assets/images/products/noimage.png' %>"
+													alt="<%= relateddata.name %>" title="<%= relateddata.name %>"
+													class="img-responsive zoomInImage">
+											</a>
+											<div class="button-group">
+												<button class="addcart" type="button" title="Add to Cart"
+													onclick='handleAddToCart({ userData: <%= JSON.stringify(userData) %>, productId: "<%= product._id %>" })'><i
+														class="icon-shopping-bag"></i></button>
+												<button class="wishlist" type="button" data-toggle="tooltip"
+													title="Add to Wish List">
+													<i class="icon-like"></i>
+												</button>
+												
+											</div>
+										</div>
+										<div class="product-description">
+											<div class="caption">
+												<div class="title-rating clearfix">
+													<h4 class="product-title"><a href="#">
+															<%= relateddata.name %>
+														</a></h4>
+												</div>
+												<div class="price-cartbtn clearfix">
+													<p class="price">
+														₹ <%= relateddata.discountedPrice %> <small
+																class="discount">₹ <%=
+																	relateddata.price %></small>
+															<span class="price-tax ">Ex Tax: ₹ <%=
+																	(relateddata.discountedPrice / 1.18).toFixed(2) %>
+															</span>
+													</p>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<% }) %>
+
+
+								<!-- </div> -->
+					</div>
+					<!-- </div> -->
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	
+<!-- Your custom script -->
+  <script>
+    $(document).ready(function() {
+        // Handle star rating selection
+        $('.rate input').on('change', function() {
+            var rating = $(this).val();
+            $('#input-rating').data('rating', rating); // Store selected rating
+        });
+
+        // Handle form submission
+        $('#form-review').submit(function(event) {
+            event.preventDefault();
+            var productId = $('[name="productId"]').val();
+            var reviewText = $('#input-review').val();
+            var rating = $('#input-rating').data('rating');
+            
+            // if (!rating) {
+            //     alert('Please select a rating.');
+            //     return;
+            // }
+
+            console.log(rating, reviewText, productId);
+
+            // Send data to backend via AJAX PUT request
+            $.ajax({
+                type: 'PUT',
+                url: '/product-review', // Replace with your backend endpoint
+                data: JSON.stringify({ productId: productId, rating: 5, review: reviewText }),
+                contentType: 'application/json',
+                success: function(response) {    
+                    console.log('Review submitted successfully:', response);
+                    // Handle success, e.g., show a success message or redirect
+                    alert('Review submitted successfully!');
+                    // window.location.href = '/'; // Redirect to homepage or another page
+                },
+                error: function(error) {
+                    console.error('Error submitting review:', error.responseText);
+                    // Handle error, e.g., show an error message
+                    alert('Failed to submit review. Please try again later.');
+                }
+            });
+        });
+    });
+</script>
+
+
+
+
+	<%- include('../includes/webFooter.ejs') %>

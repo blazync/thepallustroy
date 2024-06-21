@@ -1,0 +1,531 @@
+<!DOCTYPE HTML>
+<html lang="en-US">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="x-ua-compatible" content="ie=edge">
+	<title>Home - The Pallu Store</title>
+	<meta name="description" content="Vipodha">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="The Pallu Story promotes the six yard wonder: saree, a traditional attire with its origin in the Indian Subcontinent. Discover a unique collection of high-quality sarees celebrating heritage and modern flair.">
+    <meta name="keywords" content="saree, Indian sarees, ethnic wear, traditional sarees, high-quality sarees">
+	<!-- Favicon -->
+	<link rel="icon" type="image/png" href="../../assets/images/favicon.png">
+	<!-- bootstrap CSS -->
+	<link rel="stylesheet" href="../../assets/css/bootstrap.min.css">
+	<!-- owl-carousel CSS -->
+	<link rel="stylesheet" href="../../assets/css/owl.carousel.css" type="text/css" media="all" />
+	<!-- font-awesome CSS -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" />
+	<!-- icomoon CSS -->
+	<link rel="stylesheet" href="../../assets/fonts/vipodha-font.css" type="text/css" media="all">
+	<!-- Main Style CSS -->
+	<link rel="stylesheet" href="../../assets/css/style.css" type="text/css" media="all" />
+	<!-- Font -->
+	<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,400..900&display=swap" rel="stylesheet">
+	<!-- <link href="https://fonts.googleapis.com/css2?family=Chonburi&display=swap&family=Carattere&display=swap&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet"> -->
+	<!--vipodha_megamenu css-->
+	<link rel="stylesheet" href="../../assets/css/vipodha_megamenu.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" integrity="sha512-vKMx8UnXk60zUwyUnUPM3HbQo8QfmNx7+ltw8Pm5zLusl1XIfwcxo8DbWCqMGKaWeNxWA8yrx5v3SaVpMvR3CA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+	<script type="text/javascript" src="../../assets/js/script.js"></script>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+</head>
+</head>
+
+<body class="homepage">
+	<div class="loader"></div>
+	<% if (typeof error !== 'undefined') { %>
+        <script>
+            toastr.error('<%= error %>');
+        </script>
+    <% } %>
+    <% if (typeof success !== 'undefined') { %>
+        <script>
+            toastr.success('<%= success %>');
+        </script>
+    <% } %>
+	<!-- HEADER -->
+	<nav id="top">
+		<div class="container">
+			<div class="top-left">
+				<div class="contact-info">
+					<a href="tel:+1(123)8425733">
+						<i class="fa fa-phone"></i>
+						<span class=""> +91 9101394194</span>
+					</a>
+				</div>
+			</div>
+			<div class="top-right">
+				<div class="pull-left">
+					<form method="post" enctype="multipart/form-data" id="form-currency">
+						<div class="btn-group">
+							<button class="btn btn-link dropdown-toggle" data-toggle="dropdown">
+								<span class="symbol">$</span>
+								<span class="drop-text">Currency</span>
+								<span class="code">INR</span>
+								<!-- <i class="fa fa-angle-down"></i> -->
+							</button>
+							
+						</div>
+						<input type="hidden" name="code" value="">
+						<input type="hidden" name="redirect">
+					</form>
+				</div>
+				<div class="pull-left">
+					<form method="post" enctype="multipart/form-data" id="form-language">
+						<div class="btn-group">
+							<button class="btn btn-link dropdown-toggle" data-toggle="dropdown">
+
+								<img src="../../assets/images/en-gb.png" alt="English" title="English" class="language-img">
+								<span class="drop-text">Language</span>
+								<span class="code">English</span>
+								<i class="fa fa-angle-down"></i>
+							</button>
+							<ul class="dropdown-menu language-dropdown dropdown-menu-right">
+								<li>
+									<button class="btn btn-link btn-block language-select" type="button" name="en-gb"><img src="../../assets/images/en-gb.png" alt="English" title="English">
+										English</button>
+								</li>
+								<!-- <li>
+									<button class="btn btn-link btn-block language-select" type="button" name="ar"><img src="../../assets/images/ar.png" alt="Arabic" title="Arabic">
+										Arabic</button>
+								</li> -->
+							</ul>
+						</div>
+						<input type="hidden" name="code" value="">
+						<input type="hidden" name="redirect" value="">
+					</form>
+				</div>
+				<div id="top-links" class="nav pull-right hidden">
+					<ul class="list-inline">
+						<li class="hidden">
+							<a href="#" id="wishlist-total" title="Wish List (0)">
+								<i class="fa fa-heart"></i><span class="hidden-xs hidden-sm hidden-md">Wish List
+									(0)</span>
+							</a>
+						</li>
+						<li class="hidden">
+							<a href="#" title="Shopping Cart">
+								<i class="fa-thin fa-bag-shopping"></i><span class="hidden-xs hidden-sm hidden-md">Shopping
+									Cart</span>
+							</a>
+						</li>
+						<li class="hidden">
+							<a href="#" title="Checkout">
+								<i class="fa fa-share"></i><span class="hidden-xs hidden-sm hidden-md">Checkout</span>
+							</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</nav>
+	<header class="main-header">
+		<div class="container">
+			<div class="header-inner">
+				<div class="header-left">
+					<div id="logo">
+						<a href="/index">
+							<img src="../../assets/images/logo.png" title="The Pallu Story" alt="The Pallu Story" class="img-responsive">
+						</a>
+					</div>
+				</div>
+				<div class="header-center">
+					<div class="vipodha_megamenu-style-dev">
+						<div class="responsive vipodha_default">
+
+							<nav class="navbar-default">
+								<div class=" container-vipodha_megamenu horizontal ">
+									<div class="navbar-header">
+										<button type="button" id="show-vipodha_megamenu" data-toggle="collapse" class="navbar-toggle">
+											<i class="fas fa-bars"></i>
+										</button>
+									</div>
+
+									<div class="vipodha_megamenu-wrapper megamenu_typeheader">
+
+										<span id="remove-vipodha_megamenu" class="fa fa-times"></span>
+
+										<div class="vipodha_megamenu-pattern">
+											<div class="container">
+												<ul class="vipodha_megamenu" data-megamenuid="55" data-transition="slide" data-animationtime="500">
+
+													<li class="home current-active active-first">
+														<a href="/">
+															<span><strong> Home </strong></span>
+														</a>
+													</li>
+													<li class="home current-active active-first">
+														<a href="/about">
+															<span><strong> About
+																Us </strong></span>
+														</a>
+													</li>
+													<li class="with-sub-menu click">
+														<p class="close-menu"></p>
+														<a href="/shop" class="clearfix">
+															<strong>
+																Shop
+															</strong>
+															<b class="fa fa-angle-down"></b>
+														</a>
+														<div class="sub-menu">
+															<div class="content">
+																<div class="row">
+																	<div class="col-sm-12">
+																		<div class="categories hot">
+																			<div class="row">
+																				<% navProduct.forEach(navProduct => { %>
+																					<% }); %>
+																					
+																				<div class="col-sm-4 static-menu">
+																					<div class="menu">
+																						<ul>
+																							<li>
+																								<% 
+																									function getRandomCategories(categories, count) {
+																										const shuffled = categories.sort(() => 0.5 - Math.random());
+																										return shuffled.slice(0, count);
+																									}
+
+																									const randomCategories = getRandomCategories(navCategories, 4);
+																									%>
+
+																									<% randomCategories.forEach(navCategory => { %>
+																										<a href="/category/<%= navCategory.name.replace(/ /g, '-') %>" class="main-menu"><b><%= navCategory.name %></b></a>
+																										<ul style="list-style: square;">
+																											<% let hasProducts = false; %>
+																											<% navProduct.forEach(navProduct => { %>
+																												<% if (navProduct.categories.toString() === navCategory._id.toString()) { %>
+																													<li><a href="/product/<%= navProduct.name.replace(/ /g, '-') %>"><%= navProduct.name %></a></li>
+																													<% hasProducts = true; %>
+																												<% } %>
+																											<% }); %>
+																											<% if (!hasProducts) { %>
+																												<li>No Product Found</li>
+																											<% } %>
+																										</ul>
+																									<% }); %>
+
+																								
+																								
+																							</li>
+																						</ul>
+																					</div>
+																				</div>
+																				<div class="col-sm-4 static-menu">
+																					<div class="menu">
+																						<ul>
+																							<li>
+																								<% 
+																									function getRandomCategories1(categories, count) {
+																										const shuffled = categories.sort(() => 0.5 - Math.random());
+																										return shuffled.slice(0, count);
+																									}
+
+																									const randomCategories1 = getRandomCategories1(navCategories, 4);
+																									%>
+
+																									<% randomCategories1.forEach(navCategory => { %>
+																										<a href="/category/<%= navCategory.name.replace(/ /g, '-') %>" class="main-menu"><b><%= navCategory.name %></b></a>
+																										<ul style="list-style: square;">
+																											<% let hasProducts = false; %>
+																											<% navProduct.forEach(navProduct => { %>
+																												<% if (navProduct.categories.toString() === navCategory._id.toString()) { %>
+																													<li><a href="/product/<%= navProduct.name.replace(/ /g, '-') %>"><%= navProduct.name %></a></li>
+																													<% hasProducts = true; %>
+																												<% } %>
+																											<% }); %>
+																											<% if (!hasProducts) { %>
+																												<li>No Product Found</li>
+																											<% } %>
+																										</ul>
+																									<% }); %>
+																							</li>
+																						</ul>
+																					</div>
+																				</div>
+																				<div class="col-sm-4 static-menu">
+																					<div class="menu">
+																						<img alt="" class="img-responsive mw-100" src="../../assets/images/megamenu/1.png">
+																					</div>
+																				</div>
+																			</div>
+																		</div>
+																	</div>
+																</div>	
+															</div>
+														</div>
+													</li>
+													<li class="with-sub-menu click">
+														<p class="close-menu"></p>
+														<a href="" class="clearfix">
+															<strong>
+																Product
+															</strong>
+															<b class="fa fa-angle-down"></b>
+														</a>
+														<div class="sub-menu">
+															<div class="content">
+																<div class="">
+																	<div class="row megamenu-product-grid">
+																		<%
+																					function getRandomElements(arr, count) {
+																						const shuffled = arr.sort(() => 0.5 - Math.random());
+																						return shuffled.slice(0, count);
+																					}
+
+																					const randomNavProducts1 = getRandomElements(navProduct, 4);
+																					%>
+
+																					<% randomNavProducts1.forEach(navProduct => { %>
+																		<div class="col-sm-3 ">
+																			<div class="menu-product-thumb">
+																				<div class="image">
+																					<a href="/product/<%= navProduct.name.replace(/ /g, '-') %>">
+																						<img src="<%= navProduct.images[0] ? '../../upload/' + navProduct.images[0] : '../../assets/images/products/noimage.png' %>" alt="Linen Sarees" title="Linen Sarees" class="img-responsive">
+																					</a>
+																				</div>
+																				<div class="product-description">
+																					<div class="caption">
+																						<h4><a href="/product"><%= navProduct.name %></a>
+																						</h4>
+																						<p class="price">
+																							₹ <%= navProduct.discountedPrice %>
+																						</p>
+																					</div>
+																				</div>
+																			</div>
+																		</div>
+																		<% }); %>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</li>
+													<li class="with-sub-menu click">
+														<p class="close-menu"></p>
+														<a href="#" class="clearfix">
+															<strong>
+																Categories
+															</strong>
+															<b class="fa fa-angle-down"></b>
+														</a>
+														<div class="sub-menu">
+															<div class="content">
+																<div class="row sub_sub_menu">
+																	<div class="col-sm-4">
+																		<div class="megamenu-product-list">
+																			<span class="title-submenu">Special
+																				Product</span>
+																			<div class="row">
+																				<%
+																					function getRandomElements(arr, count) {
+																						const shuffled = arr.sort(() => 0.5 - Math.random());
+																						return shuffled.slice(0, count);
+																					}
+
+																					const randomNavProducts = getRandomElements(navProduct, 3);
+																					%>
+
+																					<% randomNavProducts.forEach(navProduct => { %>
+																					<div class="col-sm-12 ">
+																						<div class="menu-product-thumb">
+																							<div class="image">
+																								<a href="/product/<%= navProduct.name.replace(/ /g, '-') %>">
+																									<img src="<%= navProduct.images[0] ? '../../upload/' + navProduct.images[0] : '../../assets/images/products/noimage.png' %>" alt="<%= navProduct.name %>" title="<%= navProduct.name %>" class="img-responsive">
+																								</a>
+																							</div>
+																							<div class="product-description">
+																								<div class="caption">
+																									<h4><a href="/product"><%= navProduct.name %></a></h4>
+																									<div class="rating">
+																										<span class="fa fa-stack"><i class="fa fa-star fa-stack-2x"></i><i class="fa fa-star-o fa-stack-2x"></i></span>
+																										<span class="fa fa-stack"><i class="fa fa-star fa-stack-2x"></i><i class="fa fa-star-o fa-stack-2x"></i></span>
+																										<span class="fa fa-stack"><i class="fa fa-star fa-stack-2x"></i><i class="fa fa-star-o fa-stack-2x"></i></span>
+																										<span class="fa fa-stack"><i class="fa fa-star fa-stack-2x"></i><i class="fa fa-star-o fa-stack-2x"></i></span>
+																										<span class="fa fa-stack"><i class="fa fa-star fa-stack-2x"></i><i class="fa fa-star-o fa-stack-2x"></i></span>
+																									</div>
+	
+																									<p class="price">
+																										<span class="price-new">₹ <%= navProduct.discountedPrice %></span>
+																										<span class="price-old">₹ <%= navProduct.price %></span>
+	
+																										<!-- <span class="price-tax">$80.00</span> -->
+																									</p>
+																								</div>
+																							</div>
+																						</div>
+																					</div>
+																				<% }); %>
+																				
+																			</div>
+																		</div>
+																	</div>
+																	<div class="col-sm-4">
+																		<span class="title-submenu">Our Categories</span>
+																		<ul class="subcategory ">
+																		
+																						<% navCategories.forEach(navCategories => { %>
+																							<li><a href="/category/<%= navCategories.name.replace(/ /g, '-') %>" class="title-submenu"><i class="icon-shopping-bag"></i> <%= navCategories.name %></a></li>
+																						<% }); %>
+																				
+																				<!-- <img src="../../assets/images/banners/category_banner1.png" alt="" class="img-responsive"> -->
+																		</ul>
+																	</div>
+																	<div class="col-sm-4">
+																		<ul class="subcategory ">
+																			<li>
+																				
+																				<img src="../../assets/images/banners/category_banner1.png" alt="" class="img-responsive">
+																				<img src="../../assets/images/megamenu/1.png" alt="" class="img-responsive">
+																			</li>
+																		</ul>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</li>
+													
+													<!-- <li class="with-sub-menu click">
+														<p class="close-menu"></p>
+														<a href="#" class="clearfix">
+															<strong>
+																Pages
+															</strong>
+															<b class="fa fa-angle-down"></b>
+														</a>
+														<div class="sub-menu sub-menu-1-col" style="width: 250px; display: none;">
+															<div class="content">
+																<div class="row">
+																	<div class="col-sm-12">
+																		<ul class="route  html-link">
+																			<li><a href="about" class="main-menu">About
+																					Us</a></li>
+																			<li><a href="contact" class="main-menu">Contact
+																					Us</a>
+																			</li>
+																			<li><a href="site-map" class="main-menu">Site
+																					Map</a></li>
+																			<li><a href="#" class="main-menu">Special</a></li>
+																			<li><a href="my-account" class="main-menu">My
+																					Account</a>
+																			</li>
+																			<li><a href="#" class="main-menu">Order
+																					History</a>
+																			</li>
+																		</ul>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</li> -->
+													
+													
+													<li class="home current-active active-first">
+														<a href="/contact">
+															<span><strong> Contact
+																Us </strong></span>
+														</a>
+													</li>
+												</ul>
+											</div>
+										</div>
+									</div>
+								</div>
+							</nav>
+						</div>
+					</div>
+				</div>
+				<div class="header-right">
+					<!-- <div class="search-content">
+						<div class="search-btn-outer">
+							<i class="icon-search"></i>
+						</div>
+						<div class="header-search">
+							<div id="vipodhaSearch" class="input-group vipodha-search">
+								<input type="text" name="search" value="" placeholder="Search..." class="form-control input-lg ui-autocomplete-input" />
+								<span class="btn-search input-group-btn">
+									<button type="button" class="btn btn-default btn-lg"><i class="search-icon icon-search"></i></button>
+								</span>
+							</div>
+						</div>
+					</div> -->
+					
+					<% if (userData && userData.isLoggedIn) { %>
+						
+					<div class="cart-content">
+							<div id="cart" class="btn-group btn-block">
+									<button type="button" data-toggle="dropdown" data-loading-text="<i class='fa fa-spinner fa-spin' aria-hidden='true'></i>" class="btn btn-inverse btn-block btn-lg dropdown-toggle">
+										<img width="25" height="25" src="https://img.icons8.com/ios/50/shopping-bag--v1.png" alt="shopping-bag--v1"/> 
+										<span id="cart-total">0</span>
+									</button>
+									<ul class="dropdown-menu pull-right header-cart-toggle">
+									
+										<li>
+											<div>
+												<table class="table table-bordered">
+													<tbody>
+														<tr>
+															<td class="text-left"><strong>Sub-Total</strong></td>
+															<td class="text-right">₹ 0.00</td>
+														</tr>
+														<tr>
+															<td class="text-left"><strong>Eco Tax (-2.00)</strong></td>
+															<td class="text-right">₹ 0.00</td>
+														</tr>
+														<tr>
+															<td class="text-left"><strong>VAT (20%)</strong></td>
+															<td class="text-right">₹ 0.00</td>
+														</tr>
+														<tr>
+															<td class="text-left"><strong>Total</strong></td>
+															<td class="text-right">₹ 0.00</td>
+														</tr>
+													</tbody>
+												</table>
+												<p class="text-right product-cart-button">
+													<a href="/shopping-cart" class="btn cart-btn addtocart-btn"><i class="fa fa-shopping-cart hidden"></i>View Cart</a>
+													&nbsp;&nbsp;&nbsp;<a href="/shopping-cart" class="btn cart-btn checkout-btn"><i class="fa fa-share hidden"></i>Checkout</a>
+												</p>
+											</div>
+										</li>
+									</ul>
+					
+							</div>
+						</div>
+						
+						<div class="dashboard-content">
+							<a href="/account/">
+								<div id="cart" class="btn-group btn-block">
+									
+										<img width="25" height="25" src="https://img.icons8.com/?size=50&id=udjU_YS4lMXL&format=png" alt="shopping-bag--v1"/> 
+								</div>
+							</a>
+						</div>
+						<div class="logout-content">
+							<a href="/logout">
+								<div id="cart" class="btn-group btn-block">
+									
+										<img width="25" height="25" src="https://img.icons8.com/?size=50&id=24338&format=png" alt="shopping-bag--v1"/> 
+								</div>
+							</a>
+						</div>
+						<% }else{ %>
+							<div id="header_ac" class="dropdown">
+								<a href="#" title="My Account" class="dropdown-toggle" data-toggle="dropdown">
+									<i class="fa-regular fa-user"></i></i><span class="hidden">My Account</span><span class="caret hidden"></span>
+								</a>
+								<ul class="dropdown-menu dropdown-menu-right account-link-toggle">
+									<li><a href="/register">Register</a>
+									</li>
+									<li><a href="/my-account">Login</a></li>
+								</ul>
+							</div>
+						<%}%>
+				</div>
+			</div>
+		</div>
+	</header>
+	<!-- .HEADER -->

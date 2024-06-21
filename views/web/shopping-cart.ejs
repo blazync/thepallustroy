@@ -1,0 +1,261 @@
+<%- include('../includes/webHeader.ejs') %>
+
+	<!-- Shopping Cart -->
+	<section>
+		<div class="breadcrumb-main">
+			<div class="container">
+				<div class="breadcrumb-container">
+					<h2 class="page-title">Shopping Cart</h2>
+					<ul class="breadcrumb">
+						<li class="breadcrumb-item">
+							<a href="index">
+								<i class="fas fa-home"></i>
+							</a>
+						</li>
+						<li class="breadcrumb-item">
+							<a href="/">Shopping Cart</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</section>
+	<div class="blog-section">
+		<div id="checkout-cart" class="container">
+			<div class="row">
+				<%- include('../includes/webSidebar.ejs') %>
+				<div id="content" class="col-sm-9  all-blog">
+					<form id="cartForm" action="#" method="post" enctype="multipart/form-data">
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <td class="text-center">Image</td>
+                    <td class="text-center">Product Name</td>
+                    <td class="text-center">Quantity</td>
+                    <td class="text-center">Unit Price</td>
+                    <td class="text-center">Total</td>
+                </tr>
+            </thead>
+            <tbody>
+                <% 
+                    let totalprice = 0;
+                    cartDetails.forEach(cartData => { 
+                        totalprice += cartData.product.price * cartData.quantity; 
+                    }); 
+                %>
+
+                <% let deliveryCharges = totalprice > 299 ? 0 : settings.deliveryCharges; %>
+
+                <% if (cartDetails.length > 0) { %>
+                    <% cartDetails.forEach(cartData => { %>
+                        <tr id="<%= cartData.product._id %>">
+                            <td class="text-center">
+                                <a href="#">
+                                    <img src="../../upload/<%= cartData.product.images %>" alt="<%= cartData.product.name %>"
+                                        title="<%= cartData.product.name %>" class="img-thumbnail checkout-img">
+                                </a>
+                            </td>
+                            <td class="text-center">
+                                <a href="#"><%= cartData.product.name %></a> <br>
+                            </td>
+                            <td class="text-center">
+                                <div class="input-group cart_quantity">
+                                    <input type="text" id="quantityInput_<%= cartData.product._id %>" name="quantity" value="<%= cartData.quantity %>" size="1" class="form-control">
+                                    <input type="hidden" id="keyInput_<%= cartData.product._id %>" name="key" value="<%= cartData.product._id %>">
+
+                                    <button type="button" onclick="submitForm();" data-bs-toggle="tooltip" title="Update" class="btn btn-primary" data-bs-original-title="Update" aria-label="Update">
+                                        <i class="fa-solid fa-rotate"></i> 
+                                    </button>
+
+                                    <!-- Remove Product -->
+                                    <button type="submit" onclick='deleteProductFromCart("<%= cartData.product._id %>");' data-bs-toggle="tooltip" title="Remove" class="btn btn-danger" data-bs-original-title="Remove" aria-label="Remove">
+                                        <i class="fa-solid fa-circle-xmark"></i>
+                                    </button>
+                                </div>
+                            </td>
+                            <td class="text-center">₹ <%= cartData.product.price %></td>
+                            <td class="text-center">₹ <%= (cartData.product.price * cartData.quantity).toFixed(2) %></td>
+                        </tr>
+                        <script>
+                            function submitForm() {
+                                const quantity = document.getElementById('quantityInput_<%= cartData.product._id %>').value;
+                                const productId = document.getElementById('keyInput_<%= cartData.product._id %>').value;
+                                updateQuantityWithValue(quantity, productId);
+                            }
+                            userId = "<%- userData.userId %>";
+                            cartData = <%- JSON.stringify(cartData) %>;
+                            getCartData({ userId, cartData });
+                        </script>
+                    <% }); %>
+                <% } else { %>
+                    <tr>
+                        <td class="text-center" colspan="6">No Product Found in Cart</td>
+                    </tr>
+                <% } %>
+            </tbody>
+            <tfoot id="checkout-cart-foot">
+                <tr>
+                    <td colspan="4" class="text-end">Sub-Total:</td>
+                    <td class="text-end">₹ <%= totalprice.toFixed(2) %></td>
+                </tr>
+                <tr>
+                    <td colspan="4" class="text-end">Service Tax Charge:</td>
+                    <td class="text-end">₹ <%= settings.serviceFee %></td>
+                </tr>
+                <tr>
+                    <td colspan="4" class="text-end">Delivery Charge:</td>
+                    <td class="text-end">₹ <%= deliveryCharges.toFixed(2) %></td>
+                </tr>
+                <tr>
+                    <td colspan="4" class="text-end">Total:</td>
+                    <td class="text-end">₹ <%= (totalprice + deliveryCharges + settings.serviceFee).toFixed(2) %></td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</form>
+
+<div id="accordion" class="accordion">
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button type="button" class="accordion-button" data-bs-toggle="collapse" data-bs-target="#collapse-shipping">
+                Estimate Shipping &amp; Taxes
+            </button>
+        </h2>
+        <div id="collapse-shipping" class="accordion-collapse collapse show" data-bs-parent="#accordion">
+            <div class="accordion-body">
+                <form id="form-quote">
+                    <p>Enter your destination to get a shipping estimate.</p>
+                    <div>
+                        <input type="checkbox" id="addressCheckbox" checked>
+                        <label for="addressCheckbox">
+                            <%= settings.address %>
+                        </label>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button type="button" class="accordion-button" data-bs-toggle="collapse" data-bs-target="#collapse-coupon">
+                Use Coupon Code
+            </button>
+        </h2>
+        <div id="collapse-coupon" class="accordion-collapse collapse show" data-bs-parent="#accordion">
+            <div class="accordion-body">
+                <form id="form-coupon" method="post">
+                    <div class="row mb-3">
+                        <label for="input-coupon" class="col-md-4 col-form-label">Enter your coupon here</label>
+                        <div class="col-md-8">
+                            <input type="text" name="coupon" value="" placeholder="Enter your coupon here" id="input-coupon" class="form-control">
+                        </div>
+                    </div>
+                    <div class="text-end">
+                        <button type="submit" class="btn btn-primary">Apply Coupon</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="buttons clearfix">
+        <div class="pull-left"><a href="/" class="btn btn-default">Continue Shopping</a></div>
+        <div class="pull-right">
+            <button id="checkoutButton" class="btn btn-primary">Checkout</button>
+        </div>
+    </div>
+</div>
+
+
+<!-- Handling Data Submission and Payment -->
+<script src="https://sdk.cashfree.com/js/v3/cashfree.js"></script>
+				<script>
+					document.getElementById('checkoutButton').addEventListener('click', function(event) {
+						event.preventDefault();
+						
+						// Collect data from the cart form
+						const cartFormData = new FormData(document.getElementById('cartForm'));
+
+						// Collect data from the shipping estimate form
+						const shippingFormData = new FormData(document.getElementById('form-quote'));
+
+						// Collect data from the coupon form
+						const couponFormData = new FormData(document.getElementById('form-coupon'));
+
+						// Combine all form data into a single object
+						let combinedData = {};
+						
+						cartFormData.forEach((value, key) => { combinedData[key] = value });
+						shippingFormData.forEach((value, key) => { combinedData[key] = value });
+						couponFormData.forEach((value, key) => { combinedData[key] = value });
+						// Add user data
+						combinedData['customer_id'] = "<%= userData.userId %>";
+						combinedData['customer_phone'] = "<%= userData.phone %>";
+						combinedData['customer_name'] = "<%= userData.name %>";
+						combinedData['customer_email'] = "<%= userData.email %>";
+						combinedData['order_currency'] = "INR";
+                        combinedData['serviceFee'] = "<%= settings.serviceFee %>";
+                        combinedData['deliveryCharges'] = "<%= settings.deliveryCharges %>";
+                        combinedData['shipping_address'] = "<%= settings.address %>";
+						// Calculate and add total price
+						const totalprice = <%= totalprice %>;
+						const deliveryCharges = <%= deliveryCharges %>;
+						const serviceFee = <%= settings.serviceFee %>;
+						combinedData['totalprice'] = combinedData['amount'] = (totalprice + deliveryCharges + serviceFee).toFixed(2);
+						// Add product details
+						combinedData['products'] = [];
+						<% cartDetails.forEach(cartData => { %>
+							combinedData['products'].push({
+								product_id: "<%= cartData.product._id %>",
+								name: "<%= cartData.product.name %>",
+								price: "<%= cartData.product.price %>",
+								quantity: "<%= cartData.quantity %>",
+								total_value: "<%= cartData.total_value %>"
+                                
+							});
+						<% }); %>
+
+			// Send combined data to the backend
+						fetch('/create-order', {
+							method: 'POST',
+							headers: {
+								'Content-Type': 'application/json'
+							},
+							body: JSON.stringify(combinedData)
+						})
+						.then(response => response.json())
+						.then(data => {
+							const paymentSessionId = data.paymentSessionId;
+							// Handle the response data
+							 const cashfree = Cashfree({
+            					mode: "sandbox",
+       					 	});
+								if (paymentSessionId) {
+									let checkoutOptions = {
+										paymentSessionId: paymentSessionId,
+										redirectTarget: "https://thepallustory.in/",
+									};
+									cashfree.checkout(checkoutOptions);
+								} else {
+									document.body.innerHTML = '<p>Payment session ID is missing. Please try again.</p>';
+								}
+							});
+							// Redirect to a confirmation page or display a success message
+							// window.location.href = '/order-confirmation';
+						})
+						.catch(error => {
+							// Display an error message to the user
+						});
+				</script>
+
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- .Shopping Cart -->
+
+<%- include('../includes/webFooter.ejs') %>

@@ -1,0 +1,121 @@
+<%- include('../includes/webHeader.ejs') %>
+	<!--  Contact_Us -->
+	<section>
+		<div class="breadcrumb-main">
+			<div class="container">
+				<div class="breadcrumb-container">
+					<h2 class="page-title">Contact Us</h2>
+					<ul class="breadcrumb">
+						<li class="breadcrumb-item">
+							<a href="index.html">
+								<i class="fas fa-home"></i>
+							</a>
+						</li>
+						<li class="breadcrumb-item">
+							<a href="category.html">
+								Contact Us</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</section>
+	<div class="Contact_Us">
+		<div class="container">
+			<div class="row">
+				<%- include('../includes/webSidebar.ejs') %>
+				<div id="content" class="col">
+					<div class="row">
+						<div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 contact-left">
+							<!-- <h3 class="contact-title">Our Locations</h3> -->
+							<div class="panel panel-default">
+								<div class="panel-body">
+									<div class="store-address">
+										
+										<div class="store-title"><span><i class="fa fa-home"></i></span>The Pallu Story</div>
+										<div class="store-detail">Nandok Block, Ranipool Bazaar, Gangtok, Sikkim 737135, India</div>
+										<!-- <a href="#" target="_blank" class="btn btn-info"><i
+												class="fa-solid fa-location-dot"></i> View
+											Google Map</a> -->
+									</div>
+									<div class="store-telephone">
+										
+										<div class="store-title"><span><i class="fa fa-phone"></i></span>Mobile</div>
+										<div class="store-detail">+91 9101394194</div>
+									</div>
+									<div class="store-open">
+										
+										<div class="store-title"><span><i class="fa-regular fa-clock"></i></span>Opening Times</div>
+										<div class="store-detail">8:00 to 4:00</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 contact-right">							
+							<form action="/savecontact" method="post" class="form-horizontal" id="contact-form">
+								<fieldset>
+									<legend class="contact-title">Contact Form</legend>
+									<div class="form-group required row">
+										<label class="col-sm-2 control-label" for="input-name">Your Name</label>
+										<div class="col-sm-10">
+											<input type="text" name="name" id="input-name" class="form-control" required="">
+										</div>
+									</div>
+									<div class="form-group required row">
+										<label class="col-sm-2 control-label" for="input-email">E-Mail Address</label>
+										<div class="col-sm-10">
+											<input type="email" name="email" id="input-email" class="form-control" required="">
+										</div>
+									</div>
+									<div class="form-group required row">
+										<label class="col-sm-2 control-label" for="input-number">Phone Number</label>
+										<div class="col-sm-10">
+											<input type="number" name="phone" id="input-number" class="form-control" required="">
+										</div>
+									</div>
+									<div class="form-group required row">
+										<label class="col-sm-2 control-label" for="input-enquiry">Enquiry</label>
+										<div class="col-sm-10">
+											<textarea name="enquiry" rows="10" id="input-enquiry" class="form-control" required=""></textarea>
+										</div>
+									</div>
+									<div class="form-group required row form-message">
+										<div class="submitted">Your message has been sent successfully</div>
+									</div>
+								</fieldset>
+								<div class="buttons clearfix">
+									<div class="pull-right">
+										<input class="btn btn-primary" type="submit" value="Submit">
+									</div>
+								</div>
+							</form>
+						
+							<script>
+								$(document).ready(function() {
+									$('#contact-form').on('submit', function(event) {
+										event.preventDefault(); // Prevent the default form submission
+						
+										$.ajax({
+											url: '/savecontact',
+											type: 'POST',
+											data: $(this).serialize(),
+											success: function(response) {
+												toastr.success('Your message has been sent successfully');
+												$('#contact-form')[0].reset(); // Reset the form
+											},
+											error: function(xhr, status, error) {
+												toastr.error('There was an error submitting your enquiry. Please try again.');
+											}
+										});
+									});
+								});
+							</script>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- .Contact_Us -->
+
+<%- include('../includes/webFooter.ejs') %>

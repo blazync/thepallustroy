@@ -1,0 +1,99 @@
+<%- include('../includes/webHeader.ejs') %>
+
+	<section>
+		<div class="breadcrumb-main">
+			<div class="container">
+				<div class="breadcrumb-container">
+					<h2 class="page-title">All Products</h2>
+					<ul class="breadcrumb">
+						<li class="breadcrumb-item">
+							<a href="index">
+								<i class="fas fa-home"></i>
+							</a>
+						</li>
+						<li class="breadcrumb-item">
+							<a href="category">
+								All Products</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</section>
+	<div class="blog-section">
+        <div class="container">
+            <div class="row">
+				<aside id="column-left" class="col-sm-3">
+					
+					<div class="sidebar">
+						<div class="box-content">
+							<h3 class="toggled relative">Our categories</h3>
+							<ul class="list-unstyled">
+								<% navCategories.forEach(category => { %>
+									<li><a href="/category/<%= category.name.replace(/ /g, '-') %>" class="list-group-item"><%= category.name %></a></li>
+								<% }); %>
+							</ul>
+						</div>
+					</div>
+				</aside>
+                <div id="content" class="col-sm-9  all-blog my-account">
+					<div class="container">
+							<h3>All Products</h3>
+						
+						<div id="content" class="">
+							<div class="category-row row">
+								<% navProduct.forEach(product=> { %>
+									<div class="product-layout product-grid col-xl-3 col-lg-4 col-md-4 col-sm-6 col-xs-6">
+										<div class="product-thumb">
+											<div class="image">
+												<a href="/product/<%= product.name.replace(/ /g, '-') %>" class="thumb-image">
+													<img src="<%= product.images[0] ? '../../upload/' + product.images[0] : 'assets/images/products/placeholder.jpg' %>"
+														alt="<%= product.name %>" title="<%= product.name %>"
+														class="img-responsive zoomInImage">
+												</a>
+												<div class="button-group">
+													<button class="addcart" type="button" title="Add to Cart"
+														 onclick='handleAddToCart({ userData: <%= JSON.stringify(userData) %>, productId: "<%= product._id %>" })'><i class="fa-solid fa-cart-shopping" class="cart-icon"></i></button>
+													<button class="wishlist" type="button" data-toggle="tooltip"
+														title="Add to Wish List"><i class="icon-like"></i></button>
+											
+												</div>
+											</div>
+											<div class="product-description">
+												<div class="caption">
+													<div class="title-rating clearfix">
+														<h4 class="product-title"><a
+																href="/product/<%= product.name.replace(/ /g, '-') %>">
+																<%= product.name %>
+															</a></h4>
+													</div>
+													<div class="price-cartbtn clearfix">
+														<p class="price">
+															₹ <%= product.discountedPrice %> <small
+																	class="discount">₹ <%=
+																		product.price %></small>
+																<span class="price-tax ">Ex Tax: ₹ <%=
+																		(product.discountedPrice / 1.18).toFixed(2) %>
+																</span>
+														</p>
+				
+													</div>
+				
+				
+												</div>
+											</div>
+										</div>
+									</div>
+									<% }); %>
+							</div>
+				
+				
+						</div>
+				
+				
+					</div>
+                </div>
+            </div>
+        </div>
+    </div>
+	<%- include('../includes/webFooter.ejs') %>

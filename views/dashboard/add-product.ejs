@@ -1,0 +1,254 @@
+<%- include('../includes/adminHeader.ejs') %>
+<style>
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 60px;
+      height: 34px;
+    }
+    
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: .4s;
+    }
+    
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 26px;
+      width: 26px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      transition: .4s;
+    }
+    
+    input:checked + .slider {
+      background-color: #2196F3;
+    }
+    
+    input:checked + .slider:before {
+      transform: translateX(26px);
+    }
+    
+    /* Rounded sliders */
+    .slider.round {
+      border-radius: 34px;
+    }
+    
+    .slider.round:before {
+      border-radius: 50%;
+    }
+    </style>
+                    <div class="main-content">
+                        <!-- main-content-wrap -->
+                        <div class="main-content-inner">
+                            <!-- main-content-wrap -->
+                            <div class="main-content-wrap">
+                                <div class="flex items-center flex-wrap justify-between gap20 mb-27">
+                                    <h3>Add Product</h3>
+                                    <ul class="breadcrumbs flex items-center flex-wrap justify-start gap10">
+                                        <li>
+                                            <a href="index.html"><div class="text-tiny">Dashboard</div></a>
+                                        </li>
+                                        <li>
+                                            <i class="icon-chevron-right"></i>
+                                        </li>
+                                        <li>
+                                            <a href="#"><div class="text-tiny">Ecommerce</div></a>
+                                        </li>
+                                        <li>
+                                            <i class="icon-chevron-right"></i>
+                                        </li>
+                                        <li>
+                                            <div class="text-tiny">Add product</div>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <!-- form-add-product -->
+                                <form class="tf-section-2 form-add-product" method="post" action="/dashboard/save-product" enctype="multipart/form-data">
+                                    <input type="text" name="type" value="<%= type %>" hidden>
+                                    <input type="text" name="productId" value="<%= product._id?product._id:'' %>" hidden>
+                                    <div class="wg-box">
+                                        <fieldset class="name">
+                                            <div class="body-title mb-10">Product name <span class="tf-color-1">*</span></div>
+                                            <input class="mb-10" type="text" placeholder="Enter product name" name="name" tabindex="0" value="<%= product.name?product.name:'' %>" aria-required="true" required="">
+                                            <div class="text-tiny">Do not exceed 20 characters when entering the product name.</div>
+                                        </fieldset>
+                                        <div class="gap22 cols">
+                                            <fieldset class="category">
+                                                <div class="body-title mb-10">Category <span class="tf-color-1">*</span></div>
+                                                <div class="select">
+                                                    <select class="" name="categories">
+                                                        <option value="">Choose category</option>
+                                                        <% category.forEach(data => { %>
+                                                            <option value="<%= data._id %>" <%= product.category && product.category.toString() === data._id.toString() ? 'selected' : '' %> >
+                                                                <%= data.name %>
+                                                            </option>
+                                                        <% }); %>    
+                                                    </select>
+                                                </div>
+                                            </fieldset>
+                                            
+                                            
+                                            <fieldset class="category">
+                                                <div class="body-title mb-10">Brand <span class="tf-color-1">*</span></div>
+                                                    <input type="text" name="brand" placeholder="Enter Brand" value="<%= product.brand?product.brand:'' %>">
+                                                    <div class="text-tiny">Do not exceed 100 characters.</div>
+                                                
+                                            </fieldset>
+                                        </div>
+                                        
+                                        
+                                        
+
+                                        <fieldset class="description">
+                                            <div class="body-title mb-10">Description <span class="tf-color-1">*</span></div>
+                                            <textarea class="mb-10" name="description" placeholder="Description" tabindex="0" aria-required="true" required=""><%= product.description?product.description:'' %></textarea>
+                                            <div class="text-tiny">Do not exceed 100 characters when entering the product name.</div>
+                                        </fieldset>
+                                        <fieldset class="description">
+                                            <div class="body-title mb-10">Caution <span class="tf-color-1">*</span></div>
+                                            <textarea name="caution" ><%= product.caution?product.caution:'' %></textarea>
+                                        </fieldset>
+                                        
+                                        <fieldset class="description">
+                                            <div class="body-title mb-10">Contents <span class="tf-color-1">*</span></div>
+                                            <textarea name="contents" ><%= product.contents?product.contents:'' %></textarea>
+                                        </fieldset>
+                                    </div>
+                                    
+                                    <div class="wg-box">
+                                        <fieldset>
+                                            <div class="body-title mb-10">Upload images</div>
+                                            <div class="upload-image mb-16">
+                                                <!-- <div class="item">
+                                                    <img src="images/upload/upload-1.png" alt="">
+                                                </div>
+                                                <div class="item">
+                                                    <img src="images/upload/upload-2.png" alt="">
+                                                </div> -->
+                                                <div class="item up-load">
+                                                    <label class="uploadfile" for="myFile">
+                                                        <span class="icon">
+                                                            <i class="icon-upload-cloud"></i>
+                                                        </span>
+                                                        <span class="text-tiny">Drop your images here or select <span class="tf-color">click to browse</span></span>
+                                                        <input type="file" id="myFile" name="image">
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <!-- <div class="body-text">You need to add at least 4 images. Pay attention to the quality of the pictures you add, comply with the background color standards. Pictures must be in certain dimensions. Notice that the product shows all the details</div> -->
+                                        </fieldset>
+                                      
+                                        <div class="cols gap22">
+                                            <fieldset class="description">
+                                                <div class="body-title mb-10">Bestseller <span class="tf-color-1">*</span></div>
+                                                <label class="switch">
+                                                    <input type="checkbox" name="bestseller" <%= product.bestseller ? 'checked' : '' %>>
+                                                    <span class="slider round"></span>
+                                                </label>
+                                            </fieldset>
+                                            <fieldset class="description">
+                                                <div class="body-title mb-10">Status <span class="tf-color-1">*</span></div>
+                                                <label class="switch">
+                                                    <input type="checkbox" name="status" <%= product.status ? 'checked' : '' %>>
+                                                    <span class="slider round"></span>
+                                                </label>
+                                            </fieldset>
+                                        </div>
+                                        <div class="gap22 cols">
+                                            <fieldset class="description">
+                                                <div class="body-title mb-10">SKU <span class="tf-color-1">*</span></div>
+                                                <input type="text" name="sku" value="<%= product.sku ? product.sku : '' %>">
+                                            </fieldset>
+                                            <fieldset class="description">
+                                                <div class="body-title mb-10">Number of Components <span class="tf-color-1">*</span></div>
+                                                <input type="number" name="no_of_components" value="<%= product.no_of_components ? product.no_of_components : '' %>">
+                                            </fieldset>
+                                        </div>
+                                        <div class="gap22 cols">
+                                            <fieldset class="description">
+                                                <div class="body-title mb-10">Color <span class="tf-color-1">*</span></div>
+                                                <input type="text" name="color" value="<%= product.color ? product.color : '' %>">
+                                            </fieldset>
+                                            <fieldset class="description">
+                                                <div class="body-title mb-10">Material <span class="tf-color-1">*</span></div>
+                                                <input type="text" name="material" value="<%= product.material ? product.material : '' %>">
+                                            </fieldset>
+                                        </div>
+                                        <div class="gap22 cols">
+                                            <fieldset class="description">
+                                                <div class="body-title mb-10">Fit <span class="tf-color-1">*</span></div>
+                                                <input type="text" name="fit" value="<%= product.fit ? product.fit : '' %>">
+                                            </fieldset>
+                                            <fieldset class="description">
+                                                <div class="body-title mb-10">Artisan <span class="tf-color-1">*</span></div>
+                                                <input type="text" name="artisan" value="<%= product.artisan ? product.artisan : '' %>">
+                                            </fieldset>
+                                        </div>
+                                        <div class="gap22 cols">
+                                            <fieldset class="description">
+                                                <div class="body-title mb-10">Occasion <span class="tf-color-1">*</span></div>
+                                                <input type="text" name="occasion" value="<%= product.occasion ? product.occasion : '' %>">
+                                            </fieldset>
+                                            <fieldset class="description">
+                                                <div class="body-title mb-10">Collection <span class="tf-color-1">*</span></div>
+                                                <input type="text" name="collection" value="<%= product.collection ? product.collection : '' %>">
+                                            </fieldset>
+                                        </div>
+                                        <div class="gap22 cols">
+                                            <fieldset class="description">
+                                                <div class="body-title mb-10">Place of Manufacture <span class="tf-color-1">*</span></div>
+                                                <input type="text" name="place_of_manufacture" value="<%= product.collection ? product.collection : '' %>">
+                                            </fieldset>
+                                            
+                                            <fieldset class="description">
+                                                <div class="body-title mb-10">Stock <span class="tf-color-1">*</span></div>
+                                                <input type="number" name="stock" value="<%= product.stock ? product.stock : '' %>">
+                                            </fieldset>
+                                        </div>
+                                        <div class="cols gap22">
+                                            <fieldset class="name">
+                                                <div class="body-title mb-10">Product Price</div>
+                                                <div class="">
+                                                    <input type="text" placeholder="Enter Price" required name="price" value="<%= product.price ? product.price : '' %>">
+                                                </div>
+                                                
+                                            </fieldset>
+                                            <fieldset class="name">
+                                                <div class="body-title mb-10">Product Discounted Price</div>
+                                                <div class="">
+                                                    <input type="text" placeholder="Enter Price" required name="discountedPrice" value="<%= product.discountedPrice ? product.discountedPrice : '' %>">
+                                                </div>
+                                                
+                                            </fieldset>
+                                            
+                                        </div>
+                                        
+                                        <div class="cols gap10">
+                                            <button class="tf-button w-full" type="submit"><%= type %> product</button>
+                                            <!-- <button class="tf-button style-1 w-full" type="submit">Save product</button> -->
+                                            <!-- <a href="#" class="tf-button style-2 w-full">Schedule</a> -->
+                                        </div>
+                                    </div>
+                                </form>
+                                <!-- /form-add-product -->
+                            </div>
+                            <!-- /main-content-wrap -->
+                        </div>
+                        
+                    </div>
+<%- include('../includes/adminFooter.ejs') %>

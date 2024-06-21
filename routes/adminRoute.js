@@ -1,0 +1,61 @@
+const express = require('express');
+const router = express.Router();
+const adminController = require('../controllers/adminController');
+const { checkAuth } = require('../middlewares/checkAuth');
+const { checkAdmin } = require('../middlewares/checkAdmin');
+const multer  = require('multer');
+const upload = multer({ dest: 'public/upload/' });
+
+router.get('/', checkAuth,checkAdmin,   adminController.index);
+router.get('/index', checkAuth,checkAdmin,   adminController.index);
+router.get('/add-attributes', checkAuth,checkAdmin,   adminController.addAttributes);
+// Route to render the form for adding a new user
+router.get('/add-new-user', checkAuth,checkAdmin, adminController.addNewUser);
+// Route to render the form for editing an existing user
+router.get('/edit-user/:id', checkAuth,checkAdmin, adminController.editUser);
+// Route to handle saving a user (both adding and editing)
+router.post('/save-user', checkAuth,checkAdmin, adminController.saveUser);
+router.get('/add-product', checkAuth,checkAdmin,   adminController.addProduct);
+router.get('/editproduct/:id', checkAuth,checkAdmin,   adminController.editProduct);
+router.get('/deleteProduct/:id', adminController.deleteProduct);
+router.post('/save-product', upload.single('image'),checkAuth,checkAdmin,   adminController.postProduct);
+router.get('/all-roles', checkAuth,checkAdmin,  adminController.allRoles);
+router.get('/all-user', checkAuth,checkAdmin,   adminController.allUser);
+router.get('/attributes', checkAuth,checkAdmin,   adminController.attributes);
+router.get('/category-list', checkAuth,checkAdmin,   adminController.categoryList);
+router.get('/cities', checkAuth,checkAdmin,   adminController.cities);
+router.get('/components', checkAuth,checkAdmin,   adminController.components);
+router.get('/countries', checkAuth,checkAdmin,   adminController.countries);
+router.get('/create-role', checkAuth,checkAdmin,   adminController.createRole);
+router.get('/edit-page', checkAuth,checkAdmin,   adminController.editPage);
+router.get('/gallery', checkAuth,checkAdmin,   adminController.gallery);
+router.get('/home-2', checkAuth,checkAdmin,   adminController.home2);
+router.get('/home-3', checkAuth,checkAdmin,   adminController.home3);
+router.get('/home-4', checkAuth,checkAdmin,   adminController.home4);
+router.get('/home-boxed', checkAuth,checkAdmin,   adminController.homeBoxed);
+router.get('/home-menu-icon-default', checkAuth,checkAdmin,   adminController.homeMenuIconDefault);
+router.get('/home-menu-icon-hover', checkAuth,checkAdmin,   adminController.homeMenuIconHover);
+router.get('/list-page', checkAuth,checkAdmin,   adminController.listPage);
+router.get('/enquiry', checkAuth,checkAdmin,   adminController.enquiry);
+router.get('/login', checkAuth,checkAdmin,   adminController.login);
+router.get('/new-category', checkAuth,checkAdmin,   adminController.newCategory);
+router.get('/editcategory/:id', checkAuth,checkAdmin,   adminController.editCategory);
+router.post('/postcategory', upload.single('image'),checkAuth,checkAdmin,   adminController.postcategory);
+router.post('/deletecategory/:id', checkAuth,checkAdmin, adminController.deleteCategory);
+router.get('/new-page', checkAuth,checkAdmin,   adminController.newPage);
+router.get('/payment-detail', checkAuth,checkAdmin,   adminController.paymentDetail);
+router.get('/oder-detail/:id', checkAuth,checkAdmin,   adminController.oderDetail);
+router.post('/update-order-status', checkAuth,checkAdmin,   adminController.updateOrderStatus);
+router.post('/update-payment-status', adminController.updatePaymentStatus);
+router.get('/oder-list', checkAuth,checkAdmin,   adminController.oderList);
+router.get('/oder-tracking/:id', checkAuth,checkAdmin,   adminController.oderTracking);
+router.get('/product-list', checkAuth,checkAdmin,   adminController.productList);
+router.get('/report', checkAuth,checkAdmin,   adminController.report);
+router.get('/setting', checkAuth,checkAdmin,   adminController.setting);
+router.post('/setting', checkAuth,checkAdmin,   adminController.setting);
+router.post('/profile', checkAuth,checkAdmin,   adminController.profile);
+router.get('/profile', checkAuth,checkAdmin,   adminController.profile);;
+router.get('/sign-up', checkAuth,checkAdmin,   adminController.signUp);
+router.get('/states', checkAuth,checkAdmin,   adminController.states);
+
+module.exports = router;

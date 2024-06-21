@@ -1,0 +1,80 @@
+<%- include('../includes/webHeader.ejs') %>
+
+    <!-- My Account -->
+    <section>
+		<div class="breadcrumb-main">
+			<div class="container">
+				<div class="breadcrumb-container">
+                    <h2 class="page-title">Register Account</h2>
+					<ul class="breadcrumb">
+						<li><a href="index"><i class="fa fa-home"></i></a></li>
+                                <li><a href="my-account">Account </a></li>
+                                <li><a href="register">Register</a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</section>
+    <div class="register-section">
+        <div class="container">
+            <div class="row">
+              <%- include('../includes/webSidebar.ejs') %>
+                <div id="content" class="col-sm-9  all-blog my-account">
+                    <div class="row">
+                        <form action="register" method="post" class="form-horizontal well">
+                            <p>If you already have an account with us, please login at the
+                                 <a href="my-account">login page</a>.</p>
+                            <fieldset id="account">
+                               <legend>Your Personal Details</legend>
+                               <div class="form-group required row">
+                                  <label class="col-sm-2 control-label" for="input-firstname">Name</label>
+                                  <div class="col-sm-10">
+                                     <input required type="text" name="username" value="" placeholder="Enter Your Name"
+                                        id="input-firstname" class="form-control">
+                                  </div>
+                               </div>
+                               <div class="form-group required row">
+                                  <label class="col-sm-2 control-label" for="input-email">E-Mail</label>
+                                  <div class="col-sm-10">
+                                     <input required type="email" name="email" value="" placeholder="E-Mail"
+                                        id="input-email" class="form-control">
+                                  </div>
+                               </div>
+                            </fieldset>
+                            <fieldset id="password">
+                               <legend>Your Password</legend>
+                               <div class="form-group required row">
+                                  <label class="col-sm-2 control-label" for="input-password">Password</label>
+                                  <div class="col-sm-10">
+                                     <input required type="password" name="password" value="" placeholder="Password"
+                                        id="input-password" class="form-control">
+                                  </div>
+                               </div>
+                            </fieldset>
+                            <fieldset id="password">
+                                <div class="form-group required row">
+                                   <label class="col-sm-2 control-label" for="input-password">Confirm Password</label>
+                                   <div class="col-sm-10">
+                                      <input required type="cpassword" name="cpassword" value="" placeholder="Confirm Your Password"
+                                         id="input-password" class="form-control">
+                                   </div>
+                                </div>
+                             </fieldset>
+                            
+							<div class="buttons clearfix">
+								<div class="float-end text-right">
+									<div class="form-check form-check-inline">
+										<label class="form-check-label">I have read and agree to the <a href="#" class="modal-link"><b>Privacy Policy</b></a></label> <input required type="checkbox" name="agree" value="1" class="form-check-input">
+									</div>
+									<button type="submit" class="btn btn-primary">Continue</button>
+								</div>
+							</div>
+                         </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- .My Account -->
+
+<%- include('../includes/webFooter.ejs') %>

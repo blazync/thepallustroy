@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Page</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: #f7f7f7;
+        }
+        .payment-container {
+            background: #fff;
+            padding: 40px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<div class="payment-container">
+    <h2>Redirecting to Payment...</h2>
+    <p>Please wait while we redirect you to the payment gateway.</p>
+    <script src="https://sdk.cashfree.com/js/v3/cashfree.js"></script>
+    <script>
+        const cashfree = Cashfree({
+            mode: "sandbox",
+        });
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const paymentSessionId = "<%= paymentSessionId %>";
+            if (paymentSessionId) {
+                let checkoutOptions = {
+                    paymentSessionId: paymentSessionId,
+                    redirectTarget: "_self",
+                };
+                cashfree.checkout(checkoutOptions);
+            } else {
+                document.body.innerHTML = '<p>Payment session ID is missing. Please try again.</p>';
+            }
+        });
+    </script>
+</div>
+
+</body>
+</html>

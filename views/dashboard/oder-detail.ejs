@@ -1,0 +1,174 @@
+<%- include('../includes/adminHeader.ejs') %>
+                    <div class="main-content">
+                        <!-- main-content-wrap -->
+                        <div class="main-content-inner">
+                            <!-- main-content-wrap -->
+                            <div class="main-content-wrap">
+                                <div class="flex items-center flex-wrap justify-between gap20 mb-27">
+                                    <h3>Order #<%= order.id %></h3>
+                                    <ul class="breadcrumbs flex items-center flex-wrap justify-start gap10">
+                                        <li>
+                                            <a href="index"><div class="text-tiny">Dashboard</div></a>
+                                        </li>
+                                        <li>
+                                            <i class="icon-chevron-right"></i>
+                                        </li>
+                                        <li>
+                                            <a href="#"><div class="text-tiny">Order</div></a>
+                                        </li>
+                                        <li>
+                                            <i class="icon-chevron-right"></i>
+                                        </li>
+                                        <li>
+                                            <a href="#"><div class="text-tiny">Order detail</div></a>
+                                        </li>
+                                        <li>
+                                            <i class="icon-chevron-right"></i>
+                                        </li>
+                                        <li>
+                                            <div class="text-tiny">Order #123783</div>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <!-- order-detail -->
+                                <div class="wg-order-detail">
+                                    <div class="left flex-grow">
+                                        <div class="wg-box mb-20">
+                                            <div class="wg-table table-order-detail">
+                                                <ul class="table-title flex items-center justify-between gap20 mb-24">
+                                                    <li>
+                                                        <div class="body-title">All item</div>
+                                                    </li>    
+                                                    <li>
+                                                        <div class="dropdown default">
+                                                            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                                <span class="body-title-2 flex items-center gap8">Sort<i class="h6 icon-chevron-down"></i></span>
+                                                            </button>
+                                                            <ul class="dropdown-menu">
+                                                                <li>  
+                                                                    <a href="javascript:void(0);">Name</a>
+                                                                </li>
+                                                                <li>  
+                                                                    <a href="javascript:void(0);">Quantity</a>
+                                                                </li>
+                                                                <li>  
+                                                                    <a href="javascript:void(0);">Price</a>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                                <ul class="flex flex-column">
+                                                    <% order.products.forEach(product => { %>
+                                                        <li class="product-item gap14">
+                                                            <div class="image no-bg">
+                                                                <!-- Assuming you have an image URL in your product data -->
+                                                                <img src="" alt="">
+                                                            </div>
+                                                            <div class="flex items-center justify-between gap40 flex-grow">
+                                                                <div class="name">
+                                                                    <div class="text-tiny mb-1">Product name</div>
+                                                                    <!-- Assuming you have a function to get product name based on product ID -->
+                                                                    <!-- <a href="product-list" class="body-title-2"><%= product.product_id %></a> -->
+                                                                    
+                                                                        
+                                                                            <a class="body-title-2"><%= product.name %></a>
+                                                                       
+                                                                   
+                                                                    
+                                                                </div>
+                                                                <div class="name">
+                                                                    <div class="text-tiny mb-1">Quantity</div>
+                                                                    <div class="body-title-2"><%= product.quantity %></div>
+                                                                </div>
+                                                                <div class="name">
+                                                                    <div class="text-tiny mb-1">Price</div>
+                                                                    <!-- Assuming you have a function to get product price based on product ID -->
+                                                                    <div class="body-title-2">₹ <%= product.price*product.quantity %></div>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                    <% }); %>
+                                                    
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="wg-box">
+                                            <div class="wg-table table-cart-totals">
+                                                <ul class="table-title flex mb-24">
+                                                    <li>
+                                                        <div class="body-title">Cart Totals</div>
+                                                    </li>    
+                                                    <li>
+                                                        <div class="body-title">Price</div>
+                                                    </li>    
+                                                </ul>
+                                                <ul class="flex flex-column gap14">
+                                                    <li class="cart-totals-item">
+                                                        <span class="body-text">Subtotal:</span>
+                                                        <span class="body-title-2">₹ <%= order.total_amount - (order.deliveryCharges+order.serviceFee) %></span>
+                                                    </li>
+                                                    <li class="divider"></li>
+                                                    <li class="cart-totals-item">
+                                                        <span class="body-text">Shipping:</span>
+                                                        <span class="body-title-2">₹ <%= order.deliveryCharges %></span>
+                                                    </li>
+                                                    <li class="divider"></li>
+                                                    <li class="cart-totals-item">
+                                                        <span class="body-text">Tax (GST)/Service Fee:</span>
+                                                        <span class="body-title-2">₹  <%= order.serviceFee %></span>
+                                                    </li>
+                                                    <li class="divider"></li>
+                                                    <li class="cart-totals-item">
+                                                        <span class="body-title">Total price:</span>
+                                                        <span class="body-title tf-color-1">₹ <%= order.total_amount %></span>
+                                                    </li>
+                                                  
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="right">
+                                        <div class="wg-box mb-20 gap10">
+                                            <div class="body-title">Summary</div>
+                                            <div class="summary-item">
+                                                <div class="body-text">Order ID</div>
+                                                <div class="body-title-2">Order # <%= order._id %></div>
+                                            </div>
+                                            <div class="summary-item">
+                                                <div class="body-text">Date</div>
+                                                <div class="body-title-2"><%= order.created_at %></div>
+                                            </div>
+                                            <div class="summary-item">
+                                                <div class="body-text">Total</div>
+                                                <div class="body-title-2 tf-color-1">₹ <%= order.total_amount %></div>
+                                            </div>
+                                        </div>
+                                        <div class="wg-box mb-20 gap10">
+                                            <div class="body-title">Shipping Address</div>
+                                            <div class="body-text"><%= order.shipping_address %></div>
+                                        </div>
+                                        <div class="wg-box mb-20 gap10">
+                                            <div class="body-title">Payment Method</div>
+                                            <div class="body-text">
+                                                <span class="body-title-2 tf-color-2"><%= order.payment_method?order.payment_method:'Not Paid Yet' %></span>
+                                                <br>Pay on Delivery (Cash/Card). Cash on delivery (COD) available. Card/Net banking acceptance subject to device availability.</div>
+                                        </div>
+                                        <div class="wg-box gap10">
+                                            <div class="body-title">Expected Date Of Delivery</div>
+                                            <div class="body-title-2 tf-color-2"><%= new Date(new Date(order.created_at).getTime() + 7 * 24 * 60 * 60 * 1000).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) %>
+                                            </div>
+                                            <a class="tf-button style-1 w-full" href="/dashboard/oder-tracking/<%= order._id %>"><i class="icon-truck"></i>Track order</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- /order-detail -->
+                            </div>
+                            <!-- /main-content-wrap -->
+                        </div>
+                        <!-- /main-content-wrap -->
+                        <!-- bottom-page -->
+                      
+                        <!-- /bottom-page -->
+                    </div>
+                    <%- include('../includes/adminFooter.ejs') %>s

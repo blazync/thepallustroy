@@ -48,7 +48,13 @@ shuffledProducts.forEach(product => { %>
             class="img-responsive zoomInImage">
         </a>
         <div class="button-group">
-          <button class="addcart" type="button" title="Add to Cart" onclick='handleAddToCart({ userData: <%= JSON.stringify(userData) %>, productId: "<%= product._id %>" })'>
+          <button class="addcart" type="button" title="Add to Cart" 
+		 onclick='handleAddToCart({
+			userData: <%= JSON.stringify(userData) %>, 
+			productId: "<%= product._id %>",  
+			quantity: "1",
+			})' 
+		  >
             <i class="fa-solid fa-cart-shopping" class="cart-icon"></i>
           </button>
           <button class="wishlist" type="button" data-toggle="tooltip" id="button-add-to-wishlist" data-id="<%= product._id %>" title="Add to Wishlist" onclick='handleAddToWishlist({ userData: <%= JSON.stringify(userData) %>, productId: "<%= product._id %>", productName: "<%= product.name %>", productImage: "<%= product.image %>" })'>
@@ -156,7 +162,12 @@ shuffledProducts.forEach(product => { %>
 																			<button class="addcart" type="button"
 																				title="Add to Cart" id="buttoncart"
 																				data-id="<%= product._id %>"
-																				onclick='handleAddToCart({ userData: <%= JSON.stringify(userData) %>, productId: "<%= product._id %>" })'>
+																				onclick='handleAddToCart({
+																				userData: <%= JSON.stringify(userData) %>, 
+																				productId: "<%= product._id %>",  
+																				quantity: "1",
+																				})'
+																				>
 																				<i class="icon-shopping-bag"></i>
 																			</button>
 																			<button class="wishlist" type="button" data-toggle="tooltip" id="button-add-to-wishlist" data-id="<%= product._id %>" title="Add to Wishlist" onclick='handleAddToWishlist({ userData: <%= JSON.stringify(userData) %>, productId: "<%= product._id %>", productName: "<%= product.name %>", productImage: "<%= product.image %>" })'>

@@ -1,5 +1,5 @@
 // Handle Add to Cart Functinality
-function handleAddToCart({ userData, productId, productName,productImage,quantity }) {
+function handleAddToCart({ userData, productId, quantity }) {
      var userData = userData || {};
     if (userData && userData.isLoggedIn) {
         // User is logged in, proceed to add to cart
@@ -62,10 +62,6 @@ function deleteProductFromCart(productId) {
         success: function (response) {
             toastr.success('Product removed from cart successfully!');
             // Update local storage
-            updateLocalStorage(-1);
-
-            // Update DOM
-            updateCartTotalDOM();
             document.getElementById(productId).remove()
             location.reload()
         },

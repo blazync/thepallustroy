@@ -1,5 +1,6 @@
 const Order = require('../models/orders');
 const User = require('../models/user');
+const mailer = require('./emailsender');
 const { Cashfree } = require("cashfree-pg");
 const { decodeToken } =  require('../middlewares/decodeJwt');
 require('dotenv').config();
@@ -214,7 +215,7 @@ mailer(userData.email, 'Order Status Update', '', 'Order Failed', orderFailedEma
 
         // Update order status in the database
         if (orderStatus === 'Success') {
-            await Order.findOneAndUpdate(
+            const orderInfo =await Order.findOneAndUpdate(
                 { order_id: order_id },
                 {  
                     payment_status: 'Paid',
@@ -250,7 +251,9 @@ mailer(userData.email, 'Order Status Update', '', 'Order Failed', orderFailedEma
         }
         
             // Redirect to the order page
-            res.render('web/order-confirmation',{paymentSuccess:true});
+            res.render('web/order-confirmation',{paymentSuccess:true,   order_info:orderInfo,
+                    userData:userData
+} );
         } else if (orderStatus === 'Pending') {
             await Order.findOneAndUpdate(
                 { order_id: order_id },

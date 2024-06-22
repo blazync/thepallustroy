@@ -89,6 +89,8 @@
     .horizontal.timeline .steps .step.current span {
       opacity: 0.8;
     }
+    /* Order Page */
+  
     
     @keyframes animation-timeline-current {
       from {
@@ -104,11 +106,12 @@
     <!-- My Account -->
  
     <div class="blog-section">
+      
         <div class="container">
             <div class="row">
                 <%- include('../includes/customerSidebar.ejs') %>
                 <div id="content" class="col-sm-9  all-blog my-account">
-                    <h1>Order Details : <b>Order #<%= (orderDetails.id).slice(0,4) %></b></h1>
+                    <h1 class="order-page-title">Order Details : <b>Order #<%= (orderDetails.id).slice(0,4) %></b></h1>
                   <div class="row">
                     <div class="col-lg-12">
                         <div class="card p-4">

@@ -655,6 +655,15 @@ span.labeloffer {
    color: #ccc; /* Default star color */
   cursor: pointer;
 }
+.review {
+  background-color: #ebeceb;
+  padding: 30px;
+  border-radius: 10px;
+  margin: 10px;
+}
+.review h5 {
+  font-size: 20px;
+}
 .rate {
     float: left;
     height: 46px;
@@ -3879,3 +3888,5 @@ div.required .control-label:before {
   padding: 15px 30px;
   line-height: 20px;
 }
+
+

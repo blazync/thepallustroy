@@ -299,20 +299,26 @@
 					<div id="related-carousel"
 						class="box-product product-carousel clearfix owl-carousel owl-theme owl-loaded owl-drag">
 						<!-- <div class="related-products-1 owl-stage"> -->
-						<% categories.forEach(relateddata=> { %>
+						<% navProduct.forEach(relateddata=> { %>
 							<div class="owl-item">
+							
 								<div class="product-layout col-xs-12">
 									<div class="product-thumb transition">
 										<div class="image">
 											<a href="/product/<%= relateddata.name.replace(/ /g, '-') %>"
 												class="thumb-image">
-												<img src="<%= relateddata.images && relateddata.images.length > 0 ? '../../upload/' + relateddata.images[0] : '../../assets/images/products/noimage.png' %>"
+												<img src="../../upload/<%= relateddata.images[0] %>"
 													alt="<%= relateddata.name %>" title="<%= relateddata.name %>"
 													class="img-responsive zoomInImage">
 											</a>
 											<div class="button-group">
 												<button class="addcart" type="button" title="Add to Cart"
-													onclick='handleAddToCart({ userData: <%= JSON.stringify(userData) %>, productId: "<%= product._id %>" })'><i
+												 onclick='handleAddToCart({
+												userData: <%= JSON.stringify(userData) %>, 
+												productId: "<%= product._id %>",  
+												quantity: "1",
+												})' 	
+												><i
 														class="icon-shopping-bag"></i></button>
 														<button class="wishlist" type="button" data-toggle="tooltip" id="button-add-to-wishlist" data-id="<%= product._id %>" title="Add to Wishlist" onclick='handleAddToWishlist({ userData: <%= JSON.stringify(userData) %>, productId: "<%= product._id %>", productName: "<%= product.name %>", productImage: "<%= product.image %>" })'>
 															<i class="icon-like"></i>

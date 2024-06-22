@@ -547,7 +547,7 @@ let prevWidth = null;
             if (val ===0 || val===undefined || val===null || !val) {
                 deleteProductFromCart(productId)
             } else {
-                val = val >= 1 ? parseInt(val) - 1 : deleteProductFromCart(productId);
+                val = val >= 2 ? parseInt(val) - 1 : deleteProductFromCart(productId);
             }
         }
         const parsedQuantity = parseInt(val, 10);

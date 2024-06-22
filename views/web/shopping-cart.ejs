@@ -94,7 +94,8 @@
                 <% } %>
             </tbody>
 
-            
+             <% if (cartDetails.length > 0) { %>
+
             <tfoot id="checkout-cart-foot">
                 <tr>
                     <td colspan="4" class="text-end" id="subtotalPrice">Sub-Total:</td>
@@ -113,6 +114,7 @@
                     <td class="text-end">₹ <%= (totalprice + deliveryCharges + settings.serviceFee).toFixed(2) %></td>
                 </tr>
             </tfoot>
+                <% } %>
         </table>
     </div>
 </form>
@@ -142,7 +144,13 @@
                                     <% } %>
                                 <% }); %>
                             <% } else { %>
-                                <a href="/myprofile">Add Your Address</a>
+                                 <h3 class="text-danger">Oops No Address Found! Please add address from your profile <h3>
+                                <div> 
+                                    <a href="/myaddress" class="btn btn-warning" target="_self">
+                                         Add Address
+                                    </a>
+                                </div>
+
                             <% } %>
                             
                         </label>

@@ -1,106 +1,178 @@
 <%- include('../includes/webHeader.ejs') %>
 
-    <!-- My Account -->
-    <section>
-		<div class="breadcrumb-main">
-			<div class="container">
-				<div class="breadcrumb-container">
-					<ul class="breadcrumb">
-						<li><a href="index"><i class="fa fa-home"></i></a></li>
-                                <li><a href="my-account">Account </a></li>
-                                <li><a href="my-account">My Orders</a></li>
-					</ul>
-				</div>
-			</div>
-		</div>
-	</section>
-    <div class="blog-section">
-        <div class="container">
-            <div class="row">
-                <%- include('../includes/customerSidebar.ejs') %>
-                <div id="content" class="col-sm-9  all-blog my-account">
-                    <h1>My Orders</h1>
-                    <div class="table-responsive">
-                        <table id="orderTable" class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <td class="text-center">S.No.</td>
-                                    <td class="text-center">Order ID</td>
-                                    <td class="text-center">Total Amount</td>
-                                    <td class="text-center">Shipping Address</td>
-                                    <td class="text-center">Status</td>
-                                    <td class="text-center">Order Status</td>
-                                    <td class="text-center">Payment Id</td>
-                                    <td class="text-center">Action</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <% 
-                                let i = 1;
-                                orders.forEach(order => { %>
-                                <tr>
-                                    <td class="text-center"><%= i %></td>
-                                    <td class="text-center"><%= (order.order_id) %></td>
-                                    <td class="text-center">₹ <%= order.total_amount %></td>
-                                    <td class="text-center"><%= order.shipping_address %></td>
-                                    <td class="text-center"><%= order.payment_status %></td>
-                                    <td class="text-center"><%= order.status %></td>
-                                    <td class="text-center"><%= order.payment_id%></td>
-                                    <td class="text-center">
-                                        <a href="/orderDetails/<%= order.id %>">Track</a>
-                                        <a href="/orderDetails/<%= order.id %>">View</a>
-                                        <% if (order.status !== "delivered") { %>
-                                            <a href="/cancel-order/<%= order._id %>">Cancel</a>
-                                        <% } %>                                      
-                                    </td>
-                                </tr>
+<style>
+    body {
+        font-family: 'Arial', sans-serif;
+        background-color: #f5f5f5;
+        color: #333;
+    }
 
-                                <%
+    .breadcrumb-main {
+        background-color: #007bff;
+        padding: 10px 0;
+    }
+
+    .breadcrumb-container {
+        display: flex;
+        justify-content: center;
+    }
+
+    .breadcrumb {
+        background: none;
+        padding: 0;
+        margin: 0;
+        list-style: none;
+        color: #fff;
+    }
+
+    .breadcrumb li {
+        display: inline;
+        font-size: 1.2em;
+    }
+
+    .breadcrumb li a {
+        color: #fff;
+        text-decoration: none;
+    }
+
+    .breadcrumb li a:hover {
+        text-decoration: underline;
+    }
+
+    .breadcrumb li + li::before {
+        content: " / ";
+        padding: 0 5px;
+        color: #fff;
+    }
+
+    .blog-section {
+        padding: 40px 0;
+    }
+
+    .my-account {
+        background-color: #fff;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+        font-size: 2.5em;
+        margin-bottom: 20px;
+        color: #333;
+    }
+
+    .table-responsive {
+        margin-top: 20px;
+    }
+
+    .table th, .table td {
+        vertical-align: middle;
+    }
+
+    .table th {
+        background-color: #f8f9fa;
+    }
+
+    .table .text-center a {
+        margin: 0 5px;
+        color: #007bff;
+    }
+
+    .table .text-center a:hover {
+        text-decoration: underline;
+    }
+
+    .btn-custom {
+        background-color: wheat;
+        margin: 2px !important;
+        color: #fff;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 4px;
+        text-decoration: none;
+    }
+
+    .btn-custom:hover {
+        background-color: white;
+        color: #fff;
+    }
+</style>
+
+<!-- My Account -->
+
+<div class="blog-section">
+    <div class="container">
+        <div class="row">
+            <%- include('../includes/customerSidebar.ejs') %>
+            <div id="content" class="col-sm-9 all-blog my-account">
+                <h1>My Orders</h1>
+                <div class="table-responsive">
+                    <table id="orderTable" class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th class="text-center">S.No.</th>
+                                <th class="text-center">Order ID</th>
+                                <th class="text-center">Total Amount</th>
+                                <th class="text-center">Shipping Address</th>
+                                <th class="text-center">Status</th>
+                                <th class="text-center">Order Status</th>
+                                <th class="text-center">Payment Id</th>
+                                <th class="text-center">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% 
+                            let i = 1;
+                            orders.forEach(order => { %>
+                            <tr>
+                                <td class="text-center"><%= i %></td>
+                                <td class="text-center"><%= (order.order_id) %></td>
+                                <td class="text-center">₹ <%= order.total_amount %></td>
+                                <td class="text-center"><%= order.shipping_address %></td>
+                                <td class="text-center"><%= order.payment_status %></td>
+                                <td class="text-center"><%= order.status %></td>
+                                <td class="text-center"><%= order.payment_id %></td>
+                                <td class="text-center">
+                                    <a href="/orderDetails/<%= order.id %>" class="btn btn-custom"><img src="../../assets/images/track.png" width="42px" alt=""></a>
+                                    <a href="/orderDetails/<%= order.id %>" class="btn btn-custom"><img src="../../assets/images/order.png" width="32px" alt=""></a>
+                                    <% if (order.status !== "delivered") { %>
+                                        <a href="/cancel-order/<%= order._id %>" class="btn btn-custom"><img src="../../assets/images/cancel.png" width="32px" alt=""></a>
+                                    <% } %>                                      
+                                </td>
+                            </tr>
+                            <%
                             i++;
                             }); %>
-                            </tbody>
-                        </table>
-                     
-                        
-                    </div>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-
-
-
-    <!-- .My Account -->
-	 <!-- Toastr notification handling -->
-     <% if (typeof error !== 'undefined') { %>
-        <script>
-            toastr.error('<%= error %>');
-        </script>
-    <% } %>
-    <% if (typeof success !== 'undefined') { %>
-        <script>
-            toastr.success('<%= success %>');
-        </script>
-    <% } %>
-    <!-- Toastr notification handling -->
-    <% if (typeof error !== 'undefined') { %>
-        <script>
-            toastr.error('<%= error %>');
-        </script>
-    <% } %>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-
-       
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
-    
+<!-- .My Account -->
+<!-- Toastr notification handling -->
+<% if (typeof error !== 'undefined') { %>
     <script>
+        toastr.error('<%= error %>');
+    </script>
+<% } %>
+<% if (typeof success !== 'undefined') { %>
+    <script>
+        toastr.success('<%= success %>');
+    </script>
+<% } %>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+
+<script>
     $(document).ready(function() {
         $('#orderTable').DataTable();
     });
-    </script>
+</script>
 <%- include('../includes/webFooter.ejs') %>

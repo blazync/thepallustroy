@@ -65,23 +65,30 @@
 									<% } %>
 								
 								</div>
-								<div class="rating">
-									<span class="fa fa-stack"><i
-											class="fa fa-star fa-stack-2x"></i><i
-											class="fa fa-star-o fa-stack-2x"></i></span>
-									<span class="fa fa-stack"><i
-											class="fa fa-star fa-stack-2x"></i><i
-											class="fa fa-star-o fa-stack-2x"></i></span>
-									<span class="fa fa-stack"><i
-											class="fa fa-star fa-stack-2x"></i><i
-											class="fa fa-star-o fa-stack-2x"></i></span>
-									<span class="fa fa-stack"><i
-											class="fa fa-star fa-stack-2x"></i><i
-											class="fa fa-star-o fa-stack-2x"></i></span>
-									<span class="fa fa-stack"><i
-											class="fa fa-star fa-stack-2x"></i><i
-											class="fa fa-star-o fa-stack-2x"></i></span>
+								 <div class="rating">
+									<% if (productReviews.length > 0) { 
+										let totalRating = productReviews.reduce((sum, review) => sum + review.rating, 0);
+										let averageRating = totalRating / productReviews.length;
+										let fullStars = Math.floor(averageRating);
+										let halfStar = (averageRating % 1) >= 0.5 ? 1 : 0;
+										let emptyStars = 5 - fullStars - halfStar;
+									%>
+										<% for (let i = 0; i < fullStars; i++) { %>
+											<span class="fa fa-stack"><i class="fa fa-star fa-stack-2x"></i></span>
+										<% } %>
+										<% if (halfStar) { %>
+											<span class="fa fa-stack"><i class="fa fa-star-half fa-stack-2x"></i></span>
+										<% } %>
+										<% for (let i = 0; i < emptyStars; i++) { %>
+											<span class="fa fa-stack"><i class="fa fa-star-o fa-stack-2x"></i></span>
+										<% } %>
+									<% } else { %>
+										<% for (let i = 0; i < 5; i++) { %>
+											<span class="fa fa-stack"><i class="fa fa-star-o fa-stack-2x"></i></span>
+										<% } %>
+									<% } %>
 								</div>
+
 									
 						
 								<ul class="list-unstyled manufacturer-listpro">
@@ -209,7 +216,7 @@
 						<li class="nav-item" role="presentation">
 							<a href="#reviews" class="nav-link hscp-hover" id="reviews-tab" data-bs-toggle="tab"
 								data-bs-target="#reviews" role="tab" aria-controls="reviews"
-								aria-selected="false"><span>Reviews (0)</span></a>
+								aria-selected="false"><span>Reviews (<%= productReviews.length %>)</span></a>
 						</li>
 					</ul>
 				</div>
@@ -227,20 +234,26 @@
 						</div>
 					</div>
 					<div class="tab-pane fade " id="reviews" role="tabpanel" aria-labelledby="reviews-tab">
-						    <div class="reviews">
-								<h2>Product Reviews</h2>
-								<% if (productReviews.length > 0) { %>
-									<% productReviews.forEach(review => { %>
-										<div class="review">
-											<h3>Review by: <%= review.user_id.name %></h3>
-											<p>Rating: <%= review.rating %> stars</p>
-											<p><%= review.review %></p>
-										</div>
-									<% }); %>
-								<% } else { %>
-									<p>No reviews yet.</p>
-								<% } %>
-							</div>
+						        <div class="rating">
+							<% if (productReviews.length > 0) { %>
+								<% productReviews.forEach(review => { %>
+									<div class="review">
+										<h5>Review by: <%= review.user_id.name %></h5>
+										<p>
+											<% for (let i = 0; i < review.rating; i++) { %>
+												<span class="fa fa-stack"><i class="fa fa-star fa-stack-1x"></i></span>
+											<% } %>
+											<% for (let i = review.rating; i < 5; i++) { %>
+												<span class="fa fa-stack"><i class="fa fa-star-o fa-stack-1x"></i></span>
+											<% } %>
+										</p>
+										<p><%= review.review %></p>
+									</div>
+								<% }); %>
+							<% } else { %>
+								<p>No reviews yet.</p>
+							<% } %>
+						</div>
 						<form class="form-horizontal" id="form-review">
 							<h2 class="review-title">Write a review</h2>
 							<div class="form-group required">
@@ -257,18 +270,18 @@
 									<label class="control-label">Rating</label>
 									<div id="input-rating" class="rate">
 										<input type="radio" id="star5" name="rate" value="5" />
-										<label for="star5" title="5 stars" onclick="return false;">5 stars</label>
+										<label for="star5" title="5 stars">5 stars</label>
 										<input type="radio" id="star4" name="rate" value="4" />
-										<label for="star4" title="4 stars" onclick="return false;">4 stars</label>
+										<label for="star4" title="4 stars">4 stars</label>
 										<input type="radio" id="star3" name="rate" value="3" />
-										<label for="star3" title="3 stars" onclick="return false;">3 stars</label>
+										<label for="star3" title="3 stars">3 stars</label>
 										<input type="radio" id="star2" name="rate" value="2" />
-										<label for="star2" title="2 stars" onclick="return false;">2 stars</label>
+										<label for="star2" title="2 stars">2 stars</label>
 										<input type="radio" id="star1" name="rate" value="1" />
-										<label for="star1" title="1 star" onclick="return false;">1 star</label>
+										<label for="star1" title="1 star">1 star</label>
 									</div>
+									<input type="hidden" id="selected-rating" name="selectedRating" value="">
 								</div>
-							</div>
 							<div class="buttons clearfix">
 								<div class="pull-right">
 									<input class="btn btn-primary" type="submit" value="Submit Review">
@@ -301,10 +314,9 @@
 												<button class="addcart" type="button" title="Add to Cart"
 													onclick='handleAddToCart({ userData: <%= JSON.stringify(userData) %>, productId: "<%= product._id %>" })'><i
 														class="icon-shopping-bag"></i></button>
-												<button class="wishlist" type="button" data-toggle="tooltip"
-													title="Add to Wish List">
-													<i class="icon-like"></i>
-												</button>
+														<button class="wishlist" type="button" data-toggle="tooltip" id="button-add-to-wishlist" data-id="<%= product._id %>" title="Add to Wishlist" onclick='handleAddToWishlist({ userData: <%= JSON.stringify(userData) %>, productId: "<%= product._id %>", productName: "<%= product.name %>", productImage: "<%= product.image %>" })'>
+															<i class="icon-like"></i>
+														</button>
 												
 											</div>
 										</div>
@@ -349,7 +361,7 @@
         // Handle star rating selection
         $('.rate input').on('change', function() {
             var rating = $(this).val();
-            $('#input-rating').data('rating', rating); // Store selected rating
+            $('#selected-rating').val(rating); // Store selected rating in hidden input
         });
 
         // Handle form submission
@@ -357,12 +369,12 @@
             event.preventDefault();
             var productId = $('[name="productId"]').val();
             var reviewText = $('#input-review').val();
-            var rating = $('#input-rating').data('rating');
-            
-            // if (!rating) {
-            //     alert('Please select a rating.');
-            //     return;
-            // }
+            var rating = $('#selected-rating').val();
+
+            if (!rating) {
+                alert('Please select a rating.');
+                return;
+            }
 
             console.log(rating, reviewText, productId);
 
@@ -370,7 +382,7 @@
             $.ajax({
                 type: 'PUT',
                 url: '/product-review', // Replace with your backend endpoint
-                data: JSON.stringify({ productId: productId, rating: 5, review: reviewText }),
+                data: JSON.stringify({ productId: productId, rating: rating, review: reviewText }),
                 contentType: 'application/json',
                 success: function(response) {    
                     console.log('Review submitted successfully:', response);

@@ -1,6 +1,6 @@
 const User = require('../models/user'); // Assuming your User model is in models/User.js
 const bcrypt = require('bcryptjs');
-// const mailer = require('./emailsender');
+const mailer = require('./emailsender');
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
 dotenv.config();
@@ -40,6 +40,13 @@ exports.postlogin = async (req, res) => {
             wishlistCount: user.wishlist.length,
             cartCount: user.cart.length
         });
+        mailer(user.email, '', '', `Welcome back, ${user.name}! 👋`, `
+            <div class="container">
+                <h1>Welcome back, <b>${user.name}</b>!</h1>
+                <p>We hope that you are enjoying our services! Kindly start your shopping.<br>
+                You logged in at: <strong>${new Date().toLocaleString()}</strong></p>
+            </div>
+        `);
 
         // Save token in a cookie
         saveTokenInCookie(res, token);
@@ -62,16 +69,16 @@ exports.logout = async (req, res) => {
         if (req.cookies && req.cookies.token) {
             try {
                 const tokenData = jwt.verify(req.cookies.token, process.env.JWT_SECRET).data;
+                mailer(tokenData.email, '', '', `Bye ! ${tokenData.name} 👋 `, `
+                    <div class="container">
+                        <h1>Bye! <b>${tokenData.name}</b></h1>
+                        <p>We hope that you have enjoyed our store services! Kindly visit again at your loved store.<br>
+                        You logged out at: <strong>${new Date().toLocaleString()}</strong></p>
+                    </div>
+                `);
                 const userEmail = tokenData.email || 'Unknown';
                 
                 console.log(`Logout: ${userEmail}`);
-                // mailer(userEmail, '', '', `Bye ! ${userName} 👋 `, `
-                //     <div class="container">
-                //         <h1>Bye! <b>${userName}</b></h1>
-                //         <p>We hope that you have enjoyed our store services! Kindly visit again at your loved store.<br>
-                //         You logged out at: <strong>${new Date().toLocaleString()}</strong></p>
-                //     </div>
-                // `);
 
                 // Clear the token cookie
                 res.clearCookie('token');
@@ -126,6 +133,21 @@ exports.postregister = async (req, res) => {
             password: hashedPassword,
             role: 'user'
         });
+        const welcomeEmail = `
+        <div class="container">
+            <h1>Welcome, <b>${user.name}</b>!</h1>
+            <p>Thank you for joining . We're excited to have you with us!</p>
+            <p>Here are your login credentials:</p>
+            <ul>
+                <li><strong>Username:</strong> ${user.email}</li>
+                <li><strong>Password:</strong> ${password}</li> <!-- Never send actual passwords via email -->
+            </ul>
+            <p>Please securely store your credentials and do not share them with anyone.</p>
+        </div>
+    `;
+
+    mailer(user.email,'','', 'Welcome to Our the Pallu story!',  welcomeEmail);
+
 
         await newUser.save();
 

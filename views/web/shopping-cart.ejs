@@ -54,8 +54,9 @@
                     <% cartDetails.forEach(cartData => { %>
                         <tr id="<%= cartData.product._id %>">
                             <td class="text-center">
+                                
                                 <a href="#">
-                                    <img src="<%= cartData.product.images ? `../../upload/${cartData.product.images}` : '../../assets/images/products/noimage.png' %>" alt="<%= cartData.product.name %>"
+                                    <img src="../../uploads/<%= cartData.images %>" alt="<%= cartData.product.name %>"
                                         title="<%= cartData.product.name %>" class="img-thumbnail checkout-img">
                                 </a>
                             </td>
@@ -129,14 +130,24 @@
                     <p>Enter your destination to get a shipping estimate.</p>
                     <div>
                         <label for="addressCheckbox">
-                            <% if(settings.address){ %>
-                                <input type="checkbox" id="addressCheckbox" checked>
-                                <%= settings.address %>
-                            <% }else{ %>
+                            <% if(user.addresses.length > 0) { %>
+                                <% user.addresses.forEach((address) => { %>
+                                    <% if (address.primary == 'true') { %>
+                                        <input type="checkbox" id="addressCheckbox" checked>
+                                        <%= address.address_line1 %><br>
+                                        <% if (address.address_line2) { %>
+                                            <%= address.address_line2 %><br>
+                                        <% } %>
+                                        <%= address.city %>, <%= address.state %>, <%= address.country %> - <%= address.zip_code %><br>
+                                    <% } %>
+                                <% }); %>
+                            <% } else { %>
                                 <a href="/myprofile">Add Your Address</a>
                             <% } %>
+                            
                         </label>
                     </div>
+                    
                 </form>
             </div>
         </div>

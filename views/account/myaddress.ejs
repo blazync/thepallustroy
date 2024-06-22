@@ -1,0 +1,220 @@
+<%- include('../includes/webHeader.ejs') %>
+
+<style>
+    /* Your existing CSS styles */
+
+    .edit-button {
+        background-color: #ffc107; /* Yellow */
+        color: #212529;
+        border-color: #ffc107;
+    }
+
+    .edit-button:hover {
+        background-color: #ffcd39; /* Lighter Yellow */
+        border-color: #ffcd39;
+    }
+
+    .delete-button {
+        background-color: #dc3545; /* Red */
+        color: #fff;
+        border-color: #dc3545;
+    }
+
+    .delete-button:hover {
+        background-color: #c82333; /* Darker Red */
+        border-color: #c82333;
+    }
+</style>
+
+<!-- My Account -->
+<div class="blog-section">
+    <div class="container p-4">
+        <div class="row">
+            <%- include('../includes/customerSidebar.ejs') %>
+            <div id="content" class="col-sm-9 all-blog my-account">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="row mt-4 ">
+                            <!-- Add new address card -->
+                            
+                            <% user.addresses.forEach(address => { %>
+                                <div class="col-md-4 mb-4">
+                                    <div class="card" id="addressCard_<%= address._id %>">
+                                        <div class="card-header">
+                                            Address <%= address._id %>
+                                        </div>
+                                        <div class="card-body">
+                                            <p><strong>Address Line 1:</strong> <%= address.address_line1 %></p>
+                                            <% if (address.address_line2) { %>
+                                                <p><strong>Address Line 2:</strong> <%= address.address_line2 %></p>
+                                            <% } %>
+                                            <p><strong>City:</strong> <%= address.city %></p>
+                                            <p><strong>State:</strong> <%= address.state %></p>
+                                            <p><strong>Zip Code:</strong> <%= address.zip_code %></p>
+                                            <p><strong>Country:</strong> <%= address.country %></p>
+                                            <p><strong>Primary:</strong> <%= address.primary %>
+                                                <div class="form-check form-switch">
+                                                    <input class="form-check-input toggle-primary" type="checkbox" id="toggleSwitch_<%= address._id %>" data-address-id="<%= address._id %>" <%= (address.primary === 'true') ? 'checked' : '' %>>
+                                                </div>
+                                            </p>
+                                        </div>
+                                        <div class="card-footer">
+                                            <a href="/myaddress?id=<%= address._id %>"><button class="btn btn-sm edit-button" >Edit</button></a>
+                                            <button class="btn btn-sm btn-danger delete-button" data-address-id="<%= address._id %>">Delete</button>
+                                           
+                
+                                        </div>
+                                    </div>
+                                </div>
+                            <% }); %>
+                            <small>* Note You can make only One Address primary</small>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="well card">
+                            <h2>My Addresses</h2>
+                            <form id="addressForm" action="/saveaddress" method="post">
+                             
+                                        <div class="card mb-4">
+                                            <div class="card-header">
+                                                Address <%= address._id %>
+                                            </div>
+                                            <input type="hidden" name="type" value="<%= address._id?'edit':'add' %>">
+                                            <input type="hidden" name="addressId" value="<%= address._id %>">
+                                            <div class="card-body">
+                                                <div class="form-group">
+                                                    <label class="control-label" for="input-address-line1">Address Line 1</label>
+                                                    <input type="text" name="address_line1" value="<%= address.address_line1 || '' %>" placeholder="Address Line 1" id="input-address-line1" class="form-control">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="control-label" for="input-address-line2">Address Line 2</label>
+                                                    <input type="text" name="address_line2" value="<%= address.address_line2 || '' %>" placeholder="Address Line 2" id="input-address-line2" class="form-control">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="control-label" for="input-city">City</label>
+                                                    <input type="text" name="city" value="<%= address.city || '' %>" placeholder="City" id="input-city" class="form-control">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="control-label" for="input-state">State</label>
+                                                    <input type="text" name="state" value="<%= address.state || '' %>" placeholder="State" id="input-state" class="form-control">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="control-label" for="input-zip-code">Zip Code</label>
+                                                    <input type="text" name="zip_code" value="<%= address.zip_code || '' %>" placeholder="Zip Code" id="input-zip-code" class="form-control">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="control-label" for="input-country">Country</label>
+                                                    <input type="text" name="country" value="<%= address.country || '' %>" placeholder="Country" id="input-country" class="form-control">
+                                                </div>
+                                            </div>
+                                        </div>
+                            
+                                <div class="form-group">
+                                    <input type="submit" value="Save Address" class="btn btn-primary">
+                                    
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- .My Account -->
+
+<!-- Toastr notification handling -->
+<% if (typeof error !== 'undefined') { %>
+    <script>
+        toastr.error('<%= error %>');
+    </script>
+<% } %>
+<% if (typeof success !== 'undefined') { %>
+    <script>
+        toastr.success('<%= success %>');
+    </script>
+<% } %>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<%- include('../includes/webFooter.ejs') %>
+
+<script>
+    // jQuery document ready function
+    $(document).ready(function() {
+        // Change event for toggle primary switch
+        $('.toggle-primary').on('change', function() {
+            var addressId = $(this).data('address-id');
+            var isPrimary = this.checked ? 'true' : 'false'; // Use string 'true' or 'false'
+
+            // AJAX request to update primary status
+            $.ajax({
+                url: '/togglePrimary',
+                method: 'POST',
+                data: { addressId: addressId, isPrimary: isPrimary },
+                success: function(response) {
+                    // Update label text based on response
+                    var labelText = response.isPrimary ? 'Primary Address' : 'Set as Primary';
+                    $('label[for="toggleSwitch_' + addressId + '"]').text(labelText);
+
+                    // Show Toastr notification
+                    toastr.success('Primary status updated successfully.');
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error updating primary status:', error);
+                    toastr.error('Failed to update primary status. Please try again.');
+                    // Reset switch to previous state if update fails
+                    $('input#toggleSwitch_' + addressId).prop('checked', !this.checked);
+                }
+            });
+        });
+
+        // Example function to handle delete button click with AJAX
+        $('.delete-button').on('click', function() {
+            var addressId = $(this).data('address-id');
+            // Implement delete functionality using AJAX if needed
+        });
+    });
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Select all delete buttons
+        const deleteButtons = document.querySelectorAll('.delete-button');
+    
+        deleteButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const addressId = button.getAttribute('data-address-id');
+    
+                if (confirm('Are you sure you want to delete this address?')) {
+                    // Send Ajax request to delete the address
+                    fetch(`/deleteAddress/${addressId}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            // Add any necessary headers like authorization token
+                        },
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            // Show success message using Toastr
+                            toastr.success('Address deleted successfully');
+                            // Optionally update UI or refresh page
+                            // Example: window.location.reload();
+                        } else {
+                            throw new Error('Failed to delete address');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error deleting address:', error);
+                        // Show error message using Toastr
+                        toastr.success('Address deleted successfully');
+                    });
+                }
+            });
+        });
+    });
+    </script>
+    <!-- Include Toastr CSS and JS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>

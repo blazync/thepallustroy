@@ -54,8 +54,9 @@
 												<div class="button-group">
 													<button class="addcart" type="button" title="Add to Cart"
 														 onclick='handleAddToCart({ userData: <%= JSON.stringify(userData) %>, productId: "<%= product._id %>" })'><i class="fa-solid fa-cart-shopping" class="cart-icon"></i></button>
-													<button class="wishlist" type="button" data-toggle="tooltip"
-														title="Add to Wish List"><i class="icon-like"></i></button>
+														 <button class="wishlist" type="button" data-toggle="tooltip" id="button-add-to-wishlist" data-id="<%= product._id %>" title="Add to Wishlist" onclick='handleAddToWishlist({ userData: <%= JSON.stringify(userData) %>, productId: "<%= product._id %>", productName: "<%= product.name %>", productImage: "<%= product.image %>" })'>
+															<i class="icon-like"></i>
+														</button>
 											
 												</div>
 											</div>

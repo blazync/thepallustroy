@@ -1,99 +1,211 @@
 <%- include('../includes/webHeader.ejs') %>
 
-    <!-- My Account -->
-    <section>
-		<div class="breadcrumb-main">
-			<div class="container">
-				<div class="breadcrumb-container">
-					<ul class="breadcrumb">
-						<li><a href="index"><i class="fa fa-home"></i></a></li>
-                                <li><a href="my-account">Account </a></li>
-                                <li><a href="my-account">My Orders</a></li>
-					</ul>
-				</div>
-			</div>
-		</div>
-	</section>
-    <div class="blog-section">
-        <div class="container">
-            <div class="row">
-                <%- include('../includes/customerSidebar.ejs') %>
-                <div id="content" class="col-sm-9  all-blog my-account">
-                    <h1>My Wishlist</h1>
-                    <div class="table-responsive">
-                        <table id="orderTable" class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <td class="text-center">S.No.</td>
-                                    <td class="text-center">Product ID</td>
-                                    <td class="text-center">Action</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <% 
-                                if( wishlist.lenght > 0){
-                                let i = 1;
-                                wishlist.forEach(order => { %>
-                                <tr>
-                                    <td class="text-center"><%= i %></td>
-                                    <td class="text-center"><%= order.product_id %></td>
-                                    <td class="text-center">
-                                        <a href="">Track</a>
-                                        <a href="">View</a>
-                                        <% if (order.status !== "delivered") { %>
-                                            <a href="/cancel-order/<%= order._id %>">Cancel</a>
-                                        <% } %>                                      
-                                    </td>
-                                </tr>
+<style>
+    body {
+        font-family: 'Arial', sans-serif;
+        background-color: #f5f5f5;
+        color: #333;
+    }
 
-                                <%
-                            i++;
-                            });
-                        }else{ %>
-                         <tr>
-                            <td class="text-center" colspan="3">
-                                No Product Found in Wishlist
-                            </td>
-                         </tr><% }  %>
-                            </tbody>
-                        </table>
-                     
-                        
-                    </div>
+    .breadcrumb-main {
+        background-color: #007bff;
+        padding: 10px 0;
+    }
+
+    .breadcrumb-container {
+        display: flex;
+        justify-content: center;
+    }
+
+    .breadcrumb {
+        background: none;
+        padding: 0;
+        margin: 0;
+        list-style: none;
+        color: #fff;
+    }
+
+    .breadcrumb li {
+        display: inline;
+        font-size: 1.2em;
+    }
+
+    .breadcrumb li a {
+        color: #fff;
+        text-decoration: none;
+    }
+
+    .breadcrumb li a:hover {
+        text-decoration: underline;
+    }
+
+    .breadcrumb li + li::before {
+        content: " / ";
+        padding: 0 5px;
+        color: #fff;
+    }
+
+    .blog-section {
+        padding: 40px 0;
+    }
+
+    .my-account {
+        background-color: #fff;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+        font-size: 2.5em;
+        margin-bottom: 20px;
+        color: #333;
+    }
+
+    .table-responsive {
+        margin-top: 20px;
+    }
+
+    .table th, .table td {
+        vertical-align: middle;
+    }
+
+    .table th {
+        background-color: #f8f9fa;
+    }
+
+    .table .text-center a {
+        margin: 0 5px;
+        color: #007bff;
+    }
+
+    .table .text-center a:hover {
+        text-decoration: underline;
+    }
+
+    .btn-custom {
+        background-color: wheat;
+        color: #fff;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 4px;
+        text-decoration: none;
+    }
+
+    .btn-custom:hover {
+        background-color: white;
+        color: #fff;
+    }
+
+    .no-products {
+        text-align: center;
+        font-size: 1.5em;
+        color: #888;
+    }
+</style>
+
+<!-- My Account -->
+
+<div class="blog-section">
+    <div class="container">
+        <div class="row">
+            <%- include('../includes/customerSidebar.ejs') %>
+            <div id="content" class="col-sm-9 all-blog my-account">
+                <h1>My Wishlist</h1>
+                <div class="table-responsive">
+                    <table id="wishlistTable" class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th class="text-center">S.No.</th>
+                                <th class="text-center">Product ID</th>
+                                <th class="text-center">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% if(wishlist.length > 0) { 
+                                let i = 1;
+                                wishlist.forEach(wishlistItem => { %>
+                            <tr>
+                                <td class="text-center"><%= i %></td>
+                                <td class="text-center"><%= wishlistItem.product_id %></td>
+                                <td class="text-center">
+                                    <button class="wishlist btn btn-custom" type="button" data-toggle="tooltip" id="button-remove-from-wishlist-<%= wishlistItem._id %>" data-id="<%= wishlistItem._id %>" title="Remove from Wishlist" onclick='handleRemoveFromWishlist("<%= wishlistItem._id %>")'>
+                                        <img src="../../assets/images/cancel.png" width="32px" alt="Remove from Wishlist">
+                                    </button>
+                                </td>
+                                <script>
+                                    // Handle Remove from Wishlist Functionality
+                                    function handleRemoveFromWishlist(wishlistItemId) {
+                                        const confirmation = confirm("Are you sure you want to remove this item from your wishlist?");
+                                        if (!confirmation) return;
+                                
+                                        const button = $('#button-remove-from-wishlist-' + wishlistItemId); // Adjusted button ID to be unique for each item
+                                
+                                        // Update to Backend
+                                        $.ajax({
+                                            url: '/removewishlistitem',
+                                            type: 'POST',
+                                            contentType: 'application/json',
+                                            data: JSON.stringify({
+                                                wishlistItemId: wishlistItemId
+                                            }),
+                                            beforeSend: function () {
+                                                button.button('loading');
+                                            },
+                                            success: function (response) {
+                                                button.button('reset');
+                                                toastr.success('Product removed from wishlist successfully!');
+                                                // Optionally update UI to reflect wishlist change
+                                                // Example: Remove the item from the DOM
+                                                $('#wishlistItem_' + wishlistItemId).remove(); // Assuming 'wishlistItem_' + wishlistItemId is the ID of the row to remove
+                                            },
+                                            error: function (error) {
+                                                button.button('reset');
+                                                toastr.error('Failed to remove product from wishlist.');
+                                            }
+                                        });
+                                    }
+                                </script>
+                                                                
+                            </tr>
+                            <%
+                                i++;
+                                });
+                            } else { %>
+                            <tr>
+                                <td class="text-center no-products" colspan="3">No Product Found in Wishlist</td>
+                            </tr>
+                            <% } %>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
     </div>
-    <!-- .My Account -->
-	 <!-- Toastr notification handling -->
-     <% if (typeof error !== 'undefined') { %>
-        <script>
-            toastr.error('<%= error %>');
-        </script>
-    <% } %>
-    <% if (typeof success !== 'undefined') { %>
-        <script>
-            toastr.success('<%= success %>');
-        </script>
-    <% } %>
-    <!-- Toastr notification handling -->
-    <% if (typeof error !== 'undefined') { %>
-        <script>
-            toastr.error('<%= error %>');
-        </script>
-    <% } %>
+</div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-
-       
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
-    
+<!-- Toastr notification handling -->
+<% if (typeof error !== 'undefined') { %>
     <script>
-    $(document).ready(function() {
-        $('#orderTable').DataTable();
-    });
+        toastr.error('<%= error %>');
     </script>
+<% } %>
+<% if (typeof success !== 'undefined') { %>
+    <script>
+        toastr.success('<%= success %>');
+    </script>
+<% } %>
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+
+<script>
+    $(document).ready(function() {
+        $('#wishlistTable').DataTable();
+    });
+</script>
 <%- include('../includes/webFooter.ejs') %>

@@ -34,49 +34,51 @@
 				</div>
 				<div id="content" class="">
 					<div class="category-row row">
-						<% products.forEach(product=> { %>
-							<div class="product-layout product-grid col-xl-3 col-lg-4 col-md-4 col-sm-6 col-xs-6">
-								<div class="product-thumb">
-									<div class="image">
-										<a href="/product/<%= product.name.replace(/ /g, '-') %>" class="thumb-image">
-											<img src="<%= product.images[0] ? '../../upload/' + product.images[0] : 'assets/images/products/placeholder.jpg' %>"
-												alt="<%= product.name %>" title="<%= product.name %>"
-												class="img-responsive zoomInImage">
-										</a>
-										<div class="button-group">
-											<button class="addcart" type="button" title="Add to Cart"
-												 onclick='handleAddToCart({ userData: <%= JSON.stringify(userData) %>, productId: "<%= product._id %>" })'><i class="fa-solid fa-cart-shopping" class="cart-icon"></i></button>
-											<button class="wishlist" type="button" data-toggle="tooltip"
-												title="Add to Wish List"><i class="icon-like"></i></button>
-									
-										</div>
-									</div>
-									<div class="product-description">
-										<div class="caption">
-											<div class="title-rating clearfix">
-												<h4 class="product-title"><a
-														href="/product/<%= product.name.replace(/ /g, '-') %>">
-														<%= product.name %>
-													</a></h4>
-											</div>
-											<div class="price-cartbtn clearfix">
-												<p class="price">
-													₹ <%= product.discountedPrice %> <small
-															class="discount">₹ <%=
-																product.price %></small>
-														<span class="price-tax ">Ex Tax: ₹ <%=
-																(product.discountedPrice / 1.18).toFixed(2) %>
-														</span>
-												</p>
-
-											</div>
 
 
-										</div>
-									</div>
-								</div>
-							</div>
-							<% }); %>
+<%
+const shuffledProducts = products.slice(0, 20).sort(() => Math.random() - 0.5)
+shuffledProducts.forEach(product => { %>
+  <div class="product-layout product-grid col-xl-3 col-lg-4 col-md-4 col-sm-6 col-xs-6">
+    <div class="product-thumb">
+      <div class="image">
+        <a href="/product/<%= product.name.replace(/ /g, '-') %>" class="thumb-image">
+          <img src="<%= product.images[0] ? '../../upload/' + product.images[0] : 'assets/images/products/placeholder.jpg' %>"
+            alt="<%= product.name %>" title="<%= product.name %>"
+            class="img-responsive zoomInImage">
+        </a>
+        <div class="button-group">
+          <button class="addcart" type="button" title="Add to Cart" onclick='handleAddToCart({ userData: <%= JSON.stringify(userData) %>, productId: "<%= product._id %>" })'>
+            <i class="fa-solid fa-cart-shopping" class="cart-icon"></i>
+          </button>
+          <button class="wishlist" type="button" data-toggle="tooltip" id="button-add-to-wishlist" data-id="<%= product._id %>" title="Add to Wishlist" onclick='handleAddToWishlist({ userData: <%= JSON.stringify(userData) %>, productId: "<%= product._id %>", productName: "<%= product.name %>", productImage: "<%= product.image %>" })'>
+            <i class="icon-like"></i>
+          </button>
+        </div>
+      </div>
+      <div class="product-description">
+        <div class="caption">
+          <div class="title-rating clearfix">
+            <h4 class="product-title">
+              <a href="/product/<%= product.name.replace(/ /g, '-') %>">
+                <%= product.name %>
+              </a>
+            </h4>
+          </div>
+          <div class="price-cartbtn clearfix">
+            <p class="price">
+              ₹ <%= product.discountedPrice %> 
+              <small class="discount">₹ <%= product.price %></small>
+              <span class="price-tax">Ex Tax: ₹ <%= (product.discountedPrice / 1.18).toFixed(2) %></span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<% }); %>
+
+
 					</div>
 
 
@@ -135,7 +137,7 @@
 										<div class="category-box">
 											<div class="category-feature-list ">
 												<div class="product-carousel owl-carousel">
-													<% products.forEach(product=> { %>
+													<% products.slice(0, 20).forEach(product => { %>
 														<div class="single-column">
 															<div class="product-layout col-xs-12">
 																<div class="product-thumb transition">
@@ -157,8 +159,7 @@
 																				onclick='handleAddToCart({ userData: <%= JSON.stringify(userData) %>, productId: "<%= product._id %>" })'>
 																				<i class="icon-shopping-bag"></i>
 																			</button>
-																			<button class="wishlist" type="button"
-																				title="Add to wishlist">
+																			<button class="wishlist" type="button" data-toggle="tooltip" id="button-add-to-wishlist" data-id="<%= product._id %>" title="Add to Wishlist" onclick='handleAddToWishlist({ userData: <%= JSON.stringify(userData) %>, productId: "<%= product._id %>", productName: "<%= product.name %>", productImage: "<%= product.image %>" })'>
 																				<i class="icon-like"></i>
 																			</button>
 																			
@@ -483,6 +484,48 @@
 				}
 			});
 		}
+	</script>
+	<script>
+	// Handle Add to Wishlist Functionality
+function handleAddToWishlist({ userData, productId, productName, productImage }) {
+    var userData = userData || {};
+    if (userData && userData.isLoggedIn) {
+        // User is logged in, proceed to add to wishlist
+        addToWishlist(productId);
+    } else {
+        // User is not logged in, show error and redirect to login page
+        toastr.error('Please login to add to wishlist.');
+        setTimeout(function () {
+            window.location.href = '/my-account'; // Replace with your login page URL
+        }, 2000);
+    }
+}
+
+function addToWishlist(productId) {
+    const button = $('#button-add-to-wishlist');
+
+    // Update to Backend
+    $.ajax({
+        url: '/addtowishlist',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({
+            productId: productId
+        }),
+        beforeSend: function () {
+            button.button('loading');
+        },
+        success: function (response) {
+            button.button('reset');
+            toastr.success('Product added to wishlist successfully!');
+            // Optionally update UI to reflect wishlist change
+        },
+        error: function (error) {
+            button.button('reset');
+            toastr.error('Failed to add product to wishlist.');
+        }
+    });
+}
 	</script>
 
 	<%- include('../includes/webFooter.ejs') %>

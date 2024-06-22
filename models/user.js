@@ -7,7 +7,8 @@ const addressSchema = new Schema({
     city: String,
     state: String,
     zip_code: String,
-    country: String
+    country: String,
+    primary: String
 });
 
 const paymentMethodSchema = new Schema({
@@ -21,6 +22,10 @@ const cartItemSchema = new Schema({
     total_value: Number,
     timestamp: { type: Date, default: Date.now }
 });
+const wislistItemSchema = new Schema({
+    product_id: { type: Schema.Types.ObjectId, ref: 'Product' },
+    timestamp: { type: Date, default: Date.now }
+});
 
 const userSchema = new Schema({
     name: String,
@@ -30,7 +35,7 @@ const userSchema = new Schema({
     is_verified: Boolean,
     status: String,
     role: String,
-    wishlist: [{ type: Schema.Types.ObjectId, ref: 'Product' }],
+    wishlist: [wislistItemSchema],
     cart: [cartItemSchema],
     addresses: [addressSchema],
     reviews: [{ type: Schema.Types.ObjectId, ref: 'ProductReview' }],

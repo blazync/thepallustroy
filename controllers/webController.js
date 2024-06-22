@@ -106,6 +106,86 @@ exports.product = async (req, res) => {
 };
 
 
+exports.addtowishlist = async (req, res) => {
+    try {
+        const { productId } = req.body;
+        const userData = decodeToken(req.cookies.token);
+
+        if (userData) {
+            // Find the user by their email
+            const user = await User.findOne({ email: userData.email });
+            if (!user) {
+                return res.status(404).json({ message: 'User not found' });
+            }
+
+            // Check if the product exists
+            const product = await Product.findById(productId);
+            if (!product) {
+                return res.status(404).json({ message: 'Product not found' });
+            }
+
+            // Check if the product is already in the user's wishlist
+            const wishlistItemIndex = user.wishlist.findIndex(item => item.product_id.toString() === productId);
+
+            if (wishlistItemIndex > -1) {
+                // If the product is already in the wishlist, do nothing or update timestamp
+                user.wishlist[wishlistItemIndex].timestamp = Date.now();
+            } else {
+                // If the product is not in the wishlist, add it
+                user.wishlist.push({
+                    product_id: productId
+                });
+            }
+
+            // Save the updated user document
+            await user.save();
+
+            res.status(200).json({ message: 'Product added to wishlist successfully' });
+        } else {
+            res.redirect('/my-account');
+        }
+    } catch (error) {
+        console.error("Error adding product to wishlist:", error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+};
+exports.removewishlistitem = async (req, res) => {
+    try {
+        const { wishlistItemId } = req.body;
+        const userData = decodeToken(req.cookies.token);
+
+        if (userData) {
+            // Find the user by their email
+            const user = await User.findOne({ email: userData.email });
+            if (!user) {
+                return res.status(404).json({ message: 'User not found' });
+            }
+
+            // Check if the wishlist item exists
+            const wishlistItemIndex = user.wishlist.findIndex(item => item._id.toString() === wishlistItemId);
+
+            if (wishlistItemIndex > -1) {
+                // Remove the item from the wishlist array
+                user.wishlist.splice(wishlistItemIndex, 1);
+            } else {
+                return res.status(404).json({ message: 'Wishlist item not found' });
+            }
+
+            // Save the updated user document
+            await user.save();
+
+            res.status(200).json({ message: 'Product removed from wishlist successfully' });
+        } else {
+            res.redirect('/my-account');
+        }
+    } catch (error) {
+        console.error("Error removing product from wishlist:", error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+};
+
+
+
 
 
 exports.addtocart = async (req, res) => {
@@ -167,6 +247,7 @@ exports.addtocart = async (req, res) => {
         res.status(500).json({ message: 'Internal Server Error' });
     }
 };
+
 
 exports.updateCartQuantityDirectly = async (req, res) => {
     try {
@@ -745,6 +826,202 @@ exports.myprofile = async (req, res) => {
         res.status(500).send("Internal Server Error");
     }
 };
+exports.myaddress = async (req, res) => {
+    const { id } = req.query; // Destructure id from req.query
+    const userData = decodeToken(req.cookies.token);
+
+    if (!userData) {
+        return res.status(401).send('Unauthorized');
+    }
+
+    try {
+        // Fetch user from the database
+        const user = await User.findById(userData.userId);
+
+        if (!user) {
+            return res.status(404).send('User not found');
+        }
+
+        const navCategories = await Category.find();
+        const navProduct = await Product.find();
+        const address = id ? user.addresses.id(id) : '';
+
+        // Render the myaddress view with user data
+        res.render('account/myaddress', {
+            userData,
+            user,
+            address,
+            navCategories,
+            navProduct,
+        });
+
+        if (id) {
+            console.log(address);
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal Server Error');
+    }
+};
+exports.saveaddress = async (req, res) => {
+    const { type, address_line1, address_line2, city, state, zip_code, country, addressId } = req.body;
+
+    if (type !== 'add' && type !== 'edit') {
+        return res.status(400).send('Invalid request type');
+    }
+
+    try {
+        const userData = decodeToken(req.cookies.token);
+
+        if (!userData) {
+            return res.status(401).send('Unauthorized');
+        }
+
+        // Fetch the user from the database
+        const user = await User.findById(userData.userId);
+
+        if (!user) {
+            return res.status(404).send('User not found');
+        }
+
+        if (type === 'edit' && addressId) {
+            // Update existing address
+            const addressToUpdate = user.addresses.id(addressId);
+
+            if (!addressToUpdate) {
+                return res.status(404).send('Address not found');
+            }
+
+            addressToUpdate.address_line1 = address_line1;
+            addressToUpdate.address_line2 = address_line2;
+            addressToUpdate.city = city;
+            addressToUpdate.state = state;
+            addressToUpdate.zip_code = zip_code;
+            addressToUpdate.country = country;
+
+        } else if (type === 'add') {
+            // Add new address
+            const newAddress = {
+                address_line1,
+                address_line2,
+                city,
+                state,
+                zip_code,
+                country,
+            };
+
+            user.addresses.push(newAddress);
+        }
+
+        await user.save(); // Save changes to the User document
+
+        // Redirect back to myaddress page or wherever appropriate
+        return res.redirect('/myaddress');
+    } catch (error) {
+        console.error('Error saving address:', error);
+        return res.status(500).send('Internal Server Error');
+    }
+};
+exports.togglePrimary = async (req, res) => {
+    const { addressId, isPrimary } = req.body;
+    console.log(req.body);
+
+    try {
+        const userData = decodeToken(req.cookies.token);
+
+        if (!userData) {
+            return res.status(401).send('Unauthorized');
+        }
+
+        // Fetch user from the database
+        const user = await User.findById(userData.userId);
+
+        if (!user) {
+            return res.status(404).send('User not found');
+        }
+
+        // Find the address to update
+        const addressToUpdate = user.addresses.id(addressId);
+
+        if (!addressToUpdate) {
+            return res.status(404).send('Address not found');
+        }
+
+        // If setting current address as primary
+        if (isPrimary === 'true') {
+            console.log('Setting current address as primary...');
+            // Set all other addresses' primary to false
+            user.addresses.forEach(addr => {
+                addr.primary = addr._id.equals(addressToUpdate._id); // Set to true only for the current address
+                console.log(`Address ${addr._id}: primary set to ${addr.primary}`);
+            });
+        } else {
+            console.log('Unsetting current address from primary...');
+            // Just set the current address as not primary
+            addressToUpdate.primary = false;
+            console.log(`Address ${addressToUpdate._id}: primary set to false`);
+        }
+
+        // Save user document (update in the database)
+        await user.save();
+
+        // Send response with updated primary status
+        res.json({ isPrimary: addressToUpdate.primary });
+    } catch (error) {
+        console.error('Error toggling primary status:', error);
+        res.status(500).send('Internal Server Error');
+    }
+};
+
+
+
+
+exports.deleteAddress = async (req, res) => {
+    const { addressId } = req.params;
+    console.log(addressId);
+
+    try {
+        const userData = decodeToken(req.cookies.token);
+
+        if (!userData) {
+            return res.status(401).send('Unauthorized');
+        }
+
+        // Fetch the user from the database
+        const user = await User.findById(userData.userId);
+
+        if (!user) {
+            return res.status(404).send('User not found');
+        }
+
+        // Find the index of the address to be removed
+        const indexToRemove = user.addresses.findIndex(address => address._id.toString() === addressId);
+
+        if (indexToRemove === -1) {
+            return res.status(404).send('Address not found');
+        }
+
+        // Remove the address from the user's addresses array
+        user.addresses.splice(indexToRemove, 1);
+
+        // Save the updated user document
+        await user.save();
+
+        // Redirect back to myaddress page or send a success response
+        return res.redirect('/myaddress');
+        // Or you can send a JSON response:
+        // return res.status(200).json({ message: 'Address deleted successfully' });
+    } catch (error) {
+        console.error('Error deleting address:', error);
+        return res.status(500).send('Internal Server Error');
+    }
+};
+
+
+
+
+
+
 
 exports.orderDetails = async (req, res) => {
     try {

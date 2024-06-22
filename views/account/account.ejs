@@ -1,106 +1,209 @@
 <%- include('../includes/webHeader.ejs') %>
 <style>
+    body {
+        font-family: 'Arial', sans-serif;
+        background-color: #f5f5f5;
+        color: #333;
+    }
+
     .card {
-        margin: 5px;
-        padding: 10px;
-        border: 1px solid #ddd;
-        border-radius: 4px;
+        margin: 10px;
+        padding: 20px;
+        border: none;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        background-color: #fff;
         text-align: center;
+        position: relative;
+        overflow: hidden;
     }
+
+    .card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        background: linear-gradient(135deg, rgba(0,0,0,0.05) 25%, transparent 25%, transparent 50%, rgba(0,0,0,0.05) 50%, rgba(0,0,0,0.05) 75%, transparent 75%, transparent);
+        background-size: 4px 4px;
+    }
+
+    .card .icon {
+        font-size: 2.5em;
+        color: #007bff;
+        margin-bottom: 15px;
+    }
+
     .card-title {
-        font-size: 2.0em;
-        margin-bottom: 10px;
+        font-size: 1.5em;
+        margin-bottom: 15px;
+        color: #007bff;
     }
+
     .card-text {
         font-size: 1.2em;
+        color: #555;
     }
-    </style>
-    
-    <!-- My Account -->
-    <section>
-		<div class="breadcrumb-main">
-			<div class="container">
-				<div class="breadcrumb-container">
-					<ul class="breadcrumb">
-						<li><a href="index"><i class="fa fa-home"></i></a></li>
-                                <li><a href="my-account">Account </a></li>
-                                <li><a href="my-account">My Orders</a></li>
-					</ul>
-				</div>
-			</div>
-		</div>
-	</section>
-    <div class="blog-section">
-        <div class="container">
-            <div class="row">
-                <%- include('../includes/customerSidebar.ejs') %>
-                <div id="content" class="col-sm-9  all-blog my-account">
-                    <h1>Welcome <b><%= userData.name %></b></h1>
-                    <div class="row">
-                        <div class="col-md-4 col-sm-6 col-xs-12">
-                            <div class="card shadow">
-                                <div class="card-body">
-                                    <h5 class="card-title">Total Spend</h5>
-                                    <h4 class="card-title">₹ <%= totalSpend.toFixed(2) %></h4>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4 col-sm-6 col-xs-12">
-                            <div class="card shadow">
-                                <div class="card-body">
-                                    <h5 class="card-title">Total Orders</h5>
-                                    <h4 class="card-title"><%= totalOrders %></h4>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4 col-sm-6 col-xs-12">
-                            <div class="card shadow">
-                                <div class="card-body">
-                                    <h5 class="card-title">Total Items Wishlist</h5>
-                                    <h4 class="card-title"><%= totalWishlistItems %></h4>
-                                </div>
+
+    .breadcrumb-main {
+        background-color: #007bff;
+        padding: 10px 0;
+    }
+
+    .breadcrumb-container {
+        display: flex;
+        justify-content: center;
+    }
+
+    .breadcrumb {
+        background: none;
+        padding: 0;
+        margin: 0;
+        list-style: none;
+        color: #fff;
+    }
+
+    .breadcrumb li {
+        display: inline;
+        font-size: 1.2em;
+    }
+
+    .breadcrumb li a {
+        color: #fff;
+        text-decoration: none;
+    }
+
+    .breadcrumb li a:hover {
+        text-decoration: underline;
+    }
+
+    .breadcrumb li + li::before {
+        content: " / ";
+        padding: 0 5px;
+        color: #fff;
+    }
+
+    .blog-section {
+        padding: 40px 0;
+    }
+
+    .my-account {
+        background-color: #fff;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+        font-size: 2.5em;
+        margin-bottom: 20px;
+        color: #333;
+    }
+
+    .row {
+        display: flex;
+        flex-wrap: wrap;
+        margin: 0 -10px;
+    }
+
+    .col-md-4, .col-sm-6, .col-xs-12 {
+        flex: 1;
+        max-width: 100%;
+        padding: 10px;
+        box-sizing: border-box;
+    }
+
+    .p-4 {
+        padding: 20px;
+    }
+
+    .border-dashed {
+        border-style: dashed;
+    }
+
+    .bg-white {
+        background-color: #fff;
+    }
+
+    iframe {
+        border: none;
+    }
+
+    .toastr {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        z-index: 1055;
+    }
+</style>
+
+<!-- My Account -->
+<div class="blog-section">
+    <div class="container">
+        <div class="row">
+            
+            <%- include('../includes/customerSidebar.ejs') %>
+            <div id="content" class="col-sm-9 all-blog my-account">
+                <h1>Welcome <b><%= userData.name %></b></h1>
+                <div class="row">
+                    <div class="col-md-4 col-sm-6 col-xs-12">
+                        <div class="card shadow">
+                            <div class="card-body">
+                                <div class="icon"><i class="fas fa-wallet"></i></div>
+                                <h5 class="card-title">Total Spend</h5>
+                                <h4 class="card-text">₹ <%= totalSpend.toFixed(2) %></h4>
                             </div>
                         </div>
                     </div>
-                    <div class="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700 mt-14 bg-white">
-                        <iframe src="https://calendar.google.com/calendar/embed?height=600&amp;wkst=1&amp;bgcolor=%23FFFFFF&amp;src=en.indian%23holiday%40group.v.calendar.google.com&amp;color=%23125A12&amp;ctz=Asia%2FCalcutta" style="border-width:0" scrolling="no" width="100%" height="500" frameborder="0"></iframe>
-                  
-                       </div>
-                    
+                    <div class="col-md-4 col-sm-6 col-xs-12">
+                        <div class="card shadow">
+                            <div class="card-body">
+                                <div class="icon"><i class="fas fa-shopping-cart"></i></div>
+                                <h5 class="card-title">Total Orders</h5>
+                                <h4 class="card-text"><%= totalOrders %></h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-sm-6 col-xs-12">
+                        <div class="card shadow">
+                            <div class="card-body">
+                                <div class="icon"><i class="fas fa-heart"></i></div>
+                                <h5 class="card-title">Total Items Wishlist</h5>
+                                <h4 class="card-text"><%= totalWishlistItems %></h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-4 border-2 border-gray-200 border-dashed rounded-lg mt-14 bg-white">
+                    <iframe src="https://calendar.google.com/calendar/embed?height=600&wkst=1&bgcolor=%23FFFFFF&src=en.indian%23holiday%40group.v.calendar.google.com&color=%23125A12&ctz=Asia%2FCalcutta" style="width: 100%; height: 500px;"></iframe>
                 </div>
             </div>
         </div>
     </div>
-    <!-- .My Account -->
-	 <!-- Toastr notification handling -->
-     <% if (typeof error !== 'undefined') { %>
-        <script>
-            toastr.error('<%= error %>');
-        </script>
-    <% } %>
-    <% if (typeof success !== 'undefined') { %>
-        <script>
-            toastr.success('<%= success %>');
-        </script>
-    <% } %>
-    <!-- Toastr notification handling -->
-    <% if (typeof error !== 'undefined') { %>
-        <script>
-            toastr.error('<%= error %>');
-        </script>
-    <% } %>
+</div>
+<!-- .My Account -->
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-
-       
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
-    
+<!-- Toastr notification handling -->
+<% if (typeof error !== 'undefined') { %>
     <script>
+        toastr.error('<%= error %>');
+    </script>
+<% } %>
+<% if (typeof success !== 'undefined') { %>
+    <script>
+        toastr.success('<%= success %>');
+    </script>
+<% } %>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+
+<script>
     $(document).ready(function() {
         $('#orderTable').DataTable();
     });
-    </script>
+</script>
 <%- include('../includes/webFooter.ejs') %>

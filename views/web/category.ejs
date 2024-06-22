@@ -133,9 +133,9 @@
 									</a>
 									<div class="button-group">
 										<button class="addcart" type="button" title="Add to Cart" onclick="window.location.href = 'shopping-cart';"><i class="icon-shopping-bag"></i></button>
-										<button class="wishlist" type="button" data-toggle="tooltip" title=""
-											data-original-title="Add to Wish List" data-bs-original-title=""><i
-												class="icon-like"></i></button>
+										<button class="wishlist" type="button" data-toggle="tooltip" id="button-add-to-wishlist" data-id="<%= product._id %>" title="Add to Wishlist" onclick='handleAddToWishlist({ userData: <%= JSON.stringify(userData) %>, productId: "<%= product._id %>", productName: "<%= product.name %>", productImage: "<%= product.image %>" })'>
+											<i class="icon-like"></i>
+										</button>
 										<button class="vipodha_quickview-button" type="button" data-toggle="tooltip"
 											title="" data-original-title="Quickview" data-bs-original-title=""><i
 												class="icon-eye"></i></button>
@@ -179,7 +179,9 @@
 									</a>
 									<div class="button-group">
 										<button class="addcart" type="button" title="Add to Cart" onclick="window.location.href = 'shopping-cart';"><i class="icon-shopping-bag"></i></button>
-										<button class="wishlist" type="button" data-toggle="tooltip" data-original-title="Add to Wish List" data-bs-original-title=""><i class="icon-like"></i></button>
+										<button class="wishlist" type="button" data-toggle="tooltip" id="button-add-to-wishlist" data-id="<%= product._id %>" title="Add to Wishlist" onclick='handleAddToWishlist({ userData: <%= JSON.stringify(userData) %>, productId: "<%= product._id %>", productName: "<%= product.name %>", productImage: "<%= product.image %>" })'>
+											<i class="icon-like"></i>
+										</button>
 										<button class="vipodha_quickview-button" type="button" data-toggle="tooltip" title="" data-original-title="Quickview" data-bs-original-title=""><i class="icon-eye"></i></button>
 										<button class="compare" type="button" data-toggle="tooltip" title="" data-original-title="Compare this Product" data-bs-original-title=""><i class="icon-shuffle-arrows"></i></button>										
 									</div>
@@ -219,9 +221,9 @@
 									</a>
 									<div class="button-group">
 										<button class="addcart" type="button" title="Add to Cart" onclick="window.location.href = 'shopping-cart';"><i class="icon-shopping-bag"></i></button>
-										<button class="wishlist" type="button" data-toggle="tooltip" title=""
-											data-original-title="Add to Wish List" data-bs-original-title=""><i
-												class="icon-like"></i></button>
+										<button class="wishlist" type="button" data-toggle="tooltip" id="button-add-to-wishlist" data-id="<%= product._id %>" title="Add to Wishlist" onclick='handleAddToWishlist({ userData: <%= JSON.stringify(userData) %>, productId: "<%= product._id %>", productName: "<%= product.name %>", productImage: "<%= product.image %>" })'>
+											<i class="icon-like"></i>
+										</button>
 										<button class="vipodha_quickview-button" type="button" data-toggle="tooltip"
 											title="" data-original-title="Quickview" data-bs-original-title=""><i
 												class="icon-eye"></i></button>
@@ -265,9 +267,9 @@
 									</a>									
 									<div class="button-group">
 										<button class="addcart" type="button" title="Add to Cart" onclick="window.location.href = 'shopping-cart';"><i class="icon-shopping-bag"></i></button>
-										<button class="wishlist" type="button" data-toggle="tooltip" title=""
-											data-original-title="Add to Wish List" data-bs-original-title=""><i
-												class="icon-like"></i></button>
+										<button class="wishlist" type="button" data-toggle="tooltip" id="button-add-to-wishlist" data-id="<%= product._id %>" title="Add to Wishlist" onclick='handleAddToWishlist({ userData: <%= JSON.stringify(userData) %>, productId: "<%= product._id %>", productName: "<%= product.name %>", productImage: "<%= product.image %>" })'>
+											<i class="icon-like"></i>
+										</button>
 										<button class="vipodha_quickview-button" type="button" data-toggle="tooltip"
 											title="" data-original-title="Quickview" data-bs-original-title=""><i
 												class="icon-eye"></i></button>
@@ -309,9 +311,9 @@
 									</a>
 									<div class="button-group">
 										<button class="addcart" type="button" title="Add to Cart" onclick="window.location.href = 'shopping-cart';"><i class="icon-shopping-bag"></i></button>
-										<button class="wishlist" type="button" data-toggle="tooltip" title=""
-											data-original-title="Add to Wish List" data-bs-original-title=""><i
-												class="icon-like"></i></button>
+										<button class="wishlist" type="button" data-toggle="tooltip" id="button-add-to-wishlist" data-id="<%= product._id %>" title="Add to Wishlist" onclick='handleAddToWishlist({ userData: <%= JSON.stringify(userData) %>, productId: "<%= product._id %>", productName: "<%= product.name %>", productImage: "<%= product.image %>" })'>
+											<i class="icon-like"></i>
+										</button>
 										<button class="vipodha_quickview-button" type="button" data-toggle="tooltip"
 											title="" data-original-title="Quickview" data-bs-original-title=""><i
 												class="icon-eye"></i></button>

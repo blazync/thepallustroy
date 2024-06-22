@@ -84,15 +84,15 @@ footer {
                 <table>
                     <tr>
                         <th>Order Number:</th>
-                        <td>#123456789</td>
+                        <td><%= order_info.order_id %></td>
                     </tr>
                     <tr>
                         <th>Date:</th>
-                        <td>June 21, 2024</td>
+                        <td><%= order_info.created_at %></td>
                     </tr>
                     <tr>
                         <th>Total Amount:</th>
-                        <td>$150.00</td>
+                        <td><%= order_info.total_amount %> ₹</td>
                     </tr>
                 </table>
             </section>
@@ -101,15 +101,15 @@ footer {
                 <table>
                     <tr>
                         <th>Name:</th>
-                        <td>John Doe</td>
+                        <td><%= userData.name %></td>
                     </tr>
                     <tr>
-                        <th>Email:</th>
-                        <td>john.doe@example.com</td>
+                        <th>Email</th>
+                        <td><%= userData.email %></td>
                     </tr>
                     <tr>
                         <th>Shipping Address:</th>
-                        <td>123 Main Street, Cityville, ST 12345</td>
+                        <td><%= order_info.shipping_address %></td>
                     </tr>
                 </table>
             </section>
@@ -134,7 +134,7 @@ footer {
             clearInterval(intervalId);
             window.location.href = "/myorder"; // Replace with your target URL
         }
-        }, 1000);
+        }, 5000);
 
 
     </script>

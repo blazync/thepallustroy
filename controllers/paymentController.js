@@ -75,7 +75,6 @@ const createOrder = async (req, res) => {
             created_at: new Date(),
             updated_at: new Date()
         });
-        console.log(req.body);
 
         // Save the order in the database within the transaction
         await order.save({ session });
@@ -135,7 +134,7 @@ const verifyOrder = async (req, res) => {
     try {
         // Fetch order payments from Cashfree
         const response = await Cashfree.PGOrderFetchPayments('2023-08-01', order_id);
-        console.log(response.data);
+       
         
         // Process the response data to determine the order status
         const transactions = response.data || [];
@@ -143,11 +142,70 @@ const verifyOrder = async (req, res) => {
   
         console.log(transactions);
         if (transactions.filter(transaction => transaction.payment_status === 'SUCCESS').length > 0) {
-            orderStatus = 'Success';
+            orderStatus = 'Success';        
+            const orderConfirmationEmail = `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <h2>Order Confirmation</h2>
+        <p>Dear ${userData.name},</p>
+        <p>Thank you for your order!</p>
+        
+        <h3>Order Details:</h3>
+        <ul>
+            <li><strong>Order ID:</strong> ${transactions[0].order_id}</li>
+            <li><strong>Order Amount:</strong> ${transactions[0].order_amount} ${transactions[0].payment_currency}</li>
+            <li><strong>Payment Method:</strong> ${transactions[0].payment_group}</li>
+            <li><strong>Payment Status:</strong> ${transactions[0].payment_status}</li>
+            <li><strong>Payment Time:</strong> ${new Date(transactions[0].payment_time).toLocaleString()}</li>
+        </ul>
+        
+        <p>We have received your payment and will process your order shortly.</p>
+        
+        <p>You can track your order by visiting <a href="https://thepallustory.in/myorder" target="_blank">Track Order</a>.</p>
+        
+        <p>Thank you for shopping with us!</p>
+        
+    </div>
+`;
+
+// Example usage with mailer function
+mailer(userData.email, 'Order Confirmation', '', 'Thanks For Your Order!', orderConfirmationEmail);
+
         } else if (transactions.filter(transaction => transaction.payment_status === 'PENDING').length > 0) {
             orderStatus = 'Pending';
+            const orderFailedEmail = `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <h2>Order Status Update</h2>
+        <p>Dear ${userData.name},</p>
+        <p>We regret to inform you that your recent order could not be processed successfully.</p>
+        
+        <p>Please contact our support team for further assistance regarding your order.</p>
+        
+        <p>We apologize for any inconvenience caused.</p>
+        
+    </div>
+`;
+
+// Example usage with mailer function
+mailer(userData.email, 'Order Status Update', '', 'Order Pending', orderFailedEmail);
+
         } else {
             orderStatus = 'Failure';
+            const orderFailedEmail = `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <h2>Order Status Update</h2>
+        <p>Dear ${userData.name},</p>
+        <p>We regret to inform you that your recent order could not be processed.</p>
+        
+        <p>Please contact our support team for further assistance regarding your order.</p>
+        
+        <p>We apologize for any inconvenience caused.</p>
+        
+    </div>
+`;
+
+// Example usage with mailer function
+mailer(userData.email, 'Order Status Update', '', 'Order Failed', orderFailedEmail);
+
         }
         
         // Extract the payment_id from the successful transaction, if exists
@@ -158,8 +216,7 @@ const verifyOrder = async (req, res) => {
         if (orderStatus === 'Success') {
             await Order.findOneAndUpdate(
                 { order_id: order_id },
-                { 
-                    status: 'Completed', 
+                {  
                     payment_status: 'Paid',
                     payment_id: payment_id 
                 }

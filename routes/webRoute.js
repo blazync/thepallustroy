@@ -41,7 +41,13 @@ router.post('/register', authController.postregister);
 
 router.post('/addtocart', controller.addtocart);
 router.post('/deletefromcart', controller.deletefromcart);
-router.post('/update-cart-quantity',controller.updateCartQuantityDirectly)
+router.post('/update-cart-quantity',controller.updateCartQuantityDirectly);
+
+router.post('/addtowishlist', controller.addtowishlist);
+router.post('/removewishlistitem', controller.removewishlistitem);
+
+
+
 // router.post('/order',controller.postOrder);
 router.get('/checkout',controller.checkout);
 // Route to create order
@@ -59,5 +65,8 @@ router.get('/trackOrder/:id',checkAuth,controller.trackOrder);
 router.get('/mywishlist',checkAuth,controller.mywishlist);
 router.get('/myprofile',checkAuth,controller.myprofile);
 router.post('/myprofile',checkAuth,controller.myprofile);
-
+router.get('/myaddress/',checkAuth,controller.myaddress);
+router.post('/saveaddress',checkAuth,controller.saveaddress);
+router.post('/togglePrimary', controller.togglePrimary);
+router.delete('/deleteAddress/:addressId', controller.deleteAddress);
 module.exports = router;

@@ -29,6 +29,7 @@
                                     <td class="text-center">Total Amount</td>
                                     <td class="text-center">Shipping Address</td>
                                     <td class="text-center">Status</td>
+                                    <td class="text-center">Order Status</td>
                                     <td class="text-center">Payment Id</td>
                                     <td class="text-center">Action</td>
                                 </tr>
@@ -43,6 +44,7 @@
                                     <td class="text-center">₹ <%= order.total_amount %></td>
                                     <td class="text-center"><%= order.shipping_address %></td>
                                     <td class="text-center"><%= order.payment_status %></td>
+                                    <td class="text-center"><%= order.status %></td>
                                     <td class="text-center"><%= order.payment_id%></td>
                                     <td class="text-center">
                                         <a href="/orderDetails/<%= order.id %>">Track</a>

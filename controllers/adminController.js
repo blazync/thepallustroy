@@ -109,7 +109,7 @@ exports.saveUser = async (req, res) => {
 
 exports.addProduct = async (req, res) => {
     const category = await Category.find();
-    res.render('dashboard/add-product',{category,type:"edit",product:'',userData:decodeToken(req.cookies.token) });
+    res.render('dashboard/add-product',{category,type:"add",product:'',userData:decodeToken(req.cookies.token) });
 };
 
 exports.editProduct = async (req, res) => {

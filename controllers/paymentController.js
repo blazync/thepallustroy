@@ -29,7 +29,7 @@ const createOrder = async (req, res) => {
 
         // Extract order details from request body
         const { customer_id, customer_phone, customer_name, customer_email, products, serviceFee, deliveryCharges,shipping_address,totalprice } = req.body;
-
+   
         // Validate user data
         if (!userData || !userData.userId) {
             throw new Error('Invalid user data');
@@ -94,8 +94,8 @@ const createOrder = async (req, res) => {
                 customer_email: customer_email || userData.email
             },
             order_meta: {
-                return_url: "http://localhost:5000/order-confirmation/?order_id={order_id}",
-                notify_url: "http://localhost:5000/payment/webhook",
+                return_url: "https://thepallustory.in/order-confirmation/?order_id={order_id}",
+                notify_url: "https://thepallustory.in/payment/webhook",
                 payment_methods: "cc,dc,ppc,ccc,emi,paypal,upi,nb,app,paylater"
             },
             order_expiry_time: new Date(Date.now() + 30 * 60 * 1000).toISOString(),
@@ -108,7 +108,7 @@ const createOrder = async (req, res) => {
 
         // Call Cashfree API to create order
         const response = await Cashfree.PGCreateOrder("2023-08-01", request);
-        console.log(response);
+
 
         // Extract paymentSessionId from response
         const paymentSessionId = response.data.payment_session_id;

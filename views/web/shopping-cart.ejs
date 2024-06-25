@@ -111,7 +111,13 @@
         <p style="font-size: 12px; margin: 0px auto" class="mobile-hid">
          You are just one step away to get your order!
         </p>
-        <button class="mobile-hid">Continue</button>
+           <button id="checkoutButton-desktop"
+                        <% if (user.addresses.length === 0) { %>
+                            disabled
+                        <% } %>
+                    >
+                        Continue
+                    </button>
      
                <p class="checkout-1 mobile-only">
           <span class="mobile-only"
@@ -125,7 +131,13 @@
               View Price Details
             </a>
           </div>
-          <button id="checkoutButton" >Continue</button>
+                              <button id="checkoutButton-mobile"
+                        <% if (user.addresses.length === 0) { %>
+                            disabled
+                        <% } %>
+                    >
+                        Continue
+                    </button>
         </div>
       </section>
        <% }; %>
@@ -146,30 +158,26 @@
                 <form id="form-quote">
                     <p>Enter your destination to get a shipping estimate.</p>
                     <div>
-                        <label for="addressCheckbox">
+                        <label for="addressRadio">
                             <% if(user.addresses.length > 0) { %>
-                                <% user.addresses.forEach((address) => { %>
-                                    <% if (address.primary == 'true') { %>
-                                        <input type="checkbox" id="addressCheckbox" checked>
-                                        <%= address.address_line1 %><br>
-                                        <% if (address.address_line2) { %>
-                                            <%= address.address_line2 %><br>
-                                        <% } %>
-                                        <%= address.city %>, <%= address.state %>, <%= address.country %> - <%= address.zip_code %><br>
+                                <% user.addresses.forEach((address, index) => { %>
+                                    <input type="radio" name="addressRadio" id="addressRadio<%= index %>" value="<%= index %>" <%= address.primary === 'true' ? 'checked' : '' %> 
+                                    data-address="<%= address.address_line1 %>, <%= address.address_line2 %>, <%= address.city %>, <%= address.state %>, <%= address.country %> - <%= address.zip_code %>">
+                                    <%= address.address_line1 %><br>
+                                    <% if (address.address_line2) { %>
+                                        <%= address.address_line2 %><br>
                                     <% } %>
+                                    <%= address.city %>, <%= address.state %>, <%= address.country %> - <%= address.zip_code %><br>
                                 <% }); %>
                             <% } else { %>
-                                 <h3 class="text-danger">Oops No Address Found! Please add address from your profile <h3>
+                                <h3 class="text-danger">Oops No Address Found! Please add an address from your profile</h3>
                                 <div> 
-                                    <a href="/myaddress" class="btn btn-warning" target="_self">
-                                         Add Address
-                                    </a>
+                                    <a href="/myaddress" class="btn btn-warning" target="_self">Add Address</a>
                                 </div>
-
                             <% } %>
-                            
                         </label>
                     </div>
+
                     
                 </form>
             </div>
@@ -181,84 +189,100 @@
 
 <!-- Handling Data Submission and Payment -->
 <script src="https://sdk.cashfree.com/js/v3/cashfree.js"></script>
-				<script>
-					document.getElementById('checkoutButton').addEventListener('click', function(event) {
-						event.preventDefault();
-						
-						// Collect data from the cart form
-						const cartFormData = new FormData(document.getElementById('cartForm'));
+<script>
+    function handleCheckout(event) {
 
-						// Collect data from the shipping estimate form
-						const shippingFormData = new FormData(document.getElementById('form-quote'));
+        event.preventDefault();
 
-						// Collect data from the coupon form
-						// const couponFormData = new FormData(document.getElementById('form-coupon'));
+         // Check if any address radio is selected
+        const addressRadios = document.getElementsByName('addressRadio');
+        let selectedAddress = null;
+        addressRadios.forEach(radio => {
+            if (radio.checked) {
+                selectedAddress = radio.getAttribute('data-address');
+            }
+        });
 
-						// Combine all form data into a single object
-						let combinedData = {};
-						
-						cartFormData.forEach((value, key) => { combinedData[key] = value });
-						shippingFormData.forEach((value, key) => { combinedData[key] = value });
-						// couponFormData.forEach((value, key) => { combinedData[key] = value });
-						// Add user data
-						combinedData['customer_id'] = "<%= userData.userId %>";
-						combinedData['customer_phone'] = "<%= userData.phone %>";
-						combinedData['customer_name'] = "<%= userData.name %>";
-						combinedData['customer_email'] = "<%= userData.email %>";
-						combinedData['order_currency'] = "INR";
-                        combinedData['serviceFee'] = "<%= settings.serviceFee %>";
-                        combinedData['deliveryCharges'] = "<%= settings.deliveryCharges %>";
-                        combinedData['shipping_address'] = "<%= settings.address %>";
-						// Calculate and add total price
-						const totalprice = <%= totalprice %>;
-						const deliveryCharges = <%= deliveryCharges %>;
-						const serviceFee = <%= settings.serviceFee %>;
-						combinedData['totalprice'] = combinedData['amount'] = (totalprice + deliveryCharges + serviceFee).toFixed(2);
-						// Add product details
-						combinedData['products'] = [];
-						<% cartDetails.forEach(cartData => { %>
-							combinedData['products'].push({
-								product_id: "<%= cartData.product._id %>",
-								name: "<%= cartData.product.name %>",
-								price: "<%= cartData.product.price %>",
-								quantity: "<%= cartData.quantity %>",
-								total_value: "<%= cartData.total_value %>"
-                                
-							});
-						<% }); %>
+        if (!selectedAddress) {
+            alert('Please select an address to proceed.');
+            return; // Prevent checkout if no address is selected
+        }
 
-			// Send combined data to the backend
-						fetch('/create-order', {
-							method: 'POST',
-							headers: {
-								'Content-Type': 'application/json'
-							},
-							body: JSON.stringify(combinedData)
-						})
-						.then(response => response.json())
-						.then(data => {
-							const paymentSessionId = data.paymentSessionId;
-							// Handle the response data
-							 const cashfree = Cashfree({
-            					mode: "sandbox",
-       					 	});
-								if (paymentSessionId) {
-									let checkoutOptions = {
-										paymentSessionId: paymentSessionId,
-										redirectTarget: "https://thepallustory.in/",
-									};
-									cashfree.checkout(checkoutOptions);
-								} else {
-									document.body.innerHTML = '<p>Payment session ID is missing. Please try again.</p>';
-								}
-							});
-							// Redirect to a confirmation page or display a success message
-							// window.location.href = '/order-confirmation';
-						})
-						.catch(error => {
-							// Display an error message to the user
-						});
-				</script>
+        
+        // Collect data from the cart form
+        const cartFormData = new FormData(document.getElementById('cartForm'));
+
+        // Collect data from the shipping estimate form
+        const shippingFormData = new FormData(document.getElementById('form-quote'));
+
+        // Combine all form data into a single object
+        let combinedData = {};
+        
+        cartFormData.forEach((value, key) => { combinedData[key] = value });
+        shippingFormData.forEach((value, key) => { combinedData[key] = value });
+        
+        // Add user data
+        combinedData['customer_id'] = "<%= userData.userId %>";
+        combinedData['customer_phone'] = "<%= userData.phone %>";
+        combinedData['customer_name'] = "<%= userData.name %>";
+        combinedData['customer_email'] = "<%= userData.email %>";
+        combinedData['order_currency'] = "INR";
+        combinedData['serviceFee'] = "<%= settings.serviceFee %>";
+        combinedData['deliveryCharges'] = "<%= settings.deliveryCharges %>";
+        
+
+        // Calculate and add total price
+        const totalprice = <%= totalprice %>;
+        const deliveryCharges = <%= deliveryCharges %>;
+        const serviceFee = <%= settings.serviceFee %>;
+        combinedData['totalprice'] = combinedData['amount'] = (totalprice + deliveryCharges + serviceFee).toFixed(2);
+
+        // Add product details
+        combinedData['products'] = [];
+        <% cartDetails.forEach(cartData => { %>
+            combinedData['products'].push({
+                product_id: "<%= cartData.product._id %>",
+                name: "<%= cartData.product.name %>",
+                price: "<%= cartData.product.price %>",
+                quantity: "<%= cartData.quantity %>",
+                total_value: "<%= cartData.total_value %>"
+            });
+        <% }); %>;
+          combinedData['shipping_address'] = selectedAddress;
+        // Send combined data to the backend
+        fetch('/create-order', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(combinedData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            const paymentSessionId = data.paymentSessionId;
+            if (paymentSessionId) {
+                const cashfree = Cashfree({
+                    mode: "sandbox",
+                });
+                let checkoutOptions = {
+                    paymentSessionId: paymentSessionId,
+                    redirectTarget: "https://thepallustory.in/",
+                };
+                cashfree.checkout(checkoutOptions);
+            } else {
+                document.body.innerHTML = '<p>Payment session ID is missing. Please try again.</p>';
+            }
+        })
+        .catch(error => {
+            // Display an error message to the user
+            alert('An unexpected error occurred. Please try again.');
+            console.error('Error:', error);
+        });
+    }
+
+    document.getElementById('checkoutButton-desktop').addEventListener('click', handleCheckout);
+    document.getElementById('checkoutButton-mobile').addEventListener('click', handleCheckout);
+</script>
 
 				</div>
 			</div>

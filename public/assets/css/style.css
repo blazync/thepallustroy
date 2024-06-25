@@ -2847,7 +2847,7 @@ Category Page
 }
 input[type="checkbox"],
 input[type="radio"] {
-  margin: 4px 0 0;
+  margin: 20px 0 0;
   line-height: normal;
 }
 .filter_box .list-group-items + .list-group-items {

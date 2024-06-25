@@ -30,14 +30,14 @@
 		<div class="product-tab-block wow fadeInUp top-margin-all">
 			<div class="container">
 				<div class="page-title toggled">
-					<h3>Our Collections</h3>
+					<h3>Our Collection</h3>
 				</div>
 				<div id="content" class="">
 					<div class="category-row row">
 
 
 									<%
-									const shuffledProducts = products.slice(0, 20).sort(() => Math.random() - 0.5)
+									const shuffledProducts = products.filter(product => product.status).slice(0, 20).sort(() => Math.random() - 0.5)
 									shuffledProducts.forEach(product => { %>
 									<div class="product-layout product-grid col-xl-3 col-lg-4 col-md-4 col-sm-6 col-xs-6">
 										<div class="product-thumb">
@@ -171,7 +171,7 @@
 										<div class="category-box">
 											<div class="category-feature-list ">
 												<div class="product-carousel owl-carousel">
-													<% products.slice(0, 20).forEach(product => { %>
+													<% products.filter(product => product.status).slice(0, 20).forEach(product => { %>
 														<div class="single-column">
 															<div class="product-layout col-xs-12">
 																<div class="product-thumb transition">

@@ -170,26 +170,6 @@ function deleteProductFromCart(productId) {
     }
 
 
-    // Contact Form Enquiry
-    $(document).ready(function() {
-									$('#contact-form').on('submit', function(event) {
-										event.preventDefault(); // Prevent the default form submission
-						
-										$.ajax({
-											url: '/savecontact',
-											type: 'POST',
-											data: $(this).serialize(),
-											success: function(response) {
-												toastr.success('Your message has been sent successfully');
-												$('#contact-form')[0].reset(); // Reset the form
-											},
-											error: function(xhr, status, error) {
-												toastr.error('There was an error submitting your enquiry. Please try again.');
-											}
-										});
-									});
-								});
-
 
 
 

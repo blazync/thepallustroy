@@ -52,7 +52,7 @@
               <div style="margin-bottom: 10px" class="mobile-hid">
             <span style="font-weight: bold">Cart </span>| <%= cartDetails.length %> Items
           </div>
-          <div class="product">
+          <div class="product" id="<%= cartData.product._id %>">
             <img src="../../upload/<%= cartData.product.images[0] %>" alt="<%= cartData.product.name %>"
                                 title="<%= cartData.product.name %>" class="img-thumbnail checkout-img">
             <div>
@@ -82,7 +82,7 @@
             <span>Click refresh to update the quantity </span>
           </div>
 
-           <div class="divider"></div>
+          
 
               <% }); %>
         <% } else { %>
@@ -96,7 +96,7 @@
         <% } %>
         </div>
       </section>
-     
+      <div class="divider"></div>
       
 
       <% if (cartDetails.length > 0) { %>

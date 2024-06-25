@@ -52,8 +52,20 @@
 														class="img-responsive zoomInImage">
 												</a>
 												<div class="button-group">
-													<button class="addcart" type="button" title="Add to Cart"
-														 onclick='handleAddToCart({ userData: <%= JSON.stringify(userData) %>, productId: "<%= product._id %>" })'><i class="fa-solid fa-cart-shopping" class="cart-icon"></i></button>
+													    <% if (product.status) { %>
+																<button class="addcart" type="button" title="Add to Cart" 
+																		onclick='handleAddToCart({
+																			userData: <%= JSON.stringify(userData) %>, 
+																			productId: "<%= product._id %>",  
+																			quantity: "1",
+																		})'>
+																	<i class="fa-solid fa-cart-shopping cart-icon"></i>
+																</button>
+															<% } else { %>
+																<button class="addcart" type="button" title="Out of Stock" disabled>
+																	<i class="fa-solid fa-cart-shopping cart-icon"></i>
+																</button>
+															<% } %>
 														 <button class="wishlist" type="button" data-toggle="tooltip" id="button-add-to-wishlist" data-id="<%= product._id %>" title="Add to Wishlist" onclick='handleAddToWishlist({ userData: <%= JSON.stringify(userData) %>, productId: "<%= product._id %>", productName: "<%= product.name %>", productImage: "<%= product.image %>" })'>
 															<i class="icon-like"></i>
 														</button>
@@ -80,7 +92,28 @@
 				
 													</div>
 				
-				
+														<div>
+														<% if (product.status) { %>
+															<button class="btn btn-cart" type="button"
+																	title="Add to Cart"
+																	data-id="<%= product._id %>"
+																	onclick='handleAddToCart({
+																	userData: <%= JSON.stringify(userData) %>, 
+																	productId: "<%= product._id %>",  
+																	quantity: "1",
+																	})'>
+																	Add to cart
+															</button>
+														<% } else { %>
+															<button class="btn btn-cart" type="button"
+																	title="Out of Stock"
+																	data-id="<%= product._id %>"
+																	disabled>
+																	Out of Stock
+															</button>
+														<% } %>
+													</div>
+
 												</div>
 											</div>
 										</div>

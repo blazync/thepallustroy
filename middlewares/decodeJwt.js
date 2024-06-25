@@ -7,7 +7,7 @@ const decodeToken = (token) => {
       const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
       return decodedToken.data;
   } catch (error) {
-      console.error('Error decoding token:', error);
+      console.error('Error decoding token');
       return null;
   }
 };

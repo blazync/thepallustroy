@@ -13,11 +13,11 @@
 										class=" img-responsive ">
 								</div>
 							</div>
-							<div class="row-items category-layout col-xs-12">
+							<!-- <div class="row-items category-layout col-xs-12">
 								<div class="vipodha-banner-image">
-									<img src="assets/images/banners/mainbanner.webp" alt="Noelle Salar"
+									<img src="assets/images/banners/mainbanner2.png" alt="Noelle Salar"
 										class=" img-responsive ">
-								</div>
+								</div> -->
 							</div>
 						</div>
 					</div>
@@ -30,59 +30,85 @@
 		<div class="product-tab-block wow fadeInUp top-margin-all">
 			<div class="container">
 				<div class="page-title toggled">
-					<h3>All Products</h3>
+					<h3>Our Collections</h3>
 				</div>
 				<div id="content" class="">
 					<div class="category-row row">
 
 
-<%
-const shuffledProducts = products.slice(0, 20).sort(() => Math.random() - 0.5)
-shuffledProducts.forEach(product => { %>
-  <div class="product-layout product-grid col-xl-3 col-lg-4 col-md-4 col-sm-6 col-xs-6">
-    <div class="product-thumb">
-      <div class="image">
-        <a href="/product/<%= product.name.replace(/ /g, '-') %>" class="thumb-image">
-          <img src="<%= product.images[0] ? '../../upload/' + product.images[0] : 'assets/images/products/placeholder.jpg' %>"
-            alt="<%= product.name %>" title="<%= product.name %>"
-            class="img-responsive zoomInImage">
-        </a>
-        <div class="button-group">
-          <button class="addcart" type="button" title="Add to Cart" 
-		 onclick='handleAddToCart({
-			userData: <%= JSON.stringify(userData) %>, 
-			productId: "<%= product._id %>",  
-			quantity: "1",
-			})' 
-		  >
-            <i class="fa-solid fa-cart-shopping" class="cart-icon"></i>
-          </button>
-          <button class="wishlist" type="button" data-toggle="tooltip" id="button-add-to-wishlist" data-id="<%= product._id %>" title="Add to Wishlist" onclick='handleAddToWishlist({ userData: <%= JSON.stringify(userData) %>, productId: "<%= product._id %>", productName: "<%= product.name %>", productImage: "<%= product.image %>" })'>
-            <i class="icon-like"></i>
-          </button>
-        </div>
-      </div>
-      <div class="product-description">
-        <div class="caption">
-          <div class="title-rating clearfix">
-            <h4 class="product-title">
-              <a href="/product/<%= product.name.replace(/ /g, '-') %>">
-                <%= product.name %>
-              </a>
-            </h4>
-          </div>
-          <div class="price-cartbtn clearfix">
-            <p class="price">
-              ₹ <%= product.discountedPrice %> 
-              <small class="discount">₹ <%= product.price %></small>
-              <span class="price-tax">Ex Tax: ₹ <%= (product.discountedPrice / 1.18).toFixed(2) %></span>
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-<% }); %>
+									<%
+									const shuffledProducts = products.slice(0, 20).sort(() => Math.random() - 0.5)
+									shuffledProducts.forEach(product => { %>
+									<div class="product-layout product-grid col-xl-3 col-lg-4 col-md-4 col-sm-6 col-xs-6">
+										<div class="product-thumb">
+										<div class="image">
+											<a href="/product/<%= product.name.replace(/ /g, '-') %>" class="thumb-image">
+											<img src="<%= product.images[0] ? '../../upload/' + product.images[0] : 'assets/images/products/placeholder.jpg' %>"
+												alt="<%= product.name %>" title="<%= product.name %>"
+												class="img-responsive zoomInImage">
+											</a>
+											<div class="button-group">
+											   <% if (product.status) { %>
+																<button class="addcart" type="button" title="Add to Cart" 
+																		onclick='handleAddToCart({
+																			userData: <%= JSON.stringify(userData) %>, 
+																			productId: "<%= product._id %>",  
+																			quantity: "1",
+																		})'>
+																	<i class="fa-solid fa-cart-shopping cart-icon"></i>
+																</button>
+															<% } else { %>
+																<button class="addcart" type="button" title="Out of Stock" disabled>
+																	<i class="fa-solid fa-cart-shopping cart-icon"></i>
+																</button>
+															<% } %>
+											<button class="wishlist" type="button" data-toggle="tooltip" id="button-add-to-wishlist" data-id="<%= product._id %>" title="Add to Wishlist" onclick='handleAddToWishlist({ userData: <%= JSON.stringify(userData) %>, productId: "<%= product._id %>", productName: "<%= product.name %>", productImage: "<%= product.image %>" })'>
+												<i class="icon-like"></i>
+											</button>
+											</div>
+										</div>
+											<div class="product-description">
+												<div class="caption">
+												<div class="title-rating clearfix">
+													<h4 class="product-title">
+													<a href="/product/<%= product.name.replace(/ /g, '-') %>">
+														<%= product.name %>
+													</a>
+													</h4>
+												</div>
+												<div class="price-cartbtn clearfix">
+													<p class="price">
+													₹ <%= product.discountedPrice %> 
+													<small class="discount">₹ <%= product.price %></small>
+													<span class="price-tax">Ex Tax: ₹ <%= (product.discountedPrice / 1.18).toFixed(2) %></span>
+													</p>
+												</div>
+													<div>
+														<% if (product.status) { %>
+															<button class="btn btn-cart" type="button"
+																	title="Add to Cart"
+																	data-id="<%= product._id %>"
+																	onclick='handleAddToCart({
+																	userData: <%= JSON.stringify(userData) %>, 
+																	productId: "<%= product._id %>",  
+																	quantity: "1",
+																	})'>
+																	Add to cart
+															</button>
+														<% } else { %>
+															<button class="btn btn-cart" type="button"
+																	title="Out of Stock"
+																	data-id="<%= product._id %>"
+																	disabled>
+																	Out of Stock
+															</button>
+														<% } %>
+													</div>
+											</div>
+										</div>
+										</div>
+									</div>
+									<% }); %>
 
 
 					</div>
@@ -105,22 +131,22 @@ shuffledProducts.forEach(product => { %>
 						<div class="banner1">
 							<div class="inner1"><a href="#"><img alt="" class="img-responsive w-100"
 										src="assets/images/banners/banner1.png"> </a></div>
-							<div class="banner-desc">10% <span>off</span></div>
+							<!-- <div class="banner-desc">10% <span>off</span></div> -->
 							<div class="inner2">
-								<div class="banner-desc2">Tips to Choose a</div>
+								<!-- <div class="banner-desc2">Tips to Choose a</div>
 								<div class="banner-title">Fancy Saree</div>
 								<div class="banner-desc1">as per your body shape</div>
-								<div class="btn btn-info">shop now</div>
+								<div class="btn btn-info">shop now</div> -->
 							</div>
 						</div>
 					</div>
 					<div class="banner-outer">
 						<div class="banner2">
-							<div class="inner1"><a href="#"><img alt="" class="img-responsive w-100"
-										src="assets/images/banners/banner2.png"> </a></div>
+							<div class="inner1"><a href="#"><video alt="" loop autoplay muted class="img-responsive w-100"
+										src="assets/images/banners/banner2.mp4"> </a></div>
 							<div class="inner2">
 								<div class="banner-title">New Collection</div>
-								<div class="banner-desc">saree</div>
+								<!-- <div class="banner-desc">saree</div> -->
 								<div class="btn btn-info">shop now</div>
 							</div>
 						</div>
@@ -159,17 +185,20 @@ shuffledProducts.forEach(product => { %>
 																			size="2" id="input-quantity"
 																			class="form-control" hidden>
 																		<div class="button-group">
-																			<button class="addcart" type="button"
-																				title="Add to Cart" id="buttoncart"
-																				data-id="<%= product._id %>"
-																				onclick='handleAddToCart({
-																				userData: <%= JSON.stringify(userData) %>, 
-																				productId: "<%= product._id %>",  
-																				quantity: "1",
-																				})'
-																				>
-																				<i class="icon-shopping-bag"></i>
-																			</button>
+																			   <% if (product.status) { %>
+																<button class="addcart" type="button" title="Add to Cart" 
+																		onclick='handleAddToCart({
+																			userData: <%= JSON.stringify(userData) %>, 
+																			productId: "<%= product._id %>",  
+																			quantity: "1",
+																		})'>
+																	<i class="fa-solid fa-cart-shopping cart-icon"></i>
+																</button>
+															<% } else { %>
+																<button class="addcart" type="button" title="Out of Stock" disabled>
+																	<i class="fa-solid fa-cart-shopping cart-icon"></i>
+																</button>
+															<% } %>
 																			<button class="wishlist" type="button" data-toggle="tooltip" id="button-add-to-wishlist" data-id="<%= product._id %>" title="Add to Wishlist" onclick='handleAddToWishlist({ userData: <%= JSON.stringify(userData) %>, productId: "<%= product._id %>", productName: "<%= product.name %>", productImage: "<%= product.image %>" })'>
 																				<i class="icon-like"></i>
 																			</button>
@@ -194,8 +223,30 @@ shuffledProducts.forEach(product => { %>
 																					</p>
 
 																		</div>
-																		</div>
+																			<div>
+														<% if (product.status) { %>
+															<button class="btn btn-cart" type="button"
+																	title="Add to Cart"
+																	data-id="<%= product._id %>"
+																	onclick='handleAddToCart({
+																	userData: <%= JSON.stringify(userData) %>, 
+																	productId: "<%= product._id %>",  
+																	quantity: "1",
+																	})'>
+																	Add to cart
+															</button>
+														<% } else { %>
+															<button class="btn btn-cart" type="button"
+																	title="Out of Stock"
+																	data-id="<%= product._id %>"
+																	disabled>
+																	Out of Stock
+															</button>
+														<% } %>
+													</div>
 																	</div>
+																</div>
+																	
 																</div>
 															</div>
 														</div>
@@ -226,7 +277,7 @@ shuffledProducts.forEach(product => { %>
 								<div class=" icon-shipping service-icon-foor"></div>
 								<div class="service-content">
 									<h4 class="promo-title">Free shipping</h4> <span class="promo-desc">On order over
-										$150</span>
+										₹399</span>
 								</div>
 							</div>
 						</div>
@@ -234,9 +285,7 @@ shuffledProducts.forEach(product => { %>
 							<div class="service">
 								<div class=" icon-wallet service-icon-foor"></div>
 								<div class="service-content">
-									<h4 class="promo-title">Cash On Delivery</h4> <span class="promo-desc">100% money
-										back
-										guarantee</span>
+									<h4 class="promo-title">Quality Products</h4> <span class="promo-desc">100% Customer Satification</span>
 								</div>
 							</div>
 						</div>
@@ -256,7 +305,7 @@ shuffledProducts.forEach(product => { %>
 								<div class="service-content">
 									<h4 class="promo-title">24/7 customer service</h4> <span class="promo-desc">Call us
 										24/7
-										at 123-456-789</span>
+										at +919101394194</span>
 								</div>
 							</div>
 						</div>
@@ -271,7 +320,7 @@ shuffledProducts.forEach(product => { %>
 		<div class="vipodha-testimonial-block top-margin-all wow fadeInUp">
 			<div class="vipodha-testimonial container box-module box-content">
 				<div class="page-title customers-text">
-					<h3>Our Testimonials</h3>
+					<h3>What Our Customer Says!</h3>
 				</div>
 				<div class="block_box">
 					<div class="row">
@@ -279,11 +328,6 @@ shuffledProducts.forEach(product => { %>
 							<div class="customers-said owl-carousel">
 								<div class="row-items category-layout col-xs-12">
 									<div class="tetimonial-image-content">
-										<div class="vipodha-testimonial-images">
-											<i class="icon-squarequote hidden"></i>
-											<img src="assets/images/testimonial/1.png" alt="Noelle Salar"
-												class="img-circle img-responsive customers-img">
-										</div>
 										<div class="vipodha-testimonial-content">
 											<div class="vipodha-testimonial-author">Noelle Salar</div>
 											<div class="vipodha-testimonial-customer">Customer</div>
@@ -297,17 +341,7 @@ shuffledProducts.forEach(product => { %>
 									<i class="testimonial-quotes icon-quotes"></i>
 								</div>
 								<div class="row-items category-layout col-xs-12">
-									<div class="tetimonial-image-content">
-										<div class="vipodha-testimonial-images">
-											<i class="icon-squarequote hidden"></i>
-											<img src="assets/images/testimonial/2.png" alt="Noelle Salar"
-												class="img-circle img-responsive customers-img">
-										</div>
-										<div class="vipodha-testimonial-content">
-											<div class="vipodha-testimonial-author">smith anthor</div>
-											<div class="vipodha-testimonial-customer">Customer</div>
-										</div>
-									</div>
+									
 									<div class="vipodha-testimonial-text">
 										<p>Finding the perfect saree can be a daunting task, but Pallu Story made it a breeze! 
 											From the moment I landed on their website, the user-friendly interface made browsing a joy. Their extensive collection had something for every taste, 
@@ -316,7 +350,7 @@ shuffledProducts.forEach(product => { %>
 									<i class="testimonial-quotes icon-quotes"></i>
 								</div>
 								<div class="row-items category-layout col-xs-12">
-									<div class="tetimonial-image-content">
+									<!-- <div class="tetimonial-image-content">
 										<div class="vipodha-testimonial-images">
 											<i class="icon-squarequote hidden"></i>
 											<img src="assets/images/testimonial/3.png" alt="Noelle Salar"
@@ -326,7 +360,7 @@ shuffledProducts.forEach(product => { %>
 											<div class="vipodha-testimonial-author">mariya lorem</div>
 											<div class="vipodha-testimonial-customer">Customer</div>
 										</div>
-									</div>
+									</div> -->
 									<div class="vipodha-testimonial-text">
 										<p>My recent purchase from Pallu Story was a delightful experience.  
 											While the website is user-friendly and the sarees themselves are undeniably gorgeous,
@@ -466,77 +500,5 @@ shuffledProducts.forEach(product => { %>
 		</div>
 		<!-- .Newsletter section -->
 	</section>
-	<script>
-		function addToCart() {
-			// Retrieve the product ID and quantity from the button's data attributes
-			const button = $('#buttoncart');
-			const productId = button.data('id');
-			const quantity = $('#input-quantity').val();
 
-			$.ajax({
-				url: '/addtocart',
-				type: 'POST',
-				contentType: 'application/json', // Specify the content type if sending JSON
-				data: JSON.stringify({ // Convert data to JSON string
-					productId: productId,
-					quantity: quantity
-				}),
-				beforeSend: function () {
-					button.button('loading');
-				},
-				success: function (response) {
-					button.button('reset');
-					toastr.success('Product added to cart successfully!');
-					// Optionally, update the cart UI here
-				},
-				error: function (error) {
-					button.button('reset');
-					toastr.error('Failed to add product to cart.');
-				}
-			});
-		}
-	</script>
-	<script>
-	// Handle Add to Wishlist Functionality
-function handleAddToWishlist({ userData, productId, productName, productImage }) {
-    var userData = userData || {};
-    if (userData && userData.isLoggedIn) {
-        // User is logged in, proceed to add to wishlist
-        addToWishlist(productId);
-    } else {
-        // User is not logged in, show error and redirect to login page
-        toastr.error('Please login to add to wishlist.');
-        setTimeout(function () {
-            window.location.href = '/my-account'; // Replace with your login page URL
-        }, 2000);
-    }
-}
-
-function addToWishlist(productId) {
-    const button = $('#button-add-to-wishlist');
-
-    // Update to Backend
-    $.ajax({
-        url: '/addtowishlist',
-        type: 'POST',
-        contentType: 'application/json',
-        data: JSON.stringify({
-            productId: productId
-        }),
-        beforeSend: function () {
-            button.button('loading');
-        },
-        success: function (response) {
-            button.button('reset');
-            toastr.success('Product added to wishlist successfully!');
-            // Optionally update UI to reflect wishlist change
-        },
-        error: function (error) {
-            button.button('reset');
-            toastr.error('Failed to add product to wishlist.');
-        }
-    });
-}
-	</script>
-
-	<%- include('../includes/webFooter.ejs') %>
+<%- include('../includes/webFooter.ejs') %>

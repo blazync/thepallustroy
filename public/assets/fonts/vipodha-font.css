@@ -11,6 +11,15 @@
   font-display: block;
 }
 
+@font-face {
+  font-family: "Avenir Book";
+  src: url("../fonts/avenir-book.woff2") format("woff2"),
+    url("../fonts/avenir-book.woff") format("woff"),
+    url("../fonts/avenir-book.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
 [class^="icon-"],
 [class*=" icon-"] {
   /* use !important to prevent issues with browser extensions that change fonts */

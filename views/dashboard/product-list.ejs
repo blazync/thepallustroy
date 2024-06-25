@@ -1,148 +1,158 @@
 <%- include('../includes/adminHeader.ejs') %>
-                    <div class="main-content">
-                        <!-- main-content-wrap -->
-                        <div class="main-content-inner">
-                            <!-- main-content-wrap -->
-                            <div class="main-content-wrap">
-                                <div class="flex items-center flex-wrap justify-between gap20 mb-27">
-                                    <h3>Product List</h3>
-                                    <ul class="breadcrumbs flex items-center flex-wrap justify-start gap10">
-                                        <li>
-                                            <a href="index"><div class="text-tiny">Dashboard</div></a>
-                                        </li>
-                                        <li>
-                                            <i class="icon-chevron-right"></i>
-                                        </li>
-                                        <li>
-                                            <a href="#"><div class="text-tiny">Product</div></a>
-                                        </li>
-                                        <li>
-                                            <i class="icon-chevron-right"></i>
-                                        </li>
-                                        <li>
-                                            <div class="text-tiny">Product List</div>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <!-- product-list -->
-                                <div class="wg-box">
-                                    <div class="title-box">
-                                        <i class="icon-coffee"></i>
-                                        <div class="body-text">Tip search by Product ID: Each product is provided with a unique ID, which you can rely on to find the exact product you need.</div>
-                                    </div>
-                                    <div class="flex items-center justify-between gap10 flex-wrap">
-                                        
-                                        <a class="tf-button style-1 w208" href="add-product"><i class="icon-plus"></i>Add new</a>
-                                    </div>
-                                    <div class="wg-table table-product-list">
-                                        <ul class="table-title flex gap20 mb-14">
-                                            <li>
-                                                <div class="body-title">Product</div>
-                                            </li>    
-                                    
-                                            <li>
-                                                <div class="body-title">Price</div>
-                                            </li>
-                                            <li>
-                                                <div class="body-title">Quantity</div>
-                                            </li>
-                                            <li>
-                                                <div class="body-title">Views</div>
-                                            </li>
-                                            <li>
-                                                <div class="body-title">Stock</div>
-                                            </li>
-                                            <li>
-                                                <div class="body-title">Start date</div>
-                                            </li>
-                                            <li>
-                                                <div class="body-title">Action</div>
-                                            </li>
-                                        </ul>
-                                        <ul class="flex flex-column">
-                                            <% if (product.length > 0) { %>
-                                                <% product.forEach(data => { %>
-                                                    <li class="product-item gap14">
-                                                        <div class="image no-bg">
-                                                            <img src="../../upload/<%= data.images[0] %>" alt="<%= data.name %>">
-                                                        </div>
-                                                        <div class="flex items-center justify-between gap20 flex-grow">
-                                                            <div class="name">
-                                                                <a href="product-list" class="body-title-2"><%= data.name %></a>
-                                                            </div>
-                                    
-                                                            <div class="body-text">Rs <%= data.price.toFixed(2) %></div>
-                                                            <div class="body-text"><%= data.stock %></div>
-                                                            <div class="body-text"><%= data.views %></div>
-                                                            <div>
-                                                                <% if (data.stock > 0) { %>
-                                                                    <div class="block-available">In stock</div>
-                                                                <% } else { %>
-                                                                    <div class="block-not-available">Out of stock</div>
-                                                                <% } %>
-                                                            </div>
-                                                            <div class="body-text"><%= data.created_at %></div>
-                                                            <div class="list-icon-function">
-                                                                
-                                                                <a href="/dashboard/editproduct/<%= data._id %>">
-                                                                    <div class="item edit">
-                                                                        <i class="icon-edit-3"></i>
-                                                                    </div>
-                                                                </a>
-                                                                <a href="/dashboard/deleteProduct/<%= data._id %>" onclick="return confirmDeletion(event, '<%= data._id %>')">
-                                                                    <div class="item trash">
-                                                                        <i class="icon-trash-2"></i>
-                                                                    </div>
-                                                                </a>
-                                                                
-                                                            </div>
-                                                        </div>
-                                                    </li>
-                                                <% }); %>
-                                            <% } else { %>
-                                                <p>No products found.</p>
-                                            <% } %>
-                                            
-                                        </ul>
-                                    </div>
-                                    <div class="divider"></div>
-                                   
-                                </div>
-                                <!-- /product-list -->
+<div class="main-content">
+    <div class="main-content-inner">
+        <div class="main-content-wrap">
+            <div class="flex items-center flex-wrap justify-between gap20 mb-27">
+                <h3>Product List</h3>
+                <ul class="breadcrumbs flex items-center flex-wrap justify-start gap10">
+                    <li>
+                        <a href="index"><div class="text-tiny">Dashboard</div></a>
+                    </li>
+                    <li>
+                        <i class="icon-chevron-right"></i>
+                    </li>
+                    <li>
+                        <a href="#"><div class="text-tiny">Product</div></a>
+                    </li>
+                    <li>
+                        <i class="icon-chevron-right"></i>
+                    </li>
+                    <li>
+                        <div class="text-tiny">Product List</div>
+                    </li>
+                </ul>
+            </div>
+            <!-- product-list -->
+            <div class="wg-box">
+                <div class="title-box">
+                    <i class="icon-coffee"></i>
+                    <div class="body-text">Tip search by Product ID: Each product is provided with a unique ID, which you can rely on to find the exact product you need.</div>
+                </div>
+                <div class="flex items-center justify-between gap10 flex-wrap">
+                    <div class="wg-filter flex-grow">
+                        <form class="form-search" method="GET" action="/dashboard/product-list">
+                            <fieldset class="name">
+                                <input type="text" placeholder="Search here..." class="" name="search" tabindex="2" value="<%= search %>" aria-required="true">
+                            </fieldset>
+                            <div class="button-submit">
+                                <button class="" type="submit"><i class="icon-search"></i></button>
                             </div>
-                            <!-- /main-content-wrap -->
-                        </div>
-                    
+                        </form>
                     </div>
-                    <script>
-                        function confirmDeletion(event, productId) {
-                            event.preventDefault(); // Prevent the default anchor click behavior
-                            const userConfirmed = confirm("Are you sure you want to delete this product?");
-                            if (userConfirmed) {
-                                // If user confirmed, redirect to the delete URL
-                                window.location.href = `/dashboard/deleteProduct/${productId}`;
-                            }
-                        }
-                    
-                        // Function to get query parameters
-                        function getQueryParams() {
-                            const params = {};
-                            const queryString = window.location.search.substring(1);
-                            const regex = /([^&=]+)=([^&]*)/g;
-                            let match;
-                            while (match = regex.exec(queryString)) {
-                                params[decodeURIComponent(match[1])] = decodeURIComponent(match[2]);
-                            }
-                            return params;
-                        }
-                    
-                        // Display toastr messages
-                        const params = getQueryParams();
-                        if (params.success) {
-                            toastr.success(params.success);
-                        }
-                        if (params.error) {
-                            toastr.error(params.error);
-                        }
-                        </script>
-                    <%- include('../includes/adminFooter.ejs') %>
+                    <a class="tf-button style-1 w208" href="add-product"><i class="icon-plus"></i>Add new</a>
+                </div>
+                <div class="wg-table table-product-list">
+                    <ul class="table-title flex gap20 mb-14">
+                        <li>
+                            <div class="body-title">Product</div>
+                        </li>    
+                         <li>
+                            <div class="body-title">Product Id</div>
+                        </li> 
+                        <li>
+                            <div class="body-title">Price</div>
+                        </li>
+                        <li>
+                            <div class="body-title">Quantity</div>
+                        </li>
+                        <li>
+                            <div class="body-title">Views</div>
+                        </li>
+                        <li>
+                            <div class="body-title">Stock</div>
+                        </li>
+                        <li>
+                            <div class="body-title">Start date</div>
+                        </li>
+                        <li>
+                            <div class="body-title">Action</div>
+                        </li>
+                    </ul>
+                    <ul class="flex flex-column">
+                        <% if (products.length > 0) { %>
+                            <% products.forEach(data => { %>
+                                <li class="product-item gap14">
+                                    <div class="image no-bg">
+                                        <img src="../../upload/<%= data.images[0] %>" alt="<%= data.name %>">
+                                    </div>
+                                    <div class="flex items-center justify-between gap20 flex-grow">
+                                        <div class="name">
+                                            <a href="product-list" class="body-title-2"><%= data.name %></a>
+                                        </div>
+                                        <div class="body-text"><%= data._id %></div>
+                                        <div class="body-text">Rs <%= data.price.toFixed(2) %></div>
+                                        <div class="body-text"><%= data.stock %></div>
+                                        <div class="body-text"><%= data.views %></div>
+                                        <div>
+                                            <% if (data.stock > 0) { %>
+                                                <div class="block-available">In stock</div>
+                                            <% } else { %>
+                                                <div class="block-not-available">Out of stock</div>
+                                            <% } %>
+                                        </div>
+                                        <div class="body-text"><%= data.created_at %></div>
+                                        <div class="list-icon-function">
+                                            <a href="/dashboard/editproduct/<%= data._id %>">
+                                                <div class="item edit">
+                                                    <i class="icon-edit-3"></i>
+                                                </div>
+                                            </a>
+                                            <a href="/dashboard/deleteProduct/<%= data._id %>" onclick="return confirmDeletion(event, '<%= data._id %>')">
+                                                <div class="item trash">
+                                                    <i class="icon-trash-2"></i>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </li>
+                            <% }); %>
+                        <% } else { %>
+                            <p>No products found.</p>
+                        <% } %>
+                    </ul>
+                </div>
+                <!-- Pagination -->
+                <div class="pagination">
+                    <% for(let i = 1; i <= totalPages; i++) { %>
+                        <a href="/dashboard/product-list?page=<%= i %>&search=<%= search %>" class="<%= currentPage == i ? 'active' : '' %>"><%= i %></a>
+                    <% } %>
+                </div>
+                <div class="divider"></div>
+            </div>
+            <!-- /product-list -->
+        </div>
+   <!-- bottom-page -->
+                        <%- include('../includes/adminFooter.ejs') %>
+                        <!-- /bottom-page -->
+                   
+<script>
+    function confirmDeletion(event, productId) {
+        event.preventDefault(); // Prevent the default anchor click behavior
+        const userConfirmed = confirm("Are you sure you want to delete this product?");
+        if (userConfirmed) {
+            // If user confirmed, redirect to the delete URL
+            window.location.href = `/dashboard/deleteProduct/${productId}`;
+        }
+    }
+
+    // Function to get query parameters
+    function getQueryParams() {
+        const params = {};
+        const queryString = window.location.search.substring(1);
+        const regex = /([^&=]+)=([^&]*)/g;
+        let match;
+        while (match = regex.exec(queryString)) {
+            params[decodeURIComponent(match[1])] = decodeURIComponent(match[2]);
+        }
+        return params;
+    }
+
+    // Display toastr messages
+    const params = getQueryParams();
+    if (params.success) {
+        toastr.success(params.success);
+    }
+    if (params.error) {
+        toastr.error(params.error);
+    }
+</script>

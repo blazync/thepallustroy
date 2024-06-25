@@ -1,208 +1,140 @@
-<%- include('../includes/adminHeader.ejs') %>s
-                    <div class="main-content">
-                        <!-- main-content-wrap -->
-                        <div class="main-content-inner">
-                            <!-- main-content-wrap -->
-                            <div class="main-content-wrap">
-                                <div class="flex items-center flex-wrap justify-between gap20 mb-27">
-                                    <h3>Order List</h3>
-                                    <ul class="breadcrumbs flex items-center flex-wrap justify-start gap10">
-                                        <li>
-                                            <a href="index"><div class="text-tiny">Dashboard</div></a>
-                                        </li>
-                                        <li>
-                                            <i class="icon-chevron-right"></i>
-                                        </li>
-                                        <li>
-                                            <a href="#"><div class="text-tiny">Order</div></a>
-                                        </li>
-                                        <li>
-                                            <i class="icon-chevron-right"></i>
-                                        </li>
-                                        <li>
-                                            <div class="text-tiny">Order List</div>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <!-- order-list -->
-                                <div class="wg-box">
-                                    <div class="flex items-center justify-between gap10 flex-wrap">
-                                        <div class="wg-filter flex-grow">
-                                            <form class="form-search">
-                                                <fieldset class="name">
-                                                    <input type="text" placeholder="Search here..." class="" name="name" tabindex="2" value="" aria-required="true" required="">
-                                                </fieldset>
-                                                <div class="button-submit">
-                                                    <button class="" type="submit"><i class="icon-search"></i></button>
-                                                </div>
-                                            </form>
-                                        </div>
-                                        <!-- <a class="tf-button style-1 w208" href="oder-detail"><i class="icon-file-text"></i>Export all order</a> -->
-                                    </div>
-                                    <div class="wg-table table-all-category">
-                                        <ul class="table-title flex gap20 mb-14">   
-                                            <li>
-                                                <div class="body-title">Order ID</div>
-                                            </li>
-                                            <li>
-                                                <div class="body-title">Price</div>
-                                            </li>
-                                            <li>
-                                                <div class="body-title">Quantity</div>
-                                            </li>
-                                            <li>
-                                                <div class="body-title">Payment</div>
-                                            </li>
-                                            <li>
-                                                <div class="body-title">Status</div>
-                                            </li>
-                                            <li>
-                                                <div class="body-title">Tracking</div>
-                                            </li>
-                                            <li>
-                                                <div class="body-title">Action</div>
-                                            </li>
-                                        </ul>
-                                        <ul class="flex flex-column">
-                                            <% if (order.length > 0) { %>
-                                                <% order.forEach(orderItem => { %>    
-                                                    <li class="product-item gap14">
-                                                        <div class="image no-bg">
-                                                            <img src="/path/to/product-image/<%= orderItem.product_id %>.jpg" alt="<%= orderItem.name %>">
-                                                        </div>
-                                                        <div class="flex items-center justify-between gap20 flex-grow">
-                                                            
-                                                            <div class="body-text">Order #<%= orderItem._id %></div>
-                                                            <div class="body-text">₹ <%= orderItem.total_amount.toFixed(2) %></div>
-                                                            <div class="body-text"><%= orderItem.products[0].quantity %></div>
-                                                            <div class="body-text" id="paymentStatus_<%= orderItem._id %>"><%= orderItem.payment_status %></div>
-                                                            <!-- <div>
-                                                                <% if(userData.role == "admin") {%>
-                                                                 <form id="updatePaymentStatusForm_<%= orderItem._id %>" >
-                                                                    <select name="paymentStatus" id="paymentStatusSelect_<%= orderItem._id %>">
-                                                                        <option value="pending">Pending</option>
-                                                                        <option value="paid">Paid</option>
-                                                                        <option value="failed">Failed</option>
-                                                                    </select>
-                                                                    <input type="hidden" name="orderId" value="<%= orderItem._id %>">
-                                                                </form>
-                                                                <% } %>
-                                                                <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> 
-                                                                <script>
-                                                                    $(document).ready(function(){
-                                                                        // Function to handle updating payment status
-                                                                        $('[id^=updatePaymentStatusForm_]').change(function(e){
-                                                                            e.preventDefault(); // Prevent default form submission
-                                                                            var formData = $(this).serializeArray(); // Serialize form data as an array
-                                                                            var orderId = $(this).find('input[name="orderId"]').val(); // Extract order ID from the hidden input field
-                                                                            var paymentStatus = formData[0].value; // Extract the selected payment status from the form data
-                                                                            $.ajax({
-                                                                                type: 'POST',
-                                                                                url: '/dashboard/update-payment-status', // URL to your controller method
-                                                                                data: formData, // Send formData to the controller
-                                                                                success: function(response) {
-                                                                                    // Update the payment status in the UI
-                                                                                    $('#paymentStatus_' + response.orderId).text(response.paymentStatus);
-                                                                                },
-                                                                                error: function(err) {
-                                                                                    console.error(err);
-                                                                                }
-                                                                            });
-                                                                        });
-                                                                    });
-                                                                </script>
-                                                                
-
-                                                            </div> -->
-                                                            <div>
-                                                                <div class="block-available"><%= orderItem.status %></div>
-                                                                <% if(userData.role == "admin") {%>
-                                                                <form id="updateStatusForm_<%= orderItem._id %>">
-                                                                    <select name="status" id="statusSelect_<%= orderItem._id %>">
-                                                                        <option value="receiving_orders">Receiving Orders</option>
-                                                                        <option value="order_processing">Order Processing</option>
-                                                                        <option value="being_delivered">Being Delivered</option>
-                                                                        <option value="delivered">Delivered</option>
-                                                                    </select>
-                                                                    <input type="hidden" name="orderId" value="<%= orderItem._id %>"> <!-- Add a hidden input for the order ID -->
-                                                                </form>
-                                                                <% } %>
-
-                                                            </div>
-                                                            
-                                                            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-                                                            <script>
-                                                                $(document).ready(function(){
-                                                                    $('[id^=updateStatusForm_]').change(function(e){
-                                                                        e.preventDefault(); // Prevent default form submission
-                                                                        var formData = $(this).serialize(); // Serialize form data
-                                                                        $.ajax({
-                                                                            type: 'POST',
-                                                                            url: '/dashboard/update-order-status', // URL to your controller method
-                                                                            data: formData,
-                                                                            success: function(response) {
-                                                                                // Update the order status in the UI
-                                                                                $('#updateStatusForm_' + response.orderId + ' .block-available').text(response.status);
-                                                                            },
-                                                                            error: function(err) {
-                                                                                console.error(err);
-                                                                            }
-                                                                            
-                                                                        });
-                                                                    });
-                                                                    // Refresh the content every 10 seconds
-    
-                                                                });
-
-                                                                
-                                                            </script>
-                                                            
-                                                            
-                                                            
-                                                            
-                                                            <div>
-                                                                <a href="/dashboard/oder-tracking/<%= orderItem._id %>">
-                                                                    <div class="block-tracking">Tracking</div>
-                                                                </a>
-                                                            </div>
-                                                            <div class="list-icon-function">
-                                                                <a href="/dashboard/oder-detail/<%= orderItem._id %>">
-                                                                    <div class="item eye">
-                                                                        <i class="icon-eye"></i>
-                                                                    </div>
-                                                                </a>
-                                                                <% if(userData.role == "admin") {%>
-                                                                    <!-- <div class="item edit">
-                                                                        <i class="icon-edit-3"></i>
-                                                                    </div>
-                                                                    <div class="item trash">
-                                                                        <i class="icon-trash-2"></i>
-                                                                    </div> -->
-                                                                    <% } %>
-                                                            </div>
-                                                        </div>
-                                                    </li>
-                                                <% }); %>
-                                            <% } else { %>
-                                                <li>No Orders Found</li>
-                                            <% } %>
-                                        </ul>
-                                    </div>
-                                    
-                                    
-                                    <div class="divider"></div>
-                                    
-                                </div>
-                                <!-- /order-list -->
+<%- include('../includes/adminHeader.ejs') %>
+<div class="main-content">
+    <div class="main-content-inner">
+        <div class="main-content-wrap">
+            <div class="flex items-center flex-wrap justify-between gap20 mb-27">
+                <h3>Order List</h3>
+                <ul class="breadcrumbs flex items-center flex-wrap justify-start gap10">
+                    <li>
+                        <a href="index"><div class="text-tiny">Dashboard</div></a>
+                    </li>
+                    <li>
+                        <i class="icon-chevron-right"></i>
+                    </li>
+                    <li>
+                        <a href="#"><div class="text-tiny">Order</div></a>
+                    </li>
+                    <li>
+                        <i class="icon-chevron-right"></i>
+                    </li>
+                    <li>
+                        <div class="text-tiny">Order List</div>
+                    </li>
+                </ul>
+            </div>
+            <div class="wg-box">
+                <div class="flex items-center justify-between gap10 flex-wrap">
+                    <div class="wg-filter flex-grow">
+                        <form class="form-search" method="GET" action="/dashboard/order-list">
+                            <fieldset class="name">
+                                <input type="text" placeholder="Search by Order ID..." class="" name="search" value="<%= search %>" tabindex="2" aria-required="true" required>
+                            </fieldset>
+                            <div class="button-submit">
+                                <button class="" type="submit"><i class="icon-search"></i></button>
                             </div>
-                            <!-- /main-content-wrap -->
-                        </div>
-                        <!-- /main-content-wrap -->
-                        <!-- bottom-page -->
-                       
-                        <!-- /bottom-page -->
+                        </form>
                     </div>
-                 
-                    
-
-                    <%- include('../includes/adminFooter.ejs') %>
+                </div>
+                <div class="wg-table table-all-category">
+                    <ul class="table-title flex gap20 mb-14">   
+                        <li>
+                            <div class="body-title">Order ID</div>
+                        </li>
+                        <li>
+                            <div class="body-title">Price</div>
+                        </li>
+                        <li>
+                            <div class="body-title">Quantity</div>
+                        </li>
+                        <li>
+                            <div class="body-title">Payment</div>
+                        </li>
+                        <li>
+                            <div class="body-title">Status</div>
+                        </li>
+                        <li>
+                            <div class="body-title">Tracking</div>
+                        </li>
+                        <li>
+                            <div class="body-title">Action</div>
+                        </li>
+                    </ul>
+                    <ul class="flex flex-column">
+                        <% if (order.length > 0) { %>
+                            <% order.forEach(orderItem => { %>    
+                                <li class="product-item gap14">
+                                    <div class="flex items-center justify-between gap20 flex-grow">
+                                        <div class="body-text">Order #<%= orderItem._id %></div>
+                                        <div class="body-text">₹ <%= orderItem.total_amount.toFixed(2) %></div>
+                                        <div class="body-text"><%= orderItem.products[0].quantity %></div>
+                                        <div class="body-text" id="paymentStatus_<%= orderItem._id %>"><%= orderItem.payment_status %></div>
+                                        <div>
+                                            <div class="block-available"><%= orderItem.status %></div>
+                                            <% if(userData.role == "admin") { %>
+                                            <form id="updateStatusForm_<%= orderItem._id %>">
+                                                <select name="status" id="statusSelect_<%= orderItem._id %>">
+                                                    <option value="receiving_orders">Receiving Orders</option>
+                                                    <option value="order_processing">Order Processing</option>
+                                                    <option value="being_delivered">Being Delivered</option>
+                                                    <option value="delivered">Delivered</option>
+                                                </select>
+                                                <input type="hidden" name="orderId" value="<%= orderItem._id %>"> 
+                                            </form>
+                                            <% } %>
+                                        </div>
+                                        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+                                        <script>
+                                            $(document).ready(function(){
+                                                $('[id^=updateStatusForm_]').change(function(e){
+                                                    e.preventDefault(); 
+                                                    var formData = $(this).serialize(); 
+                                                    $.ajax({
+                                                        type: 'POST',
+                                                        url: '/dashboard/update-order-status', 
+                                                        data: formData,
+                                                        success: function(response) {
+                                                            $('#updateStatusForm_' + response.orderId + ' .block-available').text(response.status);
+                                                        },
+                                                        error: function(err) {
+                                                            console.error(err);
+                                                        }
+                                                    });
+                                                });
+                                            });
+                                        </script>
+                                        <div>
+                                            <a href="/dashboard/order-tracking/<%= orderItem._id %>">
+                                                <div class="block-tracking">Tracking</div>
+                                            </a>
+                                        </div>
+                                        <div class="list-icon-function">
+                                            <a href="/dashboard/order-detail/<%= orderItem._id %>">
+                                                <div class="item eye">
+                                                    <i class="icon-eye"></i>
+                                                </div>
+                                            </a>
+                                            <% if(userData.role == "admin") { %>
+                                            <!-- Additional admin actions can go here -->
+                                            <% } %>
+                                        </div>
+                                    </div>
+                                </li>
+                            <% }); %>
+                        <% } else { %>
+                            <li>No Orders Found</li>
+                        <% } %>
+                    </ul>
+                </div>
+                <div class="pagination">
+                    <% for(let i = 1; i <= totalPages; i++) { %>
+                        <a href="/dashboard/order-list?page=<%= i %>&search=<%= search %>" class="<%= currentPage == i ? 'active' : '' %>"><%= i %></a>
+                    <% } %>
+                </div>
+                <div class="divider"></div>
+            </div>
+        </div>
+    </div>
+                 <!-- bottom-page -->
+                        <%- include('../includes/adminFooter.ejs') %>
+                        <!-- /bottom-page -->
+                   

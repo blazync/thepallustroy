@@ -43,8 +43,7 @@ const checkAuth = (req, res, next) => {
       return res.redirect('/my-account');
     } else {
       // General error handling
-      console.log('Error verifying token:', error);
-      console.log({ message: 'Internal Server Error' });
+      console.log('Error verifying token');
       return res.redirect('/my-account');
     
     }

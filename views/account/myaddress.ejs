@@ -1,31 +1,5 @@
 <%- include('../includes/webHeader.ejs') %>
 
-<style>
-    /* Your existing CSS styles */
-
-    .edit-button {
-        background-color: #ffc107; /* Yellow */
-        color: #212529;
-        border-color: #ffc107;
-    }
-
-    .edit-button:hover {
-        background-color: #ffcd39; /* Lighter Yellow */
-        border-color: #ffcd39;
-    }
-
-    .delete-button {
-        background-color: #dc3545; /* Red */
-        color: #fff;
-        border-color: #dc3545;
-    }
-
-    .delete-button:hover {
-        background-color: #c82333; /* Darker Red */
-        border-color: #c82333;
-    }
-</style>
-
 <!-- My Account -->
 <div class="blog-section">
     <div class="container p-4">
@@ -41,7 +15,7 @@
                                 <div class="col-md-4 mb-4">
                                     <div class="card" id="addressCard_<%= address._id %>">
                                         <div class="card-header">
-                                            Address <%= address._id %>
+                                            Address 
                                         </div>
                                         <div class="card-body">
                                             <p><strong>Address Line 1:</strong> <%= address.address_line1 %></p>
@@ -59,8 +33,8 @@
                                             </p>
                                         </div>
                                         <div class="card-footer">
-                                            <a href="/myaddress?id=<%= address._id %>"><button class="btn btn-sm edit-button" >Edit</button></a>
-                                            <button class="btn btn-sm btn-danger delete-button" data-address-id="<%= address._id %>">Delete</button>
+                                            <a href="/myaddress?id=<%= address._id %>"><button class="btn btn-warning" >Edit</button></a>
+                                            <button class="btn btn-danger" data-address-id="<%= address._id %>">Delete</button>
                                            
                 
                                         </div>
@@ -159,6 +133,7 @@
 
                     // Show Toastr notification
                     toastr.success('Primary status updated successfully.');
+                    location.reload()
                 },
                 error: function(xhr, status, error) {
                     console.error('Error updating primary status:', error);

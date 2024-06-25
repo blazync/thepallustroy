@@ -44,11 +44,11 @@ router.post('/postcategory', upload.single('image'),checkAuth,checkAdmin,   admi
 router.post('/deletecategory/:id', checkAuth,checkAdmin, adminController.deleteCategory);
 router.get('/new-page', checkAuth,checkAdmin,   adminController.newPage);
 router.get('/payment-detail', checkAuth,checkAdmin,   adminController.paymentDetail);
-router.get('/oder-detail/:id', checkAuth,checkAdmin,   adminController.oderDetail);
+router.get('/order-detail/:id', checkAuth,checkAdmin,   adminController.oderDetail);
 router.post('/update-order-status', checkAuth,checkAdmin,   adminController.updateOrderStatus);
 router.post('/update-payment-status', adminController.updatePaymentStatus);
-router.get('/oder-list', checkAuth,checkAdmin,   adminController.oderList);
-router.get('/oder-tracking/:id', checkAuth,checkAdmin,   adminController.oderTracking);
+router.get('/order-list', checkAuth,checkAdmin,   adminController.oderList);
+router.get('/order-tracking/:id', checkAuth,checkAdmin,   adminController.oderTracking);
 router.get('/product-list', checkAuth,checkAdmin,   adminController.productList);
 router.get('/report', checkAuth,checkAdmin,   adminController.report);
 router.get('/setting', checkAuth,checkAdmin,   adminController.setting);

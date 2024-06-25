@@ -21,7 +21,13 @@ router.post('/savecontact', controller.savecontact);
 router.get('/site-map', controller.siteMap);
 
 router.get('/my-account', controller.myAccount);
+router.get('/forgot-password', controller.getForgotPassword);
+router.post('/forgot-password', authController.forgotPassword);
 router.post('/postlogin', authController.postlogin);
+router.get('/verify-email/:token',authController.verifyEmail);
+router.get('/reset-password/:token',controller.getResetPassword);
+router.get('/send-verification-email',controller.sendVerificationEmail);
+router.post('/reset-password/:token',authController.resetPassword);
 router.get('/logout', authController.logout);
 
 router.get('/blog', controller.blog);

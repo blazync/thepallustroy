@@ -2,12 +2,66 @@
 <html lang="en-US">
 <head>
 	<meta charset="UTF-8">
-	<meta http-equiv="x-ua-compatible" content="ie=edge">
-	<title>Home - The Pallu Store</title>
-	<meta name="description" content="Vipodha">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta name="description" content="The Pallu Story promotes the six yard wonder: saree, a traditional attire with its origin in the Indian Subcontinent. Discover a unique collection of high-quality sarees celebrating heritage and modern flair.">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>The Pallu Story - Handpicked with Love</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <meta name="description" content="The Pallu Story promotes the six yard wonder: saree, a traditional attire with its origin in the Indian Subcontinent. Discover a unique collection of high-quality sarees celebrating heritage and modern flair.">
     <meta name="keywords" content="saree, Indian sarees, ethnic wear, traditional sarees, high-quality sarees">
+    
+    <!-- Open Graph Meta Tags for Facebook -->
+    <meta property="og:title" content="Home - The Pallu Story">
+    <meta property="og:description" content="The Pallu Story promotes the six yard wonder: saree, a traditional attire with its origin in the Indian Subcontinent. Discover a unique collection of high-quality sarees celebrating heritage and modern flair.">
+    <meta property="og:image" content="https://www.thepallustory.com/assets/images/banners/mainbanner.png"> <!-- Add the URL of an image that represents your site -->
+    <meta property="og:url" content="https://www.thepallustory.com">
+    <meta property="og:type" content="website">
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Home - The Pallu Story">
+    <meta name="twitter:description" content="The Pallu Story promotes the six yard wonder: saree, a traditional attire with its origin in the Indian Subcontinent. Discover a unique collection of high-quality sarees celebrating heritage and modern flair.">
+    <meta name="twitter:image" content="https://www.thepallustory.com/assets/images/banners/mainbanner.png"> <!-- Add the URL of an image that represents your site -->
+    <meta name="twitter:site" content="@thepallustory"> <!-- Add your Twitter handle here -->
+    
+	<!-- JSON-LD Structured Data -->
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://thepallustory.com"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Products",
+          "item": "https://thepallustory.com/product"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "About",
+          "item": "https://thepallustory.com/about"
+        },
+        {
+          "@type": "ListItem",
+          "position": 4,
+          "name": "Contact",
+          "item": "https://thepallustory.com/contact"
+        },
+       
+      ],
+      "sameAs": [
+        "https://thepallustory.com",
+      ]
+    }
+    </script>
+
+
 	<!-- Favicon -->
 	<link rel="icon" type="image/png" href="../../assets/images/favicon.png">
 	<!-- bootstrap CSS -->
@@ -21,14 +75,14 @@
 	<!-- Main Style CSS -->
 	<link rel="stylesheet" href="../../assets/css/style.css" type="text/css" media="all" />
 	<!-- Font -->
-	<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,400..900&display=swap" rel="stylesheet">
+	  <link rel="stylesheet" href="../../assets/fonts/Avenir-Book.ttf">
 	<!-- <link href="https://fonts.googleapis.com/css2?family=Chonburi&display=swap&family=Carattere&display=swap&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet"> -->
 	<!--vipodha_megamenu css-->
 	<link rel="stylesheet" href="../../assets/css/vipodha_megamenu.css">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" integrity="sha512-vKMx8UnXk60zUwyUnUPM3HbQo8QfmNx7+ltw8Pm5zLusl1XIfwcxo8DbWCqMGKaWeNxWA8yrx5v3SaVpMvR3CA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+	
+	<!-- Scripts -->
 	<script type="text/javascript" src="../../assets/js/script.js"></script>
-	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
 </head>
 </head>
@@ -61,9 +115,9 @@
 					<form method="post" enctype="multipart/form-data" id="form-currency">
 						<div class="btn-group">
 							<button class="btn btn-link dropdown-toggle" data-toggle="dropdown">
-								<span class="symbol">$</span>
-								<span class="drop-text">Currency</span>
-								<span class="code">INR</span>
+								<span class="symbol">₹</span>
+								<!-- <span class="drop-text">INR</span> -->
+								<!-- <span class="code">INR</span> -->
 								<!-- <i class="fa fa-angle-down"></i> -->
 							</button>
 							
@@ -254,13 +308,13 @@
 													</li>
 													<li class="with-sub-menu click">
 														<p class="close-menu"></p>
-														<a href="" class="clearfix">
+														<a href="/product" class="clearfix">
 															<strong>
 																Product
 															</strong>
-															<b class="fa fa-angle-down"></b>
+															<!-- <b class="fa fa-angle-down"></b> -->
 														</a>
-														<div class="sub-menu">
+														<!-- <div class="sub-menu">
 															<div class="content">
 																<div class="">
 																	<div class="row megamenu-product-grid">
@@ -296,7 +350,7 @@
 																	</div>
 																</div>
 															</div>
-														</div>
+														</div> -->
 													</li>
 													<li class="with-sub-menu click">
 														<p class="close-menu"></p>
@@ -447,7 +501,7 @@
 						</div>
 					</div> -->
 					
-					<% if (userData && userData.isLoggedIn) { %>
+					
 						
 					<div class="cart-content">
 							<a href="/shopping-cart">
@@ -460,7 +514,8 @@
 								</div>
 							</a>
 					</div>
-					
+					<% if (userData && userData.isLoggedIn) { %>
+						
 					<div class="dashboard-content">
 						<div id="header_ac" class="dropdown">
 							<a href="#" title="My Account" class="dropdown-toggle" data-toggle="dropdown">

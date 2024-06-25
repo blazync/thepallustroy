@@ -1,7 +1,10 @@
 <%- include('../includes/webHeader.ejs') %>
-
+   
 	<!-- Shopping Cart -->
      	<% if (userData && userData.isLoggedIn) { %>
+            <script>
+                handleUserLogin();
+            </script>
             
 	<section>
 		<div class="breadcrumb-main">
@@ -28,96 +31,108 @@
 				<%- include('../includes/customerSidebar.ejs') %>
 				<div id="content" class="col-sm-9  all-blog">
                 
-					<form id="cartForm" action="#" method="post" enctype="multipart/form-data">
-    <div class="table-responsive">
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <td class="text-center">Image</td>
-                    <td class="text-center">Product Name</td>
-                    <td class="text-center">Quantity</td>
-                    <td class="text-center">Unit Price</td>
-                    <td class="text-center">Total</td>
-                </tr>
-            </thead>
-            <tbody>
-                <% 
-                    let totalprice = 0;
-                    cartDetails.forEach(cartData => { 
-                        totalprice += cartData.product.price * cartData.quantity; 
-                    }); 
-                %>
+				<form id="cartForm" action="#" method="post" enctype="multipart/form-data">
+    <div class="cart-items">
+        <% 
+            let totalprice = 0;
+            cartDetails.forEach(cartData => { 
+                totalprice += cartData.product.price * cartData.quantity; 
+            }); 
+        %>
 
-                <% let deliveryCharges = totalprice > 299 ? 0 : settings.deliveryCharges; %>
+        <% let deliveryCharges = totalprice > 299 ? 0 : settings.deliveryCharges; %>
 
-                <% if (cartDetails.length > 0) { %>
-                    <% cartDetails.forEach(cartData => { %>
-                        <tr id="<%= cartData.product._id %>">
-                            <td class="text-center">
-                                
-                                <a href="#">
-                                    <img src="../../uploads/<%= cartData.images %>" alt="<%= cartData.product.name %>"
-                                        title="<%= cartData.product.name %>" class="img-thumbnail checkout-img">
-                                </a>
-                            </td>
-                            <td class="text-center">
-                                <a href="#"><%= cartData.product.name %></a> <br>
-                            </td>
-                            <td class="text-center">
-                                <div class="input-group cart_quantity">
-                                    <div class="cart-btn-quantity">
+    <main>
+      <section>
+        <div>
+          
+          
+        <% if (cartDetails.length > 0) { %>
+            <% cartDetails.forEach(cartData => { %>
+              <div style="margin-bottom: 10px" class="mobile-hid">
+            <span style="font-weight: bold">Cart </span>| <%= cartDetails.length %> Items
+          </div>
+          <div class="product">
+            <img src="../../upload/<%= cartData.product.images[0] %>" alt="<%= cartData.product.name %>"
+                                title="<%= cartData.product.name %>" class="img-thumbnail checkout-img">
+            <div>
+              <div class="d-flex">
+                <div>
+                  <p><%= cartData.product.name %></p>
+                   <p >Price: ₹ <%= cartData.product.price %></p>
+                </div>
+                <div class="cart-item-quantity">
+                            <div class="input-group cart_quantity">
+                                <div class="cart-btn-quantity">
                                     <button class="minus"><i class="fa fa-minus"></i></button>
-                                    <input type="text" name="quantity" value="<%= cartData.quantity %>" size="2" id="input-quantity" >
+                                    <input type="text" name="quantity" value="<%= cartData.quantity %>" size="2" id="input-quantity">
                                     <input type="hidden" class="productId" name="productId" value="<%= cartData.product._id %>">
                                     <button class="plus"><i class="fa fa-plus"></i></button>
                                 </div>
-                                <a onclick="location.reload()" title="Update" class="update-cart-btn" ><i class="fa-solid fa-rotate"></i></a>
-                                <!-- <a
-                                     onclick="deleteProductFromCart('<%= cartData.product._id %>', 1)"
-                                    class="btn btn-danger"><i class="fa-solid fa-circle-xmark"></i></a> -->
-                            
-                                <input type="hidden" id="keyInput_<%= cartData.product._id %>" name="key" value="<%= cartData.product._id %>">
-                    
-                                </div>
-                            </td>
-                            
-                            
-                            <td class="text-center" id="productPrice_<%= cartData.product._id %>">₹ <%= cartData.product.price %></td>
-                            <td class="text-center" id="productTotalPrice_<%= cartData.product._id %>"">₹ <%= (cartData.product.price * cartData.quantity).toFixed(2) %></td>
-                        </tr>
+                                <a onclick="location.reload()" title="Update" class="update-cart-btn"><i class="fa-solid fa-rotate"></i></a>
+                            </div>
+                        </div>
+              </div>
+               <div class="cart-item-total-price">Total Price: (<%= cartData.product.price %>₹ x <%= cartData.quantity %> Qty) = ₹ <%= (cartData.product.price * cartData.quantity).toFixed(2) %></div>          
+            </div>
+          </div>
+          
+          <div class="seller">
+            <span>Sold By: The Pallu Story</span>
+            <span>Click refresh to update the quantity </span>
+          </div>
 
-                    <% }); %>
-                <% } else { %>
-                    <tr>
-                        <td class="text-center" colspan="6">No Product Found in Cart</td>
-                    </tr>
-                <% } %>
-            </tbody>
+           <div class="divider"></div>
 
-             <% if (cartDetails.length > 0) { %>
+              <% }); %>
+        <% } else { %>
 
-            <tfoot id="checkout-cart-foot">
-                <tr>
-                    <td colspan="4" class="text-end" id="subtotalPrice">Sub-Total:</td>
-                    <td class="text-end" id="toalprice">₹ <%= totalprice.toFixed(2) %></td>
-                </tr>
-                <tr>
-                    <td colspan="4" class="text-end">Service Tax Charge:</td>
-                    <td class="text-end">₹ <%= settings.serviceFee %></td>
-                </tr>
-                <tr>
-                    <td colspan="4" class="text-end">Delivery Charge:</td>
-                    <td class="text-end">₹ <%= deliveryCharges.toFixed(2) %></td>
-                </tr>
-                <tr>
-                    <td colspan="4" class="text-end">Total:</td>
-                    <td class="text-end">₹ <%= (totalprice + deliveryCharges + settings.serviceFee).toFixed(2) %></td>
-                </tr>
-            </tfoot>
-                <% } %>
-        </table>
+            <div class="no-products">
+              <p>No products Found!</p>
+             
+            </div>
+          
+            
+        <% } %>
+        </div>
+      </section>
+     
+      
+
+      <% if (cartDetails.length > 0) { %>
+      <section id="price-details">
+        <p>Price Details</p>
+        <p>Sub Total <span>₹ <%= totalprice.toFixed(2) %></span></p>
+        <p>Service Fee <span>₹ <%= settings.serviceFee %></span></p>
+        <p>Delivery Charges <span>₹ <%= deliveryCharges.toFixed(2) %></span></p>
+        <p>Total Pyable <span>₹ <%= (totalprice + deliveryCharges + settings.serviceFee).toFixed(2) %></span></p>
+        
+        
+        <p style="font-size: 12px; margin: 0px auto" class="mobile-hid">
+         You are just one step away to get your order!
+        </p>
+        <button class="mobile-hid">Continue</button>
+     
+               <p class="checkout-1 mobile-only">
+          <span class="mobile-only"
+            > You are just one step away to get your order!</span
+          >
+        </p>
+        <div class="checkout-2 mobile-only">
+          <div>
+            <p>₹ <%= (totalprice + deliveryCharges + settings.serviceFee).toFixed(2) %></p>
+            <a  href="#price-details" style="color: rgb(159, 32, 137); font-weight: bold">
+              View Price Details
+            </a>
+          </div>
+          <button id="checkoutButton" >Continue</button>
+        </div>
+      </section>
+       <% }; %>
+    </main>
     </div>
 </form>
+
 
 <div id="accordion" class="accordion">
     <div class="accordion-item">
@@ -161,15 +176,6 @@
         </div>
     </div>
    
-</div>
-
-<div class="row">
-    <div class="buttons clearfix">
-        <div class="pull-left"><a href="/" class="btn btn-default">Continue Shopping</a></div>
-        <div class="pull-right">
-            <button id="checkoutButton" class="btn btn-primary">Checkout</button>
-        </div>
-    </div>
 </div>
 
 

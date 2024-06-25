@@ -7,7 +7,6 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 0 5em;
     }
     
     .horizontal.timeline {
@@ -44,7 +43,7 @@
       display: block;
       position: relative;
       bottom: calc(100% + 1em);
-      padding: 0.33em;
+      padding: 0.47em;
       margin: 0 2em;
       box-sizing: content-box;
       color: #8897ec;
@@ -123,14 +122,14 @@
                                         <p><strong>Shipping Address:</strong> <%= orderDetails.shipping_address %></p>
                                     </div>
                                     <div class="col-md-6">
-                                        <p><strong>Status:</strong> <%= orderDetails.status %></p>
+                                        <p><strong>Order Status:</strong> <%= orderDetails.status %></p>
                                         <p><strong>Payment Status:</strong> <%= orderDetails.payment_status %></p>
                                         <p><strong>Service Fee:</strong> ₹ <%= orderDetails.serviceFee %></p>
                                         <p><strong>Delivery Charges:</strong> ₹ <%= orderDetails.deliveryCharges %></p>
                                     </div>
                                 </div>
-                                <p class="text-muted">Created At: <%= orderDetails.created_at.toLocaleString() %></p>
-                                <p class="text-muted">Updated At: <%= orderDetails.updated_at.toLocaleString() %></p>
+                                <p class="text-muted">Order Date: <%= orderDetails.created_at.toLocaleString() %></p>
+                                <p class="text-muted">Last Updated: <%= orderDetails.updated_at.toLocaleString() %></p>
                         
                                 <div class="table-responsive">
                                     <table class="table table-bordered">
@@ -167,13 +166,13 @@
                                     <div class="horizontal timeline">
                                         <div class="steps">
                                             <div class="step <%= orderDetails.status === 'receiving_orders'? ' current' : '' %>">
-                                                <span>Receiving orders</span>
+                                                <span>Initiated</span>
                                             </div>
                                             <div class="step <%= orderDetails.status === 'order_processing'? ' current' : '' %>">
-                                                <span>Order processing</span>
+                                                <span>Processing</span>
                                             </div>
                                             <div class="step <%= orderDetails.status === 'being_delivered'? ' current' : '' %>">
-                                                <span>Being delivered</span>
+                                                <span>Out of Delivery</span>
                                             </div>
                                             <div class="step <%= orderDetails.status === 'delivered'? ' current' : '' %>">
                                                 <span>Delivered</span>
@@ -181,18 +180,18 @@
                                         </div>
                                         
                                         <div class="line" style="width: 
-    <% if (orderDetails.status === 'receiving_orders') { %>
-        25%
-    <% } else if (orderDetails.status === 'order_processing') { %>
-        50%
-    <% } else if (orderDetails.status === 'being_delivered') { %>
-        75%
-    <% } else if (orderDetails.status === 'delivered') { %>
-        100%
-    <% } else { %>
-        0%
-    <% } %>;
-"></div>
+                                            <% if (orderDetails.status === 'receiving_orders') { %>
+                                                25%
+                                            <% } else if (orderDetails.status === 'order_processing') { %>
+                                                50%
+                                            <% } else if (orderDetails.status === 'being_delivered') { %>
+                                                75%
+                                            <% } else if (orderDetails.status === 'delivered') { %>
+                                                100%
+                                            <% } else { %>
+                                                0%
+                                            <% } %>;
+                                        "></div>
 
                                     </div>
                             

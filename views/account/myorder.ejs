@@ -1,7 +1,7 @@
 <%- include('../includes/webHeader.ejs') %>
 
 <style>
-    body {
+      body {
         font-family: 'Arial', sans-serif;
         background-color: #f5f5f5;
         color: #333;
@@ -100,13 +100,21 @@
 </style>
 
 <!-- My Account -->
-
 <div class="blog-section">
     <div class="container">
         <div class="row">
             <%- include('../includes/customerSidebar.ejs') %>
             <div id="content" class="col-sm-9 all-blog my-account">
                 <h1>My Orders</h1>
+                
+                <!-- Search Input -->
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <input id="searchInput" class="form-control" type="text" placeholder="Search...">
+                    </div>
+                </div>
+
+                <!-- Orders Table -->
                 <div class="table-responsive">
                     <table id="orderTable" class="table table-bordered">
                         <thead>
@@ -114,45 +122,62 @@
                                 <th class="text-center">S.No.</th>
                                 <th class="text-center">Order ID</th>
                                 <th class="text-center">Total Amount</th>
-                                <th class="text-center">Shipping Address</th>
-                                <th class="text-center">Status</th>
-                                <th class="text-center">Order Status</th>
                                 <th class="text-center">Payment Id</th>
                                 <th class="text-center">Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <% 
-                            let i = 1;
-                            orders.forEach(order => { %>
-                            <tr>
-                                <td class="text-center"><%= i %></td>
-                                <td class="text-center"><%= (order.order_id) %></td>
-                                <td class="text-center">₹ <%= order.total_amount %></td>
-                                <td class="text-center"><%= order.shipping_address %></td>
-                                <td class="text-center"><%= order.payment_status %></td>
-                                <td class="text-center"><%= order.status %></td>
-                                <td class="text-center"><%= order.payment_id %></td>
-                                <td class="text-center">
-                                    <a href="/orderDetails/<%= order.id %>" class="btn btn-custom"><img src="../../assets/images/track.png" width="42px" alt=""></a>
-                                    <!-- <a href="/orderDetails/<%= order.id %>" class="btn btn-custom"><img src="../../assets/images/order.png" width="32px" alt=""></a> -->
-                                    <!-- <% if (order.status !== "delivered") { %>
-                                        <a href="/cancel-order/<%= order._id %>" class="btn btn-custom"><img src="../../assets/images/cancel.png" width="32px" alt=""></a>
-                                    <% } %>                                       -->
-                                </td>
-                            </tr>
-                            <%
-                            i++;
-                            }); %>
+                            <% let perPage=20 %>
+                            <% let i = (currentPage - 1) * perPage + 1; %>
+                            <% orders.forEach(order => { %>
+                                <tr>
+                                    <td class="text-center"><%= i %></td>
+                                    <td class="text-center"><%= order.order_id %></td>
+                                    <td class="text-center">₹ <%= order.total_amount %></td>
+                                    <td class="text-center"><%= order.payment_id %></td>
+                                    <td class="text-center">
+                                        <a href="/orderDetails/<%= order.id %>" class="btn btn-custom"><img src="../../assets/images/track.png" width="42px" alt=""></a>
+                                        <!-- Add more actions as needed -->
+                                    </td>
+                                </tr>
+                                <% i++; %>
+                            <% }); %>
                         </tbody>
                     </table>
                 </div>
+
+                <!-- Pagination -->
+                <nav>
+                    <ul class="pagination justify-content-center">
+                        <% if (currentPage > 1) { %>
+                            <li class="page-item">
+                                <a class="page-link" href="?page=1">&laquo;</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page=<%= currentPage - 1 %>">&lsaquo;</a>
+                            </li>
+                        <% } %>
+                        <% for (let page = 1; page <= totalPages; page++) { %>
+                            <li class="page-item <%= page === currentPage ? 'active' : '' %>">
+                                <a class="page-link" href="?page=<%= page %>"><%= page %></a>
+                            </li>
+                        <% } %>
+                        <% if (currentPage < totalPages) { %>
+                            <li class="page-item">
+                                <a class="page-link" href="?page=<%= currentPage + 1 %>">&rsaquo;</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page=<%= totalPages %>">&raquo;</a>
+                            </li>
+                        <% } %>
+                    </ul>
+                </nav>
             </div>
         </div>
     </div>
 </div>
-
 <!-- .My Account -->
+
 <!-- Toastr notification handling -->
 <% if (typeof error !== 'undefined') { %>
     <script>
@@ -167,12 +192,27 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-<script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
-<link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
 
 <script>
     $(document).ready(function() {
-        $('#orderTable').DataTable();
+        // Handle search input change
+        $('#searchInput').on('keyup', function () {
+            const searchQuery = $(this).val().toLowerCase();
+            filterOrders(searchQuery);
+        });
+
+        // Function to filter orders based on search query
+        function filterOrders(query) {
+            $('#orderTable tbody tr').each(function() {
+                const orderText = $(this).text().toLowerCase();
+                if (orderText.indexOf(query) === -1) {
+                    $(this).hide();
+                } else {
+                    $(this).show();
+                }
+            });
+        }
     });
 </script>
+
 <%- include('../includes/webFooter.ejs') %>

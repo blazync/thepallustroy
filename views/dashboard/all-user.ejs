@@ -1,105 +1,103 @@
 <%- include('../includes/adminHeader.ejs') %>
-                    <div class="main-content">
-                        <!-- main-content-wrap -->
-                        <div class="main-content-inner">
-                            <!-- main-content-wrap -->
-                            <div class="main-content-wrap">
-                                <div class="flex items-center flex-wrap justify-between gap20 mb-27">
-                                    <h3>All User</h3>
-                                    <ul class="breadcrumbs flex items-center flex-wrap justify-start gap10">
-                                        <li>
-                                            <a href="index.html"><div class="text-tiny">Dashboard</div></a>
-                                        </li>
-                                        <li>
-                                            <i class="icon-chevron-right"></i>
-                                        </li>
-                                        <li>
-                                            <a href="#"><div class="text-tiny">User</div></a>
-                                        </li>
-                                        <li>
-                                            <i class="icon-chevron-right"></i>
-                                        </li>
-                                        <li>
-                                            <div class="text-tiny">All User</div>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <!-- all-user -->
-                                <div class="wg-box">
-                                    <div class="flex items-center justify-between gap10 flex-wrap">
-                                        <div class="wg-filter flex-grow">
-                                            <form class="form-search">
-                                                <fieldset class="name">
-                                                    <input type="text" placeholder="Search here..." class="" name="name" tabindex="2" value="" aria-required="true" required="">
-                                                </fieldset>
-                                                <div class="button-submit">
-                                                    <button class="" type="submit"><i class="icon-search"></i></button>
-                                                </div>
-                                            </form>
-                                        </div>
-                                        <a class="tf-button style-1 w208" href="add-new-user.html"><i class="icon-plus"></i>Add new</a>
-                                    </div>
-                                    <div class="wg-table table-all-user">
-                                        <ul class="table-title flex gap20 mb-14">
-                                            <li>
-                                                <div class="body-title">User</div>
-                                            </li>    
-                                            <li>
-                                                <div class="body-title">Email</div>
-                                            </li>
-                                            <li>
-                                                <div class="body-title">Total Product in cart</div>
-                                            </li>
-                                            <li>
-                                                <div class="body-title">Total Product in wishlist</div>
-                                            </li>
-                                            <li>
-                                                <div class="body-title">created At</div>
-                                            </li>
-                                            <li>
-                                                <div class="body-title">Action</div>
-                                            </li>
-                                        </ul>
-                                        <ul class="flex flex-column">
-                                            <% if (user.length > 0) { %>
-                                                <% user.forEach(data => { %>
-                                                    <li class="user-item gap14">
-                                                        <div class="image">
-                                                            <img src="images/avatar/user-6.png" alt="">
-                                                        </div>
-                                                        <div class="flex items-start justify-start gap20 flex-grow">
-                                                            <div class="name">
-                                                                <a href="#" class="body-title-2"><%= data.name?data.name:'Name' %></a>
-                                                                <div class="text-tiny mt-3"><%= data.role %></div>
-                                                            </div>
-                                                            <div class="body-text"><%= data.email %></div>
-                                                            <div class="body-text">0</div>
-                                                            <div class="body-text">0</div>
-                                                            <div class="body-text"><%= data.created_at %></div>
-                                                            <div class="list-icon-function">
-                                                                
-                                                                <a href="/dashboard/edit-user/<%= data._id %>">
-                                                                    <div class="item edit">
-                                                                        <i class="icon-edit-3"></i>
-                                                                    </div>
-                                                                </a>
-                                                                <div class="item trash">
-                                                                    <i class="icon-trash-2"></i>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </li>
-                                                    <% }); %>
-                                                    
-                                                    <% } else { %>
-                                                        <p>No User found.</p>
-                                                    <% } %>
-                                          
-
-                                <!-- /all-user -->
+<div class="main-content">
+    <!-- main-content-wrap -->
+    <div class="main-content-inner">
+        <!-- main-content-wrap -->
+        <div class="main-content-wrap">
+            <div class="flex items-center flex-wrap justify-between gap20 mb-27">
+                <h3>All User</h3>
+                <ul class="breadcrumbs flex items-center flex-wrap justify-start gap10">
+                    <li>
+                        <a href="index.html"><div class="text-tiny">Dashboard</div></a>
+                    </li>
+                    <li>
+                        <i class="icon-chevron-right"></i>
+                    </li>
+                    <li>
+                        <a href="#"><div class="text-tiny">User</div></a>
+                    </li>
+                    <li>
+                        <i class="icon-chevron-right"></i>
+                    </li>
+                    <li>
+                        <div class="text-tiny">All User</div>
+                    </li>
+                </ul>
+            </div>
+            <!-- all-user -->
+            <div class="wg-box">
+                <div class="flex items-center justify-between gap10 flex-wrap">
+                    <div class="wg-filter flex-grow">
+                        <form class="form-search" method="GET" action="/dashboard/all-user">
+                            <fieldset class="email">
+                                <input type="text" placeholder="Search here..." class="" name="search" tabindex="2" value="<%= search %>" aria-required="true">
+                            </fieldset>
+                            <div class="button-submit">
+                                <button class="" type="submit"><i class="icon-search"></i></button>
                             </div>
-                            <!-- /main-content-wrap -->
-                        </div>
-                        <!-- /main-content-wrap -->
-                       
-                    <%- include('../includes/adminFooter.ejs') %>
+                        </form>
+                    </div>
+                    <a class="tf-button style-1 w208" href="/dashboard/add-new-user"><i class="icon-plus"></i>Add new</a>
+                </div>
+                <div class="wg-table table-all-user">
+                    <ul class="table-title flex gap20 mb-14">
+                        <li>
+                            <div class="body-title">User</div>
+                        </li>
+                        <li>
+                            <div class="body-title">Email</div>
+                        </li>
+                    
+                        <li>
+                            <div class="body-title">Is Verified</div>
+                        </li>
+                        <li>
+                            <div class="body-title">Action</div>
+                        </li>
+                    </ul>
+                    <ul class="flex flex-column">
+                        <% if (users.length > 0) { %>
+                            <% users.forEach(data => { %>
+                                <li class="user-item gap14">
+                                    <!-- <div class="image">
+                                        <img src="images/avatar/user-6.png" alt="">
+                                    </div> -->
+                                    <div class="flex items-start justify-start gap20 flex-grow">
+                                        <div class="name">
+                                            <a href="#" class="body-title-2"><%= data.name ? data.name : 'Name' %></a>
+                                            <div class="text-tiny mt-3"><%= data.role %></div>
+                                        </div>
+                                        <div class="body-text"><%= data.email %></div>
+                                      
+                                        <div class="body-text"><%= data.is_verified %></div>
+                                        <div class="list-icon-function">
+                                            <a href="/dashboard/edit-user/<%= data._id %>">
+                                                <div class="item edit">
+                                                    <i class="icon-edit-3"></i>
+                                                </div>
+                                            </a>
+                                            <!-- <div class="item trash">
+                                                <i class="icon-trash-2"></i>
+                                            </div> -->
+                                        </div>
+                                    </div>
+                                </li>
+                            <% }); %>
+                        <% } else { %>
+                            <p>No User found.</p>
+                        <% } %>
+                    </ul>
+                </div>
+                <!-- Pagination -->
+                <div class="pagination">
+                    <% for(let i = 1; i <= totalPages; i++) { %>
+                        <a href="/dashboard/all-user?page=<%= i %>&search=<%= search %>" class="<%= currentPage == i ? 'active' : '' %>"><%= i %></a>
+                    <% } %>
+                </div>
+            </div>
+            <!-- /main-content-wrap -->
+        </div>
+        <!-- bottom-page -->
+                        <%- include('../includes/adminFooter.ejs') %>
+                        <!-- /bottom-page -->
+                   

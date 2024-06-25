@@ -6,12 +6,67 @@ function handleAddToCart({ userData, productId, quantity }) {
             addToCart(productId,quantity,'plus');
        } else {
             // User is not logged in, redirect to login page
-                toastr.error('Please login to continue with cart.');
-                setTimeout(function() {
-            window.location.href = '/my-account'; // Replace with your login page URL
-        }, 2000); 
+                addToLocalStorageCart(productId, quantity);
+                toastr.success('Product Added to Cart Successfully.');
+                
              }
     }
+
+        // handle use login
+    function handleUserLogin() {
+        const cart = JSON.parse(localStorage.getItem('cart')) || [];
+        if (cart.length > 0) {
+            addLocalStorageCartToBackend(cart);
+            localStorage.removeItem('cart'); // Clear the local storage cart after syncing
+        }
+}
+
+function addLocalStorageCartToBackend(cart) {
+  
+
+    // Prepare the data to be sent to the backend
+    const cartData = cart.map(item => ({
+        operation: 'plus',
+        productId: item.productId,
+        quantity: item.quantity
+    }));
+
+    // Send each cart item to the backend
+    cartData.forEach(item => {
+        $.ajax({
+            url: '/addtocart',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(item),
+       
+            success: function (response) {
+                button.button('reset');
+                toastr.success('Product added to cart successfully!');
+                // Update local storage if necessary
+                location.reload();
+            },
+            error: function (error) {
+                button.button('reset');
+                toastr.error('Failed to add product to cart.');
+            }
+        });
+    });
+}
+
+
+function addToLocalStorageCart(productId, quantity) {
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const existingProduct = cart.find(item => item.productId === productId);
+
+    if (existingProduct) {
+        existingProduct.quantity += parseInt(quantity, 10);
+    } else {
+        cart.push({ productId, quantity: parseInt(quantity, 10) });
+    }
+
+    localStorage.setItem('cart', JSON.stringify(cart));
+}
+
 
 function addToCart(productId,quantity,operation='plus') {
     const button = $('#button-cart');
@@ -113,6 +168,29 @@ function deleteProductFromCart(productId) {
             }
         });
     }
+
+
+    // Contact Form Enquiry
+    $(document).ready(function() {
+									$('#contact-form').on('submit', function(event) {
+										event.preventDefault(); // Prevent the default form submission
+						
+										$.ajax({
+											url: '/savecontact',
+											type: 'POST',
+											data: $(this).serialize(),
+											success: function(response) {
+												toastr.success('Your message has been sent successfully');
+												$('#contact-form')[0].reset(); // Reset the form
+											},
+											error: function(xhr, status, error) {
+												toastr.error('There was an error submitting your enquiry. Please try again.');
+											}
+										});
+									});
+								});
+
+
 
 
 

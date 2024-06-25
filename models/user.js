@@ -24,6 +24,7 @@ const cartItemSchema = new Schema({
 });
 const wislistItemSchema = new Schema({
     product_id: { type: Schema.Types.ObjectId, ref: 'Product' },
+    product_name:String,
     timestamp: { type: Date, default: Date.now }
 });
 
@@ -32,7 +33,7 @@ const userSchema = new Schema({
     email: String,
     contactNumber: String,
     password: String,
-    is_verified: Boolean,
+     is_verified: { type: Boolean, default: false },
     status: String,
     role: String,
     wishlist: [wislistItemSchema],
@@ -40,6 +41,10 @@ const userSchema = new Schema({
     addresses: [addressSchema],
     reviews: [{ type: Schema.Types.ObjectId, ref: 'ProductReview' }],
     payment_methods: [paymentMethodSchema],
+    emailVerificationToken: String,
+    emailVerificationExpires: Date,
+    resetPasswordToken: String,
+    resetPasswordExpires: Date,
     created_at: { type: Date, default: Date.now },
     updated_at: { type: Date, default: Date.now }
 });

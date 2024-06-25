@@ -84,6 +84,12 @@
                                                     <% } %>
                                         </ul>
                                     </div>
+                                    <!-- Pagination -->
+                                    <div class="pagination">
+                                        <% for(let i = 1; i <= totalPages; i++) { %>
+                                            <a href="/dashboard/category-list?page=<%= i %>&search=<%= search %>" class="<%= currentPage == i ? 'active' : '' %>"><%= i %></a>
+                                        <% } %>
+                                    </div>
                                     <div class="divider"></div>
                                    
                                 </div>
@@ -94,8 +100,10 @@
                         <!-- /main-content-wrap -->
                         <!-- bottom-page -->
                       
+                        <!-- bottom-page -->
+                        <%- include('../includes/adminFooter.ejs') %>
                         <!-- /bottom-page -->
-                    </div>
+                   
                     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
@@ -123,4 +131,4 @@ function confirmDeletion(event, categoryId) {
 }
 </script>
 
-                    <%- include('../includes/adminFooter.ejs') %>
+            

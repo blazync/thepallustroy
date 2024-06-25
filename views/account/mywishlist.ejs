@@ -117,7 +117,7 @@
                         <thead>
                             <tr>
                                 <th class="text-center">S.No.</th>
-                                <th class="text-center">Product ID</th>
+                                <th class="text-center">Product Name</th>
                                 <th class="text-center">Action</th>
                             </tr>
                         </thead>
@@ -125,9 +125,9 @@
                             <% if(wishlist.length > 0) { 
                                 let i = 1;
                                 wishlist.forEach(wishlistItem => { %>
-                            <tr>
+                            <tr id="wishlistItem_<%= wishlistItem._id %>">
                                 <td class="text-center"><%= i %></td>
-                                <td class="text-center"><%= wishlistItem.product_id %></td>
+                                <td class="text-center"> <a href="/product/<%= wishlistItem.product_name.replace(/\s+/g, '-') %>"><%= wishlistItem.product_name %></a></td>
                                 <td class="text-center">
                                     <button class="wishlist btn btn-custom" type="button" data-toggle="tooltip" id="button-remove-from-wishlist-<%= wishlistItem._id %>" data-id="<%= wishlistItem._id %>" title="Remove from Wishlist" onclick='handleRemoveFromWishlist("<%= wishlistItem._id %>")'>
                                         <img src="../../assets/images/cancel.png" width="32px" alt="Remove from Wishlist">

@@ -8,6 +8,7 @@ const Order = require('../models/orders');
 const Payment = require('../models/payments');
 const Settings = require('../models/setting');
 const bcrypt = require('bcryptjs');
+const mongoose = require('mongoose');
 
 exports.index = async (req, res) => {
     const userData = decodeToken(req.cookies.token);
@@ -279,17 +280,53 @@ exports.allRoles = async (req, res) => {
 };
 
 exports.allUser = async (req, res) => {
-    const user = await User.find();
-    res.render('dashboard/all-user',{ user,userData:decodeToken(req.cookies.token) });
+    const { page = 1, limit = 10, search = '' } = req.query;
+    const query = search ? { email: { $regex: search, $options: 'i' } } : {};
+    
+    try {
+        const userCount = await User.countDocuments(query);
+        const users = await User.find(query)
+            .skip((page - 1) * limit)
+            .limit(parseInt(limit));
+        
+        res.render('dashboard/all-user', {
+            users,
+            userData: decodeToken(req.cookies.token),
+            currentPage: page,
+            totalPages: Math.ceil(userCount / limit),
+            search
+        });
+    } catch (error) {
+        res.status(500).send(error);
+    }
 };
+
 
 exports.attributes = async (req, res) => {
     res.render('dashboard/attributes',{ userData:decodeToken(req.cookies.token) });
 };
 
 exports.categoryList = async (req, res) => {
-    const categories = await Categories.find();
-    res.render('dashboard/category-list',{ categories,userData:decodeToken(req.cookies.token) });
+    const { page = 1, limit = 10, search = '' } = req.query;
+    const query = search ? { name: { $regex: search, $options: 'i' } } : {};
+
+    try {
+        const categoryCount = await Categories.countDocuments(query);
+        const categories = await Categories.find(query)
+            .skip((page - 1) * limit)
+            .limit(parseInt(limit));
+
+        res.render('dashboard/category-list', {
+            categories,
+            userData: decodeToken(req.cookies.token),
+            currentPage: parseInt(page),
+            totalPages: Math.ceil(categoryCount / limit),
+            search
+        });
+    } catch (error) {
+        console.error('Error handling category list:', error);
+        res.status(500).send('Internal Server Error');
+    }
 };
 
 exports.cities = async (req, res) => {
@@ -344,8 +381,28 @@ exports.listPage = async (req, res) => {
     res.render('dashboard/list-page',{ userData:decodeToken(req.cookies.token) });
 };
 exports.enquiry = async (req, res) => {
-    const enquiry = await Enquiry.find();
-    res.render('dashboard/enquiry',{enquiry, userData:decodeToken(req.cookies.token) });
+    try {
+        const userData = decodeToken(req.cookies.token);
+        const { page = 1, limit = 10, search = '' } = req.query;
+
+        const query = search ? { $or: [{ name: { $regex: search, $options: 'i' } }, { email: { $regex: search, $options: 'i' } }] } : {};
+
+        const enquiries = await Enquiry.find(query)
+            .skip((page - 1) * limit)
+            .limit(parseInt(limit));
+        const totalEnquiries = await Enquiry.countDocuments(query);
+
+        res.render('dashboard/enquiry', {
+            enquiries,
+            userData,
+            currentPage: page,
+            totalPages: Math.ceil(totalEnquiries / limit),
+            search
+        });
+    } catch (error) {
+        console.error('Error handling enquiry list:', error);
+        res.status(500).send('Internal Server Error');
+    }
 };
 
 exports.login = async (req, res) => {
@@ -511,24 +568,36 @@ exports.updatePaymentStatus = async (req, res) => {
 exports.oderList = async (req, res) => {
     try {
         const userData = decodeToken(req.cookies.token);
-        let order;
+        const { page = 1, limit = 10, search = '' } = req.query;
 
-        if (userData.role === "admin") {
-            order = await Order.find();
-        } else {
-            order = await Order.find({ user_id: userData.userId });
-        }
-        
-        if (!order) {
-            return res.status(404).send('Order not found');
+        let query = userData.role === "admin" ? {} : { user_id: userData.userId };
+
+        if (search) {
+            if (mongoose.Types.ObjectId.isValid(search)) {
+                query._id = new mongoose.Types.ObjectId(search);
+            } else {
+                query._id = { $regex: search, $options: 'i' };
+            }
         }
 
-        res.render('dashboard/oder-list', { order, userData });
+        const orderCount = await Order.countDocuments(query);
+        const order = await Order.find(query)
+            .skip((page - 1) * limit)
+            .limit(parseInt(limit));
+
+        res.render('dashboard/oder-list', {
+            order,
+            userData,
+            currentPage: parseInt(page),
+            totalPages: Math.ceil(orderCount / limit),
+            search
+        });
     } catch (error) {
         console.error('Error handling order list:', error);
         res.status(500).send('Internal Server Error');
     }
 };
+
 
 
 exports.oderTracking = async (req, res) => {
@@ -538,8 +607,25 @@ exports.oderTracking = async (req, res) => {
 };
 
 exports.productList = async (req, res) => {
-    const product = await Product.find();
-    res.render('dashboard/product-list',{product,userData:decodeToken(req.cookies.token) });
+    const { page = 1, limit = 3, search = '' } = req.query;
+    const query = search ? { name: { $regex: search, $options: 'i' } } : {};
+
+    try {
+        const productCount = await Product.countDocuments(query);
+        const products = await Product.find(query)
+            .skip((page - 1) * limit)
+            .limit(parseInt(limit));
+
+        res.render('dashboard/product-list', {
+            products,
+            userData: decodeToken(req.cookies.token),
+            currentPage: parseInt(page),
+            totalPages: Math.ceil(productCount / limit),
+            search
+        });
+    } catch (error) {
+        res.status(500).send(error);
+    }
 };
 
 exports.report = async (req, res) => {

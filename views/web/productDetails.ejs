@@ -116,7 +116,7 @@
 												</small></h2>
 												<div class="form-group-wishlist">
 													<div class="btn-group pro-buttons">
-														<button type="button" class="btn pro-wishlist" title="Add to Wish List"><i
+														<button type="button" class="btn pro-wishlist" title="Add to Wish List" onclick='handleAddToWishlist({ userData: <%= JSON.stringify(userData) %>, productId: "<%= product._id %>", productName: "<%= product.name %>", productImage: "<%= product.image %>" })'><i
 													class="icon-like"></i></button>
 												</div>
 										</div>
@@ -179,10 +179,10 @@
 											<%= product.material %>
 											</span>
 										</li>
-										<li><span class="disc">Categories:</span> <span class="">
+										<!-- <li><span class="disc">Categories:</span> <span class="">
 											<%= product.categories%>
 											</span>
-										</li>
+										</li> -->
 										<li><span class="disc">Collection:</span> <span class="">
 											<%= product.collection %>
 											</span>
@@ -312,15 +312,21 @@
 													class="img-responsive zoomInImage">
 											</a>
 											<div class="button-group">
-												<button class="addcart" type="button" title="Add to Cart"
-												 onclick='handleAddToCart({
-												userData: <%= JSON.stringify(userData) %>, 
-												productId: "<%= product._id %>",  
-												quantity: "1",
-												})' 	
-												><i
-														class="icon-shopping-bag"></i></button>
-														<button class="wishlist" type="button" data-toggle="tooltip" id="button-add-to-wishlist" data-id="<%= product._id %>" title="Add to Wishlist" onclick='handleAddToWishlist({ userData: <%= JSON.stringify(userData) %>, productId: "<%= product._id %>", productName: "<%= product.name %>", productImage: "<%= product.image %>" })'>
+												<% if (relateddata.status) { %>
+												<button class="addcart" type="button" title="Add to Cart" 
+														onclick='handleAddToCart({
+															userData: <%= JSON.stringify(userData) %>, 
+															productId: "<%= relateddata._id %>",  
+															quantity: "1",
+														})'>
+													<i class="fa-solid fa-cart-shopping cart-icon"></i>
+												</button>
+											<% } else { %>
+												<button class="addcart" type="button" title="Out of Stock" disabled>
+													<i class="fa-solid fa-cart-shopping cart-icon"></i>
+												</button>
+											<% } %>
+																<button class="wishlist" type="button" data-toggle="tooltip" id="button-add-to-wishlist" data-id="<%= product._id %>" title="Add to Wishlist" onclick='handleAddToWishlist({ userData: <%= JSON.stringify(userData) %>, productId: "<%= product._id %>", productName: "<%= product.name %>", productImage: "<%= product.image %>" })'>
 															<i class="icon-like"></i>
 														</button>
 												
@@ -343,6 +349,27 @@
 															</span>
 													</p>
 												</div>
+													<div>
+														<% if (relateddata.status) { %>
+															<button class="btn btn-cart" type="button"
+																	title="Add to Cart"
+																	data-id="<%= product._id %>"
+																	onclick='handleAddToCart({
+																	userData: <%= JSON.stringify(userData) %>, 
+																	productId: "<%= relateddata._id %>",  
+																	quantity: "1",
+																	})'>
+																	Add to cart
+															</button>
+														<% } else { %>
+															<button class="btn btn-cart" type="button"
+																	title="Out of Stock"
+																	data-id="<%= relateddata._id %>"
+																	disabled>
+																	Out of Stock
+															</button>
+														<% } %>
+													</div>
 											</div>
 										</div>
 									</div>
@@ -399,7 +426,7 @@
                 error: function(error) {
                     console.error('Error submitting review:', error.responseText);
                     // Handle error, e.g., show an error message
-                    alert('Failed to submit review. Please try again later.');
+                    alert('Failed to submit review. Please buy the product first.');
                 }
             });
         });

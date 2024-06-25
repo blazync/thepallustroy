@@ -7,6 +7,8 @@ const Payment = require('../models/payments');
 const User = require('../models/user');
 const Order = require('../models/orders');
 const Settings = require('../models/setting');
+const crypto = require('crypto');
+const mailer = require('./emailsender');
 const axios = require('axios'); // Make sure to replace with the correct path to your payment model
 
 exports.index = async (req, res) => {
@@ -14,7 +16,6 @@ exports.index = async (req, res) => {
         const products = await Product.find(); // Fetch all products from the database
         // Fetch product details for each item in the cart
 
-       
         res.render('web/index', {
             products, 
             userData: decodeToken(req.cookies.token),
@@ -26,6 +27,21 @@ exports.index = async (req, res) => {
         res.status(500).send("Internal Server Error");
     }
 };
+exports.getForgotPassword = async (req, res) => {
+    res.render('web/forgot-password',{
+        userData: decodeToken(req.cookies.token),
+        navCategories: await Category.find(),
+        navProduct: await Product.find(),});
+};
+exports.getResetPassword = async (req, res) => {
+    const {token} = req.params;
+    res.render('web/reset-password',{
+        userData: decodeToken(req.cookies.token),
+        token:token,
+        navCategories: await Category.find(),
+        navProduct: await Product.find(),});
+};
+
 
 exports.category = async (req, res) => {
     try {
@@ -133,7 +149,9 @@ exports.addtowishlist = async (req, res) => {
             } else {
                 // If the product is not in the wishlist, add it
                 user.wishlist.push({
-                    product_id: productId
+                    product_id: productId,
+                     product_name: product.name,
+                     timestamp: Date.now()
                 });
             }
 
@@ -444,23 +462,40 @@ exports.productReview = async (req, res) => {
         if (!productId || !rating || !review) {
             return res.status(400).json({ message: 'Invalid request: Missing required fields' });
         }
-
-        // Create a new review object
-        const newReview = new ProductReviews({
+         const order = await Order.findOne({
             user_id: userData.userId,
-            product_id: productId,
-            rating: parseInt(rating),
-            review: review,
-            status: 'Pending',  // or 'Approved' based on your workflow
-            created_at: new Date(),
-            updated_at: new Date()
+            'products.product_id': productId
         });
 
-        // Save the review to the database
-        await newReview.save();
+        if (!order) {
+            return res.status(403).json({ message: 'You can only review products you have bought' });
+        }
+        // Check if there's an existing review by the same user for the same product
+        const existingReview = await ProductReviews.findOne({ user_id: userData.userId, product_id: productId });
 
-        // Send success response
-        res.status(201).json({ message: 'Review submitted successfully' });
+        if (existingReview) {
+            // Update the existing review
+            existingReview.rating = parseInt(rating);
+            existingReview.review = review;
+            existingReview.updated_at = new Date();
+
+            await existingReview.save();
+            res.status(200).json({ message: 'Review updated successfully' });
+        } else {
+            // Create a new review object
+            const newReview = new ProductReviews({
+                user_id: userData.userId,
+                product_id: productId,
+                rating: parseInt(rating),
+                review: review,
+                created_at: new Date(),
+                updated_at: new Date()
+            });
+
+            // Save the review to the database
+            await newReview.save();
+            res.status(201).json({ message: 'Review submitted successfully' });
+        }
     } catch (error) {
         console.error('Error creating product review:', error.message);
         res.status(500).json({ message: 'Failed to submit review' });
@@ -749,9 +784,26 @@ exports.account = async (req, res) => {
 exports.myorder = async (req, res) => {
     try {
         const userData = decodeToken(req.cookies.token);
+        console.log(userData)
+        const perPage = 10; // Number of items per page
+        const page = parseInt(req.query.page) || 1; // Current page (default: 1)
+
+        const ordersQuery = Order.find({ user_id: userData.userId });
+        const countPromise = Order.countDocuments({ user_id: userData.userId });
+
+        const orders = await ordersQuery
+            .sort({ createdAt: -1 }) // Example: Sort by createdAt in descending order
+            .skip((page - 1) * perPage)
+            .limit(perPage)
+            .exec();
+
+        const count = await countPromise;
+
         res.render('account/myorder', { 
             userData,
-            orders:await Order.find({user_id:userData.userId}),
+            orders,
+            currentPage: page,
+            totalPages: Math.ceil(count / perPage),
             navCategories: await Category.find(),
             navProduct: await Product.find(), 
         });
@@ -760,6 +812,8 @@ exports.myorder = async (req, res) => {
         res.status(500).send("Internal Server Error");
     }
 };
+
+
 exports.mywishlist = async (req, res) => {
     const userData = decodeToken(req.cookies.token);
     const user = await User.findById(userData.userId);
@@ -1051,4 +1105,50 @@ exports.trackOrder = async (req, res) => {
         res.status(500).send("Internal Server Error");
     }
 };
+
+exports.sendVerificationEmail = async (req, res) => {
+    try {
+        const userData = decodeToken(req.cookies.token);
+
+        if (!userData) {
+            return res.status(401).json({ error: 'Unauthorized' });
+        }
+
+        const user = await User.findById(userData.userId);
+
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        // Generate verification token
+        const emailVerificationToken = crypto.randomBytes(20).toString('hex');
+        const emailVerificationExpires = Date.now() + 3600000; // 1 hour
+        user.emailVerificationToken  = emailVerificationToken ;
+        user.emailVerificationExpires  = emailVerificationExpires ;
+        await user.save();
+
+        // Construct verification URL
+        const verificationUrl = `${req.protocol}://${req.get('host')}/verify-email/${emailVerificationToken}`;
+
+        // Prepare email content
+        const verificationEmail = `
+            <div class="container">
+                <h1>Hello, <b>${user.name}</b>!</h1>
+                <p>Please verify your email by clicking the link below:</p>
+                <a href="${verificationUrl}">${verificationUrl}</a>
+                <p>This link will expire in 1 hour.</p>
+            </div>
+        `;
+
+        // Send verification email
+        await mailer(user.email, '', '', 'Email Verification', verificationEmail);
+
+        res.redirect('/account')
+    } catch (error) {
+        console.error("Error sending verification email:", error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+};
+
+
 module.exports = exports;

@@ -88,7 +88,7 @@
                                     <!-- best-shop-sellers -->
                                     <div class="wg-box">
                                         <div class="flex items-center justify-between">
-                                            <h5>Best Shop Sellers</h5>
+                                            <h5>Recent Orders</h5>
                                             <div class="dropdown default">
                                                 <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                     <span class="view-all">View all<i class="icon-chevron-down"></i></span>
@@ -106,7 +106,7 @@
                                         <div class="wg-table table-best-shop-sellers">
                                             <ul class="table-title flex gap20 mb-14">
                                                 <li>
-                                                    <div class="body-title">Shop</div>
+                                                    <div class="body-title">OrderId</div>
                                                 </li>    
                                                 <li>
                                                     <div class="body-title">Order Date</div>
@@ -119,11 +119,9 @@
                                                 </li>
                                             </ul>
                                             <ul class="flex flex-column gap18">
-                                                <% userOrders.forEach(orderItem => { %>
+                                                <% userOrders.slice(0, 20).forEach(orderItem => { %>
                                                     <li class="shop-item">
-                                                        <div class="image">
-                                                            <img src="../../upload/<%= orderItem.images %>" alt="">
-                                                        </div>
+                                                        
                                                         <div class="flex-grow flex items-center justify-between gap20">
                                                             <div>
                                                                 <a href="#" class="body-text name"># <%= (orderItem.id).slice(0,5) %></a>
@@ -151,17 +149,17 @@
                                             <thead>
                                                 <tr>
                                                     <th>Order ID</th>
-                                                    <th>User</th>
+                                               
                                                     <th>Amount</th>
                                                     <th>Status</th>
                                                     <th>Date</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <% userOrders.forEach(orderItem => { %>
+                                                <% userOrders.slice(0, 20).forEach(orderItem => { %>
                                                     <tr>
                                                         <td><%= orderItem.order_id %></td>
-                                                        <td><%= orderItem.user_name %></td>
+                                                    
                                                         <td>$<%= orderItem.total_amount %></td>
                                                         <td><%= orderItem.payment_status %></td>
                                                         <td><%= orderItem.created_at.toDateString() %></td>
@@ -177,8 +175,7 @@
                             <!-- /main-content-wrap -->
                         </div>
                         <!-- /main-content-wrap -->
-                        <!-- bottom-page -->
-                        
+                         <!-- bottom-page -->
+                        <%- include('../includes/adminFooter.ejs') %>
                         <!-- /bottom-page -->
-                    </div>
-<%- include('../includes/adminFooter.ejs') %>
+                   

@@ -20,27 +20,29 @@ exports.postlogin = async (req, res) => {
 
         // Check if user exists
         if (!user) {
-            return res.redirect('web/my-account', { error: 'User not found' });
+            return res.status(400).json({ error: 'User not found, Please create account First.' });
         }
         console.log(user);
+        
         // Validate password (compare hashed passwords)
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
-            return res.redirect('web/my-account', { error: 'Invalid password' });
+            return res.status(400).json({ error: 'Invalid password, Please enter correct password' });
         }
 
         console.log('Login Successfully', user.email);
 
         // Generate a token
         const token = generateAccessToken({
-            userId:user._id, 
+            userId: user._id,
             email: user.email,
-            name: user.name?user.name:user.role,
+            name: user.name ? user.name : user.role,
             role: user.role,
             isLoggedIn: true,
             wishlistCount: user.wishlist.length,
             cartCount: user.cart.length
         });
+
         mailer(user.email, '', '', `Welcome back, ${user.name}! 👋`, `
             <div class="container">
                 <h1>Welcome back, <b>${user.name}</b>!</h1>
@@ -52,18 +54,16 @@ exports.postlogin = async (req, res) => {
         // Save token in a cookie
         saveTokenInCookie(res, token);
 
-        // Redirect based on user role with success message
-        if(user.role == "user"){
-            return res.redirect('/');    
-        }else{
-            return res.redirect('/dashboard/');    
-        }    
+        // Return success response with redirection URL
+        const redirectUrl = user.role == "user" ? '/' : '/dashboard/';
+        return res.status(200).json({ success: 'Login successful', redirectUrl });
 
     } catch (error) {
         console.error('Login error:', error);
-        return res.redirect('/my-account?error=Internal%20server%20error');
+        return res.status(500).json({ error: 'Internal server error' });
     }
 };
+
 
 exports.verifyEmail = async (req, res) => {
     try {

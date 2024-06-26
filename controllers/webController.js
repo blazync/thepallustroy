@@ -640,6 +640,20 @@ exports.privacyPolicy = async (req, res) => {
     }
 };
 
+exports.shippingAndDelivery = async (req, res) => {
+    try {
+        res.render('web/shipping-and-delivery', { 
+            userData: decodeToken(req.cookies.token),
+            navCategories: await Category.find(),
+            navProduct: await Product.find(), 
+        });
+    } catch (error) {
+        console.error("Error fetching Shipping and Delivery Page:", error);
+        res.status(500).send("Internal Server Error");
+    }
+};
+
+
 exports.termandconditions = async (req, res) => {
     try {
         res.render('web/terms-and-conditions', { 
@@ -792,7 +806,7 @@ exports.myorder = async (req, res) => {
         const countPromise = Order.countDocuments({ user_id: userData.userId });
 
         const orders = await ordersQuery
-            .sort({ createdAt: -1 }) // Example: Sort by createdAt in descending order
+            .sort({ created_at: -1 }) // Example: Sort by createdAt in Ascending order
             .skip((page - 1) * perPage)
             .limit(perPage)
             .exec();

@@ -978,6 +978,7 @@ ul.vipodha_megamenu ul.subcategory {
     height: 35px;
     width: 35px;
     border-radius: 5px;
+    margin-right: 15px;
   }
   .vipodha_megamenu-style-dev .navbar-default .navbar-toggle .icon-bar {
     background: var(--secondary-hover-color);

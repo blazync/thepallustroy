@@ -40,6 +40,7 @@ router.get('/consectetur-adipiscing', controller.consecteturAdipiscing);
 router.get('/refund-policy', controller.refundpolicy);
 router.get('/privacy-policy', controller.privacyPolicy);
 router.get('/terms-and-conditions', controller.termandconditions);
+router.get('/shipping-and-delivery', controller.shippingAndDelivery);
 router.get('/register', controller.register);
 router.post('/register', authController.postregister);
 

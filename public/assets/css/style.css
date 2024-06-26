@@ -1252,6 +1252,13 @@ Titles
   text-transform: capitalize;
   text-align: center;
 }
+.product-title-link {
+        display: inline-block;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 100%; /* Adjust this value as needed */
+    }
 @media (max-width: 991px) {
   .page-title h3 {
     font-size: 28px;

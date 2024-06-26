@@ -94,8 +94,8 @@ const createOrder = async (req, res) => {
                 customer_email: customer_email || userData.email
             },
             order_meta: {
-                return_url: "https://thepallustory.in/order-confirmation/?order_id={order_id}",
-                notify_url: "https://thepallustory.in/payment/webhook",
+                return_url: "https://localhost:5000/order-confirmation/?order_id={order_id}",
+                notify_url: "https://localhost:5000/payment/webhook",
                 payment_methods: "cc,dc,ppc,ccc,emi,paypal,upi,nb,app,paylater"
             },
             order_expiry_time: new Date(Date.now() + 30 * 60 * 1000).toISOString(),

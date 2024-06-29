@@ -235,9 +235,9 @@ exports.postregister = async (req, res) => {
             return res.status(400).json({ error: 'Password must be at least 8 characters long and contain at least one special character.' });
         }
 
-        const user = await User.findOne({ email });
+        const existingUser = await User.findOne({ email });
 
-        if (user) {
+        if (existingUser) {
             return res.status(400).json({ error: 'User already exists. Please sign in.' });
         }
 
@@ -269,7 +269,22 @@ exports.postregister = async (req, res) => {
 
         await newUser.save();
 
-        res.status(200).json({ success: true, message: 'Account created. Please verify your email.' });
+        // Generate a token
+        const token = generateAccessToken({
+            userId: newUser._id,
+            email: newUser.email,
+            name: newUser.name,
+            role: newUser.role,
+            isLoggedIn: true,
+            wishlistCount: newUser.wishlist.length,
+            cartCount: newUser.cart.length
+        });
+
+        // Save token in a cookie
+        saveTokenInCookie(res, token);
+
+        // Redirect to shopping cart
+        return res.status(200).json({ success: true, message: 'Account created and logged in successfully.', redirectUrl: '/shopping-cart' });
     } catch (error) {
         console.log('register error', error);
         res.status(500).json({ error: 'An error occurred during registration. Please try again.' });

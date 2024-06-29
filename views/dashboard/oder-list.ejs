@@ -36,10 +36,21 @@
                     </div>
                 </div>
                 <div class="wg-table table-all-category">
-                    <ul class="table-title flex gap20 mb-14">   
+                    <ul class="table-title flex gap10 mb-14">   
                         <li>
                             <div class="body-title">Order ID</div>
                         </li>
+                        
+                        <li>
+                            <div class="body-title">Quick Track Order</div>
+                        </li>
+                        <li>
+                            <div class="body-title">Order Status</div>
+                        </li>
+                         <li>
+                            <div class="body-title">Order Date</div>
+                        </li>
+
                         <li>
                             <div class="body-title">Price</div>
                         </li>
@@ -49,74 +60,34 @@
                         <li>
                             <div class="body-title">Payment</div>
                         </li>
-                        <li>
-                            <div class="body-title">Status</div>
-                        </li>
-                        <li>
-                            <div class="body-title">Tracking</div>
-                        </li>
-                        <li>
-                            <div class="body-title">Action</div>
-                        </li>
                     </ul>
                     <ul class="flex flex-column">
                         <% if (order.length > 0) { %>
                             <% order.forEach(orderItem => { %>    
-                                <li class="product-item gap14">
-                                    <div class="flex items-center justify-between gap20 flex-grow">
-                                        <div class="body-text">Order #<%= orderItem._id %></div>
-                                        <div class="body-text">₹ <%= orderItem.total_amount.toFixed(2) %></div>
-                                        <div class="body-text"><%= orderItem.products[0].quantity %></div>
-                                        <div class="body-text" id="paymentStatus_<%= orderItem._id %>"><%= orderItem.payment_status %></div>
-                                        <div>
-                                            <div class="block-available"><%= orderItem.status %></div>
-                                            <% if(userData.role == "admin") { %>
-                                            <form id="updateStatusForm_<%= orderItem._id %>">
-                                                <select name="status" id="statusSelect_<%= orderItem._id %>">
-                                                    <option value="receiving_orders">Receiving Orders</option>
-                                                    <option value="order_processing">Order Processing</option>
-                                                    <option value="being_delivered">Being Delivered</option>
-                                                    <option value="delivered">Delivered</option>
-                                                </select>
-                                                <input type="hidden" name="orderId" value="<%= orderItem._id %>"> 
-                                            </form>
-                                            <% } %>
-                                        </div>
-                                        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-                                        <script>
-                                            $(document).ready(function(){
-                                                $('[id^=updateStatusForm_]').change(function(e){
-                                                    e.preventDefault(); 
-                                                    var formData = $(this).serialize(); 
-                                                    $.ajax({
-                                                        type: 'POST',
-                                                        url: '/dashboard/update-order-status', 
-                                                        data: formData,
-                                                        success: function(response) {
-                                                            $('#updateStatusForm_' + response.orderId + ' .block-available').text(response.status);
-                                                        },
-                                                        error: function(err) {
-                                                            console.error(err);
-                                                        }
-                                                    });
-                                                });
-                                            });
-                                        </script>
-                                        <div>
-                                            <a href="/dashboard/order-tracking/<%= orderItem._id %>">
-                                                <div class="block-tracking">Tracking</div>
-                                            </a>
-                                        </div>
+                                <li class="product-item gap10">
+                                    <div class="flex items-center justify-between gap10 flex-grow">
+                                        <div class="body-text">#<%= orderItem._id %></div>
                                         <div class="list-icon-function">
                                             <a href="/dashboard/order-detail/<%= orderItem._id %>">
                                                 <div class="item eye">
                                                     <i class="icon-eye"></i>
                                                 </div>
                                             </a>
-                                            <% if(userData.role == "admin") { %>
-                                            <!-- Additional admin actions can go here -->
-                                            <% } %>
+                                            <div>
+                                                <a href="/dashboard/order-tracking/<%= orderItem._id %>">
+                                                <img width="20" height="20" src="https://img.icons8.com/color-glass/48/delivery-tracking.png" alt="delivery-tracking"/>
+                                                </a>
+                                            </div>
+                                        
                                         </div>
+                                        <div class="body-text"><%= orderItem.status %></div>
+                                        <div class="body-text"><%- new Date(orderItem.created_at).toLocaleDateString('en-IN') %></div>
+                                        
+                                       
+                                       
+                                        <div class="body-text">₹ <%= orderItem.total_amount.toFixed(2) %></div>
+                                        <div class="body-text"><%= orderItem.products[0].quantity %></div>
+                                        <div class="body-text" id="paymentStatus_<%= orderItem._id %>"><%= orderItem.payment_status %></div>
                                     </div>
                                 </li>
                             <% }); %>

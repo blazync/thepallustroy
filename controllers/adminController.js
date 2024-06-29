@@ -1,3 +1,5 @@
+const mongoose = require('mongoose');
+const ObjectId = mongoose.Types.ObjectId;
 const Product = require('../models/products');
 const User = require('../models/user');
 const Enquiry = require('../models/enquiry');
@@ -8,7 +10,6 @@ const Order = require('../models/orders');
 const Payment = require('../models/payments');
 const Settings = require('../models/setting');
 const bcrypt = require('bcryptjs');
-const mongoose = require('mongoose');
 
 exports.index = async (req, res) => {
     const userData = decodeToken(req.cookies.token);
@@ -519,11 +520,33 @@ exports.paymentDetail = async (req, res) => {
 
 
 exports.oderDetail = async (req, res) => {
-    const orderId = req.params.id;
-    const order = await Order.findById(orderId);
-    const productData = await Product.find();
-    res.render('dashboard/oder-detail',{ productData,order,userData:decodeToken(req.cookies.token) });
+    try {
+        const orderId = req.params.id;
+        const order = await Order.findById(orderId).populate('products.product_id');
+        const productData = await Product.find();
+        
+        if (!order) {
+            return res.status(404).send('Order not found');
+        }
+        
+       const userId = order.user_id;
+        const user = await User.findById(userId).select('name email')
+        if (!user) {
+                return res.status(404).send('User not found');
+        }
+
+        res.render('dashboard/oder-detail', {
+            productData,
+            order,
+            userData: decodeToken(req.cookies.token),
+            user
+        });
+    } catch (err) {
+        res.status(500).send(err.message);
+    }
 };
+
+
 exports.updateOrderStatus = async (req, res) => {
     try {
         const { orderId, status } = req.body;
@@ -601,13 +624,26 @@ exports.oderList = async (req, res) => {
 
 
 exports.oderTracking = async (req, res) => {
-    const orderId = req.params.id;
+    try{
+        const orderId = req.params.id;
     const order = await Order.findById(orderId);
-    res.render('dashboard/oder-tracking',{ order,userData:decodeToken(req.cookies.token) });
+    if (!order) {
+            return res.status(404).send('Order not found');
+        }
+     const userId = order.user_id;
+    const user = await User.findById(userId).select('name email')
+    if (!user) {
+            return res.status(404).send('User not found');
+    }
+    res.render('dashboard/oder-tracking',{ user,order,userData:decodeToken(req.cookies.token) });
+    }
+    catch(error){
+         res.status(500).send(error.message);
+    }
 };
 
 exports.productList = async (req, res) => {
-    const { page = 1, limit = 3, search = '' } = req.query;
+    const { page = 1, limit = 20, search = '' } = req.query;
     const query = search ? { name: { $regex: search, $options: 'i' } } : {};
 
     try {
@@ -628,10 +664,60 @@ exports.productList = async (req, res) => {
     }
 };
 
-exports.report = async (req, res) => {
-    
-    res.render('dashboard/report',{ userData:decodeToken(req.cookies.token) });
+exports.userReport = async (req, res) => {
+    try {
+        const userId = req.params.userId;
+        if (!mongoose.Types.ObjectId.isValid(userId)) {
+        return res.redirect('/dashboard/all-user')
+    }
+
+        // Fetch user details
+        const user = await User.findById(userId)
+            .populate('wishlist.product_id')
+            .populate('cart.product_id')
+            .populate('reviews');
+        console.log(user)
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+        const { page = 1, limit = 10, search = '' } = req.query;
+
+        let query = { user_id: userId};
+
+        if (search) {
+            if (mongoose.Types.ObjectId.isValid(search)) {
+                query._id = new mongoose.Types.ObjectId(search);
+            } else {
+                query._id = { $regex: search, $options: 'i' };
+            }
+        }
+
+        const orderCount = await Order.countDocuments(query);
+        const orders = await Order.find(query)
+            .skip((page - 1) * limit)
+            .limit(parseInt(limit)).populate('products.product_id');
+        // Calculate total order value and total delivered items
+        let totalOrderAmount = 0;
+        orders.forEach(order => {
+            totalOrderAmount += order.total_amount;
+        });
+
+
+        res.render('dashboard/user-report', {
+            userData: decodeToken(req.cookies.token),
+            user,
+            orders,
+            totalOrderAmount,
+            currentPage: parseInt(page),
+            totalPages: Math.ceil(orderCount / limit),
+            search
+        });
+    } catch (error) {
+        console.error('Error fetching user report:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
 };
+
 
 exports.setting = async (req, res) => {
     try {

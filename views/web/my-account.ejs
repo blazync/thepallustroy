@@ -1,5 +1,7 @@
 <%- include('../includes/webHeader.ejs') %>
-
+ <% if (userData && userData.isLoggedIn) { %>
+         <script>window.location.href="/myprofile"</script>
+    <%}%>
 <!-- My Account -->
 <section>
     <div class="breadcrumb-main">
@@ -42,8 +44,10 @@
                                     <input type="password" name="password" placeholder="Password" id="input-password" class="form-control">
                                     <a href="/forgot-password">Forgotten Password</a>
                                 </div>
+                                <div class="mb-2">Don't have a account?<a class="text-primary" href="/register"> Create an account now.</a></div>
                                 <input type="submit" value="Login" class="btn btn-primary">
                                 <input type="hidden" name="redirect" value="">
+                                
                             </form>
                         </div>
                     </div>

@@ -136,6 +136,14 @@
                                                 <div class="body-title-2">Order # <%= order._id %></div>
                                             </div>
                                             <div class="summary-item">
+                                                <div class="body-text">Customer Name</div>
+                                                <div class="body-title-2"><%= user.name %></div>
+                                            </div>
+                                            <div class="summary-item">
+                                                <div class="body-text">Customer Email</div>
+                                                <div class="body-title-2"><%= user.email %></div>
+                                            </div>
+                                            <div class="summary-item">
                                                 <div class="body-text">Date</div>
                                                 <div class="body-title-2"><%= order.created_at %></div>
                                             </div>

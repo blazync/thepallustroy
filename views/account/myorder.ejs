@@ -119,7 +119,7 @@
                     <table id="orderTable" class="table table-bordered">
                         <thead>
                             <tr>
-                                <th class="text-center">S.No.</th>
+                                <th class="text-center">Date</th>
                                 <th class="text-center">Order ID</th>
                                 <th class="text-center">Total Amount</th>
                                 <th class="text-center">Payment Id</th>
@@ -131,7 +131,7 @@
                             <% let i = (currentPage - 1) * perPage + 1; %>
                             <% orders.forEach(order => { %>
                                 <tr>
-                                    <td class="text-center"><%= i %></td>
+                                    <td class="text-center"><%- new Date(order.created_at).toLocaleDateString('en-IN') %></td>
                                     <td class="text-center"><%= order.order_id %></td>
                                     <td class="text-center">₹ <%= order.total_amount %></td>
                                     <td class="text-center"><%= order.payment_id %></td>

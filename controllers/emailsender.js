@@ -1,5 +1,6 @@
 const nodemailer = require('nodemailer');
 const Settings = require('../models/setting');
+require('dotenv').config();
 
 async function createTransporter() {
   try {
@@ -8,14 +9,17 @@ async function createTransporter() {
 
     // Create a transporter with SMTP settings
     const transporter = nodemailer.createTransport({
-      service: "Gmail",
-      host: "smtp.gmail.com",
-      port: 465,
-      secure: true,
+       host: process.env.SMTP_HOST,
+      port: process.env.SMTP_PORT, 
+      secure: process.env.SMTP_SECURITY_TYPE === 'true', 
       auth: {
-        user: "ersrivastavarishabh@gmail.com",
-        pass: "xirl kxrc dkmb xmzw",
+        user: process.env.SMTP_USER, 
+        pass: process.env.SMTP_PASS 
       },
+      tls: {
+      rejectUnauthorized: false,
+      minVersion: 'TLSv1.2' // or try 'TLSv1' or 'TLSv1.1' if necessary
+    }
     });
 
     return transporter;
@@ -32,8 +36,9 @@ async function sendMail(to, cc, bcc, subject, htmlContent) {
     const transporter = await createTransporter();
     const settings = await Settings.findOne();
     // Set up mail options
+    const fromEmail = process.env.FROM_EMAIL
     const mailOptions = {
-      from: 'Blazync Technology <ersrivastavarishabh@gmail.com>',
+      from: `The Pallu Story <${fromEmail}>`,
       to: to,
       cc: cc,
       bcc: bcc,

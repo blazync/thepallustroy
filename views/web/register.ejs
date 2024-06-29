@@ -1,5 +1,9 @@
 <%- include('../includes/webHeader.ejs') %>
 
+    <% if (userData && userData.isLoggedIn) { %>
+         <script>window.location.href="/myprofile"</script>
+    <%}%>
+
 <!-- My Account -->
 <section>
     <div class="breadcrumb-main">
@@ -59,12 +63,14 @@
                             </div>
                         </fieldset>
                         <div id="error-message" class="alert alert-danger d-none"></div>
+                        <div class="mb-2">Already have an Account? <a class="text-primary" href="/my-account">Sign In now.</a></div>
                         <div class="buttons clearfix">
                             <div class="float-end text-right">
                                 <div class="form-check form-check-inline">
                                     <input required type="checkbox" name="agree" value="1" class="form-check-input">
                                     <label class="form-check-label">I have read and agree to the <a href="#" class="modal-link"><b>Privacy Policy</b></a></label>
                                 </div>
+                                
                                 <button type="submit" class="btn btn-primary">Continue</button>
                             </div>
                         </div>

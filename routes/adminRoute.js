@@ -50,7 +50,7 @@ router.post('/update-payment-status', adminController.updatePaymentStatus);
 router.get('/order-list', checkAuth,checkAdmin,   adminController.oderList);
 router.get('/order-tracking/:id', checkAuth,checkAdmin,   adminController.oderTracking);
 router.get('/product-list', checkAuth,checkAdmin,   adminController.productList);
-router.get('/report', checkAuth,checkAdmin,   adminController.report);
+router.get('/user-report/:userId', checkAuth,checkAdmin,   adminController.userReport);
 router.get('/setting', checkAuth,checkAdmin,   adminController.setting);
 router.post('/setting', checkAuth,checkAdmin,   adminController.setting);
 router.post('/profile', checkAuth,checkAdmin,   adminController.profile);

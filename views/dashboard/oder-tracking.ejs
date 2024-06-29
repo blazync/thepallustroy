@@ -35,6 +35,7 @@
                                             <div class="infor mb-10">
                                                 <div class="body-text">Order ID</div>
                                                 <div class="body-title-2">Order #<%= order._id %></div>
+                                                
                                             </div>
                                             
                                             <div class="infor mb-10">
@@ -53,10 +54,26 @@
                                                 <div class="body-text">Payment Status:</div>
                                                 <div class="body-title-2"><%= order.payment_status %></div>
                                             </div>
+                                            <div class="infor mb-20">
+                                                <div class="body-text">Customer Name:</div>
+                                                <div class="body-title-2"><%= user.name %></div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
+                             
                                 <!-- /order-track -->
+                                 <div>
+                                       <form id="updateStatusForm_<%= orderItem._id %>">
+                                                <select name="status" id="statusSelect_<%= orderItem._id %>">
+                                                    <option value="receiving_orders">Receiving Orders</option>
+                                                    <option value="order_processing">Order Processing</option>
+                                                    <option value="being_delivered">Being Delivered</option>
+                                                    <option value="delivered">Delivered</option>
+                                                </select>
+                                                <input type="hidden" name="orderId" value="<%= orderItem._id %>"> 
+                                            </form>
+                                 </div>
                                 <!-- detail -->
                                 <div class="wg-box mb-20">
                                     <div>
@@ -161,6 +178,27 @@
                         </div>
                         <!-- /main-content-wrap -->
                         <!-- bottom-page -->
-                        <%- include('../includes/adminFooter.ejs') %>
-                        <!-- /bottom-page -->
+
+                        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function(){
+        $('[id^=updateStatusForm_]').change(function(e){
+            e.preventDefault(); 
+            var formData = $(this).serialize(); 
+            $.ajax({
+                type: 'POST',
+                url: '/dashboard/update-order-status', 
+                data: formData,
+                success: function(response) {
+                    $('#updateStatusForm_' + response.orderId + ' .block-available').text(response.status);
+                },
+                error: function(err) {
+                    console.error(err);
+                }
+            });
+        });
+    });
+</script>                   
+<%- include('../includes/adminFooter.ejs') %>
+<!-- /bottom-page -->
                    

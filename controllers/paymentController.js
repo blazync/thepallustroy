@@ -94,8 +94,8 @@ const createOrder = async (req, res) => {
                 customer_email: customer_email || userData.email
             },
             order_meta: {
-                return_url: "https://thepallustory.in/order-confirmation/?order_id={order_id}",
-                notify_url: "https://thepallustory.in/payment/webhook",
+                return_url: `${process.env.SITE_URL}/order-confirmation/?order_id={order_id}`,
+                notify_url: `${process.env.SITE_URL}/payment/webhook`,
                 payment_methods: "cc,dc,ppc,ccc,emi,paypal,upi,nb,app,paylater"
             },
             order_expiry_time: new Date(Date.now() + 30 * 60 * 1000).toISOString(),
@@ -161,7 +161,7 @@ const verifyOrder = async (req, res) => {
         
         <p>We have received your payment and will process your order shortly.</p>
         
-        <p>You can track your order by visiting <a href="https://thepallustory.in/myorder" target="_blank">Track Order</a>.</p>
+        <p>You can track your order by visiting <a href="${process.env.SITE_URL}/myorder" target="_blank">Track Order</a>.</p>
         
         <p>Thank you for shopping with us!</p>
         

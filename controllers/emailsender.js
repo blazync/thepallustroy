@@ -94,7 +94,7 @@ async function sendMail(to, cc, bcc, subject, htmlContent) {
 <body style="font-family: Arial, sans-serif; background-color: #f0f0f0; margin: 0; padding: 0;">
   <div class="container">
     <header>
-      <img width="300px" height="60px" src="https://thepallustory.in/assets/images/logo2.png" alt="Store Logo">
+      <img src="${process.env.SITE_URL}/assets/images/logo2.png" alt="Store Logo">
     </header>
     <p>${htmlContent}</p>
     <p>Feel free to contact us for support or any questions you may have.</p>

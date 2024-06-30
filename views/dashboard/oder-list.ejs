@@ -20,6 +20,7 @@
                     <li>
                         <div class="text-tiny">Order List</div>
                     </li>
+                    <li></li>
                 </ul>
             </div>
             <div class="wg-box">
@@ -35,7 +36,7 @@
                         </form>
                     </div>
                 </div>
-                <div class="wg-table table-all-category">
+                <div class="wg-table table-all-order">
                     <ul class="table-title flex gap10 mb-14">   
                         <li>
                             <div class="body-title">Order ID</div>
@@ -60,6 +61,8 @@
                         <li>
                             <div class="body-title">Payment</div>
                         </li>
+                        <li></li>
+           
                     </ul>
                     <ul class="flex flex-column">
                         <% if (order.length > 0) { %>
@@ -88,6 +91,7 @@
                                         <div class="body-text">₹ <%= orderItem.total_amount.toFixed(2) %></div>
                                         <div class="body-text"><%= orderItem.products[0].quantity %></div>
                                         <div class="body-text" id="paymentStatus_<%= orderItem._id %>"><%= orderItem.payment_status %></div>
+                                        <div></div>
                                     </div>
                                 </li>
                             <% }); %>

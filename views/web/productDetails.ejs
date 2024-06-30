@@ -33,7 +33,7 @@
 								<div class="thumbnails">
 									<div class="pro-image" id="img-1">
 										<a class="thumbnail" href="#">
-											<img src="<%= product.images[0] ? '../../upload/' + product.images[0] : '../../assets/images/products/noimage.png' %>"
+											<img src="<%= product.images[0] ? '../../upload/multiple/' + product.images[0] : '../../assets/images/products/noimage.png' %>"
 												title="Chikankari Saree" id="prozoom" alt="Chikankari Saree"
 												data-zoom-image="assets/images/products/7-570x570.jpg" class="product-main-image">
 										</a>
@@ -44,7 +44,7 @@
 												<a href="#" title="Chikankari Saree" class="elevatezoom-gallery"
 													data-image="assets/images/products/7.jpg"
 													data-zoom-image="assets/images/products/7.jpg">
-													<img src="<%= product.images[0] ? '../../upload/' + product.images[0] : '../../assets/images/products/noimage.png' %>"
+													<img src="<%= product.images[0] ? '../../upload/multiple/' + product.images[0] : '../../assets/images/products/noimage.png' %>"
 														title="Chikankari Saree" alt="Chikankari Saree" class="w-100">
 												</a>
 											</div>
@@ -99,7 +99,11 @@
 												product.id.slice(0,5) %></span>
 									</li>
 									<li><span class="disc">Availability:</span> <span class="disc1">
-											<%= product.status %>
+											<% if (product.status && product.stock > 0) { %>
+												In Stock
+												<% } else { %>
+												Unavailable
+												<% } %>
 										</span></li>
 									<li><span class="disc">SKU:</span> <span class="">
 											<%= product.sku %>
@@ -151,7 +155,9 @@
 															productName: "<%= product.name %>", 
 															productImage: "<%= product.images[0] %>", 
 															quantity: document.getElementById("input-quantity").value
-														})'>
+														})' 
+														<% if (!(product.status && product.stock > 0)) { %>disabled<% } %>
+														>
 													<i class="icon-bag"></i><span>Add To Cart</span>
 												</button>
 											</div>
@@ -307,12 +313,12 @@
 										<div class="image">
 											<a href="/product/<%= relateddata.name.replace(/ /g, '-') %>"
 												class="thumb-image">
-												<img src="../../upload/<%= relateddata.images[0] %>"
+												<img src="../../upload/multiple/<%= relateddata.images[0] %>"
 													alt="<%= relateddata.name %>" title="<%= relateddata.name %>"
 													class="img-responsive zoomInImage">
 											</a>
 											<div class="button-group">
-												<% if (relateddata.status) { %>
+												<% if (relateddata.status && relateddata.stock>0) { %>
 												<button class="addcart" type="button" title="Add to Cart" 
 														onclick='handleAddToCart({
 															userData: <%= JSON.stringify(userData) %>, 
@@ -350,7 +356,7 @@
 													</p>
 												</div>
 													<div>
-														<% if (relateddata.status) { %>
+														<% if (relateddata.status && relateddata.stock>0) { %>
 															<button class="btn btn-cart" type="button"
 																	title="Add to Cart"
 																	data-id="<%= product._id %>"
@@ -403,9 +409,13 @@
             var productId = $('[name="productId"]').val();
             var reviewText = $('#input-review').val();
             var rating = $('#selected-rating').val();
+			if (!reviewText) {
+                toastr.error('Please Write your review.');
+                return;
+            }
 
             if (!rating) {
-                alert('Please select a rating.');
+                toastr.error('Please select a rating.');
                 return;
             }
 
@@ -418,15 +428,17 @@
                 data: JSON.stringify({ productId: productId, rating: rating, review: reviewText }),
                 contentType: 'application/json',
                 success: function(response) {    
-                    console.log('Review submitted successfully:', response);
+                
                     // Handle success, e.g., show a success message or redirect
-                    alert('Review submitted successfully!');
-                    // window.location.href = '/'; // Redirect to homepage or another page
+                    toastr.success('Review submitted successfully!');
+                    setTimeout(()=>{
+						location.reload();
+					},2000)
                 },
                 error: function(error) {
                     console.error('Error submitting review:', error.responseText);
                     // Handle error, e.g., show an error message
-                    alert('Failed to submit review. Please buy the product first.');
+                    toastr.error('Please buy the product to submit a review.');
                 }
             });
         });

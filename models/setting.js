@@ -13,6 +13,7 @@ const settingsSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+  
     address: {
         type: String,
         required: true
@@ -27,40 +28,58 @@ const settingsSchema = new mongoose.Schema({
         required: true,
         default: 0
     },
-    service: {
+    smtp_service: {
         type: String,
         required: true,
         default: 'Gmail'
     },
-    host: {
+    smtp_host: {
         type: String,
         required: true,
         default: 'smtp.gmail.com'
     },
-    port: {
+    smtp_port: {
         type: Number,
         required: true,
         default: 465
     },
-    secure: {
+    smtp_secure: {
         type: Boolean,
         required: true,
         default: true
     },
-    user: {
+    smtp_user: {
         type: String,
         required: true
     },
-    pass: {
+    smtp_pass: {
         type: String,
         required: true
     },
-    facebook: String,
-    instagram: String,
-    twitter: String,
-    linkedin: String,
-    threads: String,
-    whatsapp: String
+    from_email:{
+        type: String,
+        required: true
+    },
+    facebook:{
+        type: String,
+        required: true
+    },
+    twitter:{
+        type: String,
+        required: true
+    },
+    instagram:{
+        type: String,
+        required: true
+    },
+    whatsapp:{
+        type: String,
+        required: true
+    },
+    email_image_url:{
+        type: String,
+        required: true
+    }
 });
 
 module.exports = mongoose.model('Settings', settingsSchema);

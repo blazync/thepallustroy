@@ -45,53 +45,47 @@
                     <ul class="table-title flex gap20 mb-14">
                         <li>
                             <div class="body-title">Product</div>
-                        </li>    
-                         <li>
-                            <div class="body-title">Product Id</div>
-                        </li> 
+                        </li>   
+                         
                         <li>
-                            <div class="body-title">Price</div>
+                            <div class="body-title">Stock</div>
                         </li>
                         <li>
-                            <div class="body-title">Quantity</div>
+                            <div class="body-title">Action</div>
                         </li>
                         <li>
                             <div class="body-title">Views</div>
                         </li>
                         <li>
-                            <div class="body-title">Stock</div>
+                            <div class="body-title">Price</div>
                         </li>
-                        <li>
-                            <div class="body-title">Start date</div>
-                        </li>
-                        <li>
-                            <div class="body-title">Action</div>
-                        </li>
+                         <li>
+                            <div class="body-title">Product Id</div>
+                        </li> 
+                        <li></li>
+                        
+                       
+                        
                     </ul>
                     <ul class="flex flex-column">
                         <% if (products.length > 0) { %>
                             <% products.forEach(data => { %>
                                 <li class="product-item gap14">
                                     <div class="image no-bg">
-                                        <img src="../../upload/<%= data.images[0] %>" alt="<%= data.name %>">
+                                        <img src="../../upload/multiple/<%= data.images[0] %>" alt="<%= data.name %>">
                                     </div>
                                     <div class="flex items-center justify-between gap20 flex-grow">
                                         <div class="name">
                                             <a href="product-list" class="body-title-2"><%= data.name %></a>
                                         </div>
-                                        <div class="body-text"><%= data._id %></div>
-                                        <div class="body-text">Rs <%= data.price.toFixed(2) %></div>
-                                        <div class="body-text"><%= data.stock %></div>
-                                        <div class="body-text"><%= data.views %></div>
                                         <div>
-                                            <% if (data.stock > 0) { %>
+                                            <% if (data.stock > 0 && data.status) { %>
                                                 <div class="block-available">In stock</div>
                                             <% } else { %>
                                                 <div class="block-not-available">Out of stock</div>
                                             <% } %>
                                         </div>
-                                        <div class="body-text"><%= data.created_at %></div>
-                                        <div class="list-icon-function">
+                                         <div class="list-icon-function">
                                             <a href="/dashboard/editproduct/<%= data._id %>">
                                                 <div class="item edit">
                                                     <i class="icon-edit-3"></i>
@@ -103,6 +97,13 @@
                                                 </div>
                                             </a>
                                         </div>
+                                        <div class="body-text"><%= data.views %></div>
+                                        <div class="body-text">Rs <%= data.price.toFixed(2) %></div>
+                                        <div class="body-text"><%= data._id %></div>
+                                        <div></div>
+                                        
+                                
+                                       
                                     </div>
                                 </li>
                             <% }); %>

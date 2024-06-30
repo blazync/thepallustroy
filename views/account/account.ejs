@@ -148,24 +148,29 @@
                 <h1>Welcome <b><%= userData.name %></b></h1>
                 <div class="row">
                     <div class="col-md-4 col-sm-6 col-xs-12">
+                        <a href="/myorder">
                         <div class="card shadow">
-                            <div class="card-body">
+                                <div class="card-body">
                                 <div class="icon"><i class="fas fa-wallet"></i></div>
-                                <h5 class="card-title">Total Spend</h5>
+                                <h5 class="card-title">Total Order Amount</h5>
                                 <h4 class="card-text">₹ <%= totalSpend.toFixed(2) %></h4>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-4 col-sm-6 col-xs-12">
+                </a>
+                <div class="col-md-4 col-sm-6 col-xs-12">
+                        <a href="/myorder">
                         <div class="card shadow">
-                            <div class="card-body">
+                                <div class="card-body">
                                 <div class="icon"><i class="fas fa-shopping-cart"></i></div>
                                 <h5 class="card-title">Total Orders</h5>
                                 <h4 class="card-text"><%= totalOrders %></h4>
                             </div>
                         </div>
+                    </a>
                     </div>
                     <div class="col-md-4 col-sm-6 col-xs-12">
+                        <a href="/mywishlist">
                         <div class="card shadow">
                             <div class="card-body">
                                 <div class="icon"><i class="fas fa-heart"></i></div>
@@ -173,6 +178,7 @@
                                 <h4 class="card-text"><%= totalWishlistItems %></h4>
                             </div>
                         </div>
+                    </a>
                     </div>
                 </div>
                 <div class="p-4 border-2 border-gray-200 border-dashed rounded-lg mt-14 bg-white">

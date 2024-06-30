@@ -157,10 +157,10 @@
                                             <div class="body-text"><%= order.shipping_address %></div>
                                         </div>
                                         <div class="wg-box mb-20 gap10">
-                                            <div class="body-title">Payment Method</div>
+                                            <div class="body-title">Payment Status</div>
                                             <div class="body-text">
-                                                <span class="body-title-2 tf-color-2"><%= order.payment_method?order.payment_method:'Not Paid Yet' %></span>
-                                                <br>Pay on Delivery (Cash/Card). Cash on delivery (COD) available. Card/Net banking acceptance subject to device availability.</div>
+                                                <span class="body-title-2 tf-color-2"><%= order.payment_status %></span>
+                                                <br>Cash/Card/Net banking/ Cash on delivery (COD) available.</div>
                                         </div>
                                         <div class="wg-box gap10">
                                             <div class="body-title">Expected Date Of Delivery</div>

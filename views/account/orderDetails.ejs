@@ -1,116 +1,13 @@
 <%- include('../includes/webHeader.ejs') %>
-
-<style>
-
-
-    .main {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-    
-    .horizontal.timeline {
-      display: flex;
-      position: relative;
-      flex-direction: row;
-      justify-content: space-between;
-      align-items: center;
-      width: 100%;
-    }
-    .horizontal.timeline:before {
-      content: "";
-      display: block;
-      position: absolute;
-      width: 100%;
-      height: 0.2em;
-      background-color: #f2f2f2;
-    }
-    .horizontal.timeline .line {
-      display: block;
-      position: absolute;
-      height: 0.2em;
-      background-color: #8897ec;
-    }
-    .horizontal.timeline .steps {
-      display: flex;
-      position: relative;
-      flex-direction: row;
-      justify-content: space-between;
-      align-items: center;
-      width: 100%;
-    }
-    .horizontal.timeline .steps .step {
-      display: block;
-      position: relative;
-      bottom: calc(100% + 1em);
-      padding: 0.47em;
-      margin: 0 2em;
-      box-sizing: content-box;
-      color: #8897ec;
-      background-color: currentColor;
-      border: 0.25em solid white;
-      border-radius: 50%;
-      z-index: 500;
-    }
-    .horizontal.timeline .steps .step:first-child {
-      margin-left: 0;
-    }
-    .horizontal.timeline .steps .step:last-child {
-      margin-right: 0;
-      color: #71CB35;
-    }
-    .horizontal.timeline .steps .step span {
-      position: absolute;
-      top: calc(100% + 1em);
-      left: 50%;
-      transform: translateX(-50%);
-      white-space: nowrap;
-      color: #000;
-      opacity: 0.4;
-    }
-    .horizontal.timeline .steps .step.current:before {
-      content: "";
-      display: block;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      padding: 1em;
-      background-color: currentColor;
-      border-radius: 50%;
-      opacity: 0;
-      z-index: -1;
-      animation-name: animation-timeline-current;
-      animation-duration: 2s;
-      animation-iteration-count: infinite;
-      animation-timing-function: ease-out;
-    }
-    .horizontal.timeline .steps .step.current span {
-      opacity: 0.8;
-    }
-    /* Order Page */
-  
-    
-    @keyframes animation-timeline-current {
-      from {
-        transform: translate(-50%, -50%) scale(0);
-        opacity: 1;
-      }
-      to {
-        transform: translate(-50%, -50%) scale(1);
-        opacity: 0;
-      }
-    }
-    </style>
     <!-- My Account -->
  
     <div class="blog-section">
       
         <div class="container">
+            <%- include('../includes/customerSidebar.ejs') %>
             <div class="row">
-                <%- include('../includes/customerSidebar.ejs') %>
                 <div id="content" class="col-sm-9  all-blog my-account">
-                    <h1 class="order-page-title">Order Details : <b>Order #<%= orderDetails.id %></b></h1>     
+                    <h1 class="orderDetails-page-title">Order Details : <b>Order #<%= orderDetails.id %></b></h1>     
                   <div class="row">
                     <div class="col-lg-12">
                         <div class="card p-4" id="print-area">
@@ -129,6 +26,7 @@
                                     <div class="col-md-6">
                                        
                                         <p><strong>Payment Status:</strong> <%= orderDetails.payment_status %></p>
+                                        <p><strong>Payment Id:</strong> <%= orderDetails.payment_id %></p>
                                         <p><strong>Service Fee:</strong> ₹ <%= orderDetails.serviceFee %></p>
                                         <p><strong>Delivery Charges:</strong> ₹ <%= orderDetails.deliveryCharges %></p>
                                     </div>
@@ -149,7 +47,7 @@
                                         <tbody>
                                             <% orderDetails.products.forEach(item => { %>
                                                 <tr>
-                                                    <td><%= item.name %></td>
+                                                    <td><a href="/product/<%= item.name.replace(/ /g, '-') %>" class="text-primary"><%= item.name %></a></td>
                                                     <td><%= item.quantity %></td>
                                                     <td>₹ <%= item.price %></td>
                                                     <td>₹ <%= item.price*item.quantity %></td>
@@ -157,54 +55,66 @@
                                             <% }); %>
                                         </tbody>
                                     </table>
-                                    <button class="btn btn-primary btn-print" onclick="printSpecificArea('print-area')">Print</button>
+                                    <div class="d-flex justify-content-between">
+                                        <button class="btn btn-primary btn-print" onclick="printSpecificArea('print-area')">Print</button>
+                                        <a href="https://wa.me/919101394194"><button class="btn btn-warning" >Support</button></a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    <% if (orderDetails.status === 'cancelled') { %>
+                        <h2 class="text-danger mt-5">Your order has been cancelled. Tracking has been disabled.</h2>
+                    <% } else { %>
+
                     <div class="col-lg-12">
                         <div class="card p-5 shadow">
                                 <div class="mb-3">
                                     <h6 class="mb-10">Detail</h6>
-                                    <div class="body-text">Your item is on the way. Tracking information will be available within 24 hours.</div>
+                                    <div class="body-text">
+                                        <% if (orderDetails.status === 'approved') { %>
+                                            Your order has been approved and is being processed.
+                                        <% } else if (orderDetails.status === 'shipped') { %>
+                                            Your order has been shipped. Tracking information will be available within 24 hours.
+                                        <% } else if (orderDetails.status === 'out_of_delivery') { %>
+                                            Your order is out for delivery and will reach you soon.
+                                        <% } else if (orderDetails.status === 'delivered') { %>
+                                            Your order has been delivered. We hope you enjoy your purchase!
+                                        <% } else { %>
+                                            Your order status is being updated. Please check back later.
+                                        <% } %>
+                                    </div>
+
                                 </div>
-                                <div class="main">
-                                    <div class="horizontal timeline">
-                                        <div class="steps">
-                                            <div class="step <%= orderDetails.status === 'receiving_orders'? ' current' : '' %>">
-                                                <span>Initiated</span>
-                                            </div>
-                                            <div class="step <%= orderDetails.status === 'order_processing'? ' current' : '' %>">
-                                                <span>Processing</span>
-                                            </div>
-                                            <div class="step <%= orderDetails.status === 'being_delivered'? ' current' : '' %>">
-                                                <span>Out of Delivery</span>
-                                            </div>
-                                            <div class="step <%= orderDetails.status === 'delivered'? ' current' : '' %>">
-                                                <span>Delivered</span>
+                                <div class="container">
+                                 <div class="row">
+                                        <div class="col-12 col-md-10 hh-grayBox pt45 pb45">
+                                            <div class="row justify-content-between">
+                                                <div class="order-tracking <%= orderDetails.status === 'approved' || orderDetails.status === 'shipped' || orderDetails.status === 'out_of_delivery' || orderDetails.status === 'delivered' ? 'completed' : '' %>">
+                                                    <span class="is-complete"></span>
+                                                    <p>Approved</p>
+                                                </div>
+                                                <div class="order-tracking <%= orderDetails.status === 'shipped' || orderDetails.status === 'out_of_delivery' || orderDetails.status === 'delivered' ? 'completed' : '' %>">
+                                                    <span class="is-complete"></span>
+                                                    <p>Shipped</p>
+                                                </div>
+                                                <div class="order-tracking <%= orderDetails.status === 'out_of_delivery' || orderDetails.status === 'delivered' ? 'completed' : '' %>">
+                                                    <span class="is-complete"></span>
+                                                    <p>Out for Delivery</p>
+                                                </div>
+                                                <div class="order-tracking <%= orderDetails.status === 'delivered' ? 'completed' : '' %>">
+                                                    <span class="is-complete"></span>
+                                                    <p>Delivered</p>
+                                                </div>
                                             </div>
                                         </div>
-                                        
-                                        <div class="line" style="width: 
-                                            <% if (orderDetails.status === 'receiving_orders') { %>
-                                                25%
-                                            <% } else if (orderDetails.status === 'order_processing') { %>
-                                                50%
-                                            <% } else if (orderDetails.status === 'being_delivered') { %>
-                                                75%
-                                            <% } else if (orderDetails.status === 'delivered') { %>
-                                                100%
-                                            <% } else { %>
-                                                0%
-                                            <% } %>;
-                                        "></div>
+                                    </div>
 
                                     </div>
-                            
-                                </div>
-                                
                             </div>
                     </div>
+                        
+                    <% } %>
                   </div>  
                 </div>
             </div>

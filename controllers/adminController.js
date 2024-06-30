@@ -10,7 +10,9 @@ const Order = require('../models/orders');
 const Payment = require('../models/payments');
 const Settings = require('../models/setting');
 const bcrypt = require('bcryptjs');
-
+const mailer = require('./emailsender');
+const fs = require('fs');
+const path = require('path');
 exports.index = async (req, res) => {
     const userData = decodeToken(req.cookies.token);
     try {
@@ -23,10 +25,12 @@ exports.index = async (req, res) => {
             // Fetch all orders
 
             const orders = await Order.find();
-            userOrders = await Order.find();
+            userOrders = await Order.find().sort({ created_at: -1 });
             // Calculate total payment earned
-            totalPaymentEarned = orders.reduce((acc, order) => acc + order.total_amount, 0);
-            // Fetch total number of users
+            totalPaymentEarned =  orders
+                .filter(order => order.payment_status === 'Paid')
+                .reduce((acc, order) => acc + order.total_amount, 0);
+                            // Fetch total number of users
             totalUsers = await User.countDocuments();
             // Calculate total number of orders
             totalOrders = orders.length;
@@ -130,50 +134,88 @@ exports.editProduct = async (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 };
+
+const deleteImages = (images) => {
+    images.forEach(image => {
+        const imagePath = path.join(__dirname, '..', 'public', 'upload', 'multiple', image);
+        fs.unlink(imagePath, (err) => {
+            if (err) {
+                console.error(`Error deleting image: ${imagePath}`, err);
+            } else {
+                console.log(`Deleted image: ${imagePath}`);
+            }
+        });
+    });
+};
+
+
 exports.deleteProduct = async (req, res) => {
     try {
         const productId = req.params.id;
-        await Product.findByIdAndDelete(productId);
-        // Redirecting to the product list page with success message
+        const product = await Product.findByIdAndDelete(productId);
+        
+        if (product && product.images) {
+            deleteImages(product.images);
+        }
+
         res.redirect('/dashboard/product-list?success=Product deleted successfully');
     } catch (error) {
         console.error('Error deleting product:', error);
-        // Redirecting to the product list page with error message
         res.redirect('/dashboard/product-list?error=Error deleting product');
     }
 };
 
 
 exports.postProduct = async (req, res) => {
-    if (req.body.type === "edit") {
-        const productId = req.body.productId; // Assuming the ID of the product to edit is passed in the request body
-        try {
-            const images = req.file ? req.file.filename : req.body.images; // Use existing images if no new file is uploaded
+    try {
+        const {
+            name,
+            description,
+            price,
+            discountedPrice,
+            sku,
+            no_of_components,
+            color,
+            material,
+            fit,
+            artisan,
+            categories,
+            occasion,
+            collection,
+            brand,
+            place_of_manufacture,
+            caution,
+            contents,
+            stock,
+            views,
+            type,
+            productId // Assuming productId is sent in the request body
+        } = req.body;
 
-            // Extracting data from req.body
-            const {
-                name,
-                description,
-                price,
-                discountedPrice,
-                sku,
-                no_of_components,
-                color,
-                material,
-                fit,
-                artisan,
-                categories,
-                occasion,
-                collection,
-                brand,
-                place_of_manufacture,
-                caution,
-                contents,
-                stock,
-                views,
-            } = req.body;
+        // Convert checkbox values to boolean
+        const bestseller = req.body.bestseller === 'true';
+        const status = req.body.status === 'true';
 
-            // Find the product by ID and update it
+        // Handle uploaded images
+        const images = req.files ? req.files.map(file => file.filename) : [];
+
+        if (type === "edit") {
+            const existingProduct = await Product.findById(productId);
+
+            if (!existingProduct) {
+                return res.status(404).send("Product not found");
+            }
+
+            // If new images are uploaded, delete old images
+            if (images.length > 0 && existingProduct.images) {
+                existingProduct.images.forEach(img => {
+                    fs.unlink(path.join(__dirname, '..', 'public', 'upload', 'multiple', img), err => {
+                        if (err) console.error(err);
+                    });
+                });
+            }
+
+            // Update product with new data
             await Product.findByIdAndUpdate(productId, {
                 name,
                 description,
@@ -185,30 +227,31 @@ exports.postProduct = async (req, res) => {
                 material,
                 fit,
                 artisan,
-                categories, // Assuming categories is a comma-separated string
-                occasion, // Assuming occasion is a comma-separated string
+                categories,
+                occasion,
                 collection,
                 brand,
                 place_of_manufacture,
                 caution,
                 contents,
-                images, // Assuming images is a comma-separated string
+                images: images.length > 0 ? images : existingProduct.images,
                 stock,
                 views,
+                bestseller,
+                status
             });
 
-            // Redirecting to the product list page with success message
             res.redirect('/dashboard/product-list');
-        } catch (error) {
-            console.error('Error editing product:', error);
-            // Redirecting to the add product page with error message
-            res.redirect('/dashboard/add-product?error=Error editing product');
-        }
-    } else {
-        const images = req.file ? req.file.filename : null;
-        try {
-            // Extracting data from req.body
-            const {
+        } else {
+            // Check for existing product with the same name or SKU
+            const existingProduct = await Product.findOne({ $or: [{ name }, { sku }] });
+
+            if (existingProduct) {
+                return res.redirect('/dashboard/add-product?error=Product with the same name or SKU already exists');
+            }
+
+            // Create a new product
+            const newProduct = new Product({
                 name,
                 description,
                 price,
@@ -226,54 +269,23 @@ exports.postProduct = async (req, res) => {
                 place_of_manufacture,
                 caution,
                 contents,
+                images,
                 stock,
                 views,
-            } = req.body;
-
-            // Check for existing product with the same name or SKU
-            const existingProduct = await Product.findOne({ $or: [{ name }, { sku }] });
-
-            if (existingProduct) {
-                // Redirecting to the add product page with error message if product already exists
-                return res.redirect('/dashboard/add-product?error=Product with the same name or SKU already exists');
-            }
-
-            // Creating a new product
-            const newProduct = new Product({
-                name,
-                description,
-                price,
-                discountedPrice,
-                sku,
-                no_of_components,
-                color,
-                material,
-                fit,
-                artisan,
-                categories, // Assuming categories is a comma-separated string
-                occasion, // Assuming occasion is a comma-separated string
-                collection,
-                brand,
-                place_of_manufacture,
-                caution,
-                contents,
-                images, // Assuming images is a comma-separated string
-                stock,
-                views,
+                bestseller,
+                status
             });
 
-            // Saving the new product to the database
             await newProduct.save();
 
-            // Redirecting to the product list page with success message
             res.redirect('/dashboard/product-list');
-        } catch (error) {
-            console.error('Error adding product:', error);
-            // Redirecting to the add product page with error message
-            res.redirect('/dashboard/add-product?error=Error adding product');
         }
+    } catch (error) {
+        console.error('Error adding or editing product:', error);
+        res.redirect('/dashboard/add-product?error=Error adding or editing product');
     }
 };
+
 
 
 exports.allRoles = async (req, res) => {
@@ -443,34 +455,42 @@ exports.editCategory = async (req, res) => {
 exports.postcategory = async (req, res) => {
     try {
         const image = req.file ? req.file.filename : null; // Get the uploaded image filename if it exists
-        const { name, description, type } = req.body; // Destructure the name, description, and type from the request body
+        const { name, description, type, categoryId } = req.body; // Destructure the name, description, type, and categoryId from the request body
 
         if (type === "edit") {
-            console.log(req.body);
             // Handle category edit
-            const categoryId = req.body.categoryId; // Assuming the category ID is passed as a route parameter
-            const updatedCategory = await Categories.findByIdAndUpdate(categoryId, {
-                name,
-                description,
-                image
-            });
-
-            if (!updatedCategory) {
+            const category = await Categories.findById(categoryId);
+            
+            if (!category) {
                 return res.status(404).send("Category not found");
             }
+
+            // If a new image is uploaded, delete the old image file
+            if (image && category.images) {
+                console.log(category.images)
+                fs.unlink(path.join(__dirname, '..', 'public', 'upload', 'single', category.images), err => {
+                    if (err) console.error(err);
+                });
+            }
+
+            category.name = name;
+            category.description = description;
+            if (image) {
+                category.images = image;
+            }
+
+            await category.save();
 
             // Redirect to the category list page
             res.redirect('/dashboard/category-list');
         } else {
             // Handle new category creation
-            // Create a new category instance
             const newCategory = new Categories({
                 name,
                 description,
-                image
+                images:image
             });
 
-            // Save the category to the database
             await newCategory.save();
 
             // Redirect to the category list page
@@ -482,13 +502,25 @@ exports.postcategory = async (req, res) => {
     }
 };
 
+
 exports.deleteCategory = async (req, res) => {
     try {
         const categoryId = req.params.id;
-        const deletedCategory = await Category.findByIdAndDelete(categoryId);
-        if (!deletedCategory) {
+        const category = await Categories.findById(categoryId);
+
+        if (!category) {
             return res.status(404).json({ success: false, message: 'Category not found' });
         }
+
+        // Delete the associated image file
+        if (category.images) {
+            fs.unlink(path.join(__dirname, '..', 'public', 'upload', 'single', category.images), err => {
+                if (err) console.error(err);
+            });
+        }
+
+        await Categories.findByIdAndDelete(categoryId);
+
         res.json({ success: true, message: 'Category deleted successfully' });
     } catch (error) {
         console.error('Error deleting category:', error);
@@ -554,13 +586,54 @@ exports.updateOrderStatus = async (req, res) => {
 
         // Assuming you have an Order model and you want to update the status
         const updatedOrder = await Order.findByIdAndUpdate(orderId, { status }, { new: true });
-        console.log('Updated order:', updatedOrder);
+      
 
         if (!updatedOrder) {
             console.log('Order not found.');
             return res.status(404).json({ error: 'Order not found' });
         }
+        
+       const userId = updatedOrder.user_id;
+        const user = await User.findById(userId).select('name email')
+        if (!user) {
+                return res.status(404).send('User not found');
+        }
 
+        if (status === 'delivered' || status === 'cancelled') {
+            const stockAdjustment = status === 'delivered' ? -1 : 1;
+            
+            for (const item of updatedOrder.products) {
+                await Product.findByIdAndUpdate(item.product_id, {
+                    $inc: { stock: item.quantity * stockAdjustment }
+                });
+            }
+        }
+
+         const orderStatusChangeEmail = `
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                <h2>Order Status Update</h2>
+                <p>Dear ${user.name},</p>
+                <p>We wanted to inform you that the status of your order has been updated.</p>
+        
+            <h3>Order Details:</h3>
+            <ul>
+                <li><strong>Order ID:</strong> ${orderId}</li>
+                
+                <li><strong>Current Status:</strong> ${status}</li>
+            </ul>
+        
+        <p>We appreciate your patience and understanding as we process your order.</p>
+        
+        <p>You can track your order status by visiting <a href="${process.env.SITE_URL}/orderDetails/${orderId}" target="_blank">Track Order</a>.</p>
+        
+        <p>If you have any questions or concerns, please do not hesitate to contact our customer support team.</p>
+        
+        <p>Thank you for shopping with us!</p>
+        
+    </div>
+`;
+
+        mailer(user.email, 'Order Status Change', '', 'Your order Status Updated!', orderStatusChangeEmail);
         console.log('Order status updated successfully.');
         return res.status(200).json({ status: updatedOrder.status });
     } catch (error) {
@@ -569,15 +642,44 @@ exports.updateOrderStatus = async (req, res) => {
     }
 };
 exports.updatePaymentStatus = async (req, res) => {
-    const { orderId, paymentStatus } = req.body;
-    
+    const { orderId, payment_status, payment_method, payment_id } = req.body;
     try {
-        // Find the order by orderId and update its payment status
-        const updatedOrder = await Order.findByIdAndUpdate(orderId, { payment_status: paymentStatus }, { new: true });
+        // Find the order by orderId
+        const order = await Order.findById(orderId);
 
-        if (!updatedOrder) {
+        if (!order) {
             return res.status(404).json({ error: 'Order not found' });
         }
+
+        // Check if payment status is already 'Paid'
+        if (order.payment_status === 'Paid') {
+            return res.status(400).json({ error: 'Payment status is already Paid. Cannot modify.' });
+        }
+
+        // If payment method is 'Manual', check and update payment status
+        if (payment_method === 'Manual') {
+            // If converting from 'Pending' to 'Paid' in manual mode, require payment_id
+            if (payment_status === 'Paid') {
+                if (!payment_id) {
+                    return res.status(400).json({ error: 'Payment ID is required for Manual payment.' });
+                }
+                // Update payment status and payment_id
+                order.payment_status = payment_status;
+                order.payment_method = payment_method;
+                order.payment_id = payment_id;
+            } else {
+                // Directly update payment status for 'Pending' to 'Paid'
+                order.payment_status = payment_status;
+                order.payment_method = payment_method;
+            }
+        } else {
+            // Update payment status for non-manual methods
+            order.payment_status = payment_status;
+            order.payment_method = payment_method;
+        }
+
+        // Save the updated order
+        const updatedOrder = await order.save();
 
         return res.status(200).json({ orderId: updatedOrder._id, paymentStatus: updatedOrder.payment_status });
     } catch (error) {

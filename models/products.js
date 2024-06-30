@@ -20,7 +20,7 @@ const productSchema = new Schema({
     contents: String,
     images: [String],
     stock: Number,
-    status: String,
+    status: Boolean,
     created_at: { type: Date, default: Date.now },
     updated_at: { type: Date, default: Date.now },
     views: Number,

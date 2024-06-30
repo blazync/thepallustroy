@@ -1,24 +1,23 @@
 const nodemailer = require('nodemailer');
 const Settings = require('../models/setting');
-require('dotenv').config();
 
 async function createTransporter() {
   try {
     // Fetch the settings from the database
-    
-
+    const settings = await Settings.findOne();
     // Create a transporter with SMTP settings
     const transporter = nodemailer.createTransport({
-       host: process.env.SMTP_HOST,
-      port: process.env.SMTP_PORT, 
-      secure: process.env.SMTP_SECURITY_TYPE === 'true', 
+      // service:settings.smtp_service,
+      host:settings.smtp_host,
+      port:settings.smtp_port, 
+      secure:settings.smtp_secure === 'true', 
       auth: {
-        user: process.env.SMTP_USER, 
-        pass: process.env.SMTP_PASS 
+        user:settings.smtp_user, 
+        pass:settings.smtp_pass 
       },
       tls: {
       rejectUnauthorized: false,
-      minVersion: 'TLSv1.2' // or try 'TLSv1' or 'TLSv1.1' if necessary
+      minVersion: 'TLSv1.2' 
     }
     });
 
@@ -36,9 +35,9 @@ async function sendMail(to, cc, bcc, subject, htmlContent) {
     const transporter = await createTransporter();
     const settings = await Settings.findOne();
     // Set up mail options
-    const fromEmail = process.env.FROM_EMAIL
+ 
     const mailOptions = {
-      from: `The Pallu Story <${fromEmail}>`,
+      from: `The Pallu Story <${settings.from_email}>`,
       to: to,
       cc: cc,
       bcc: bcc,
@@ -94,7 +93,7 @@ async function sendMail(to, cc, bcc, subject, htmlContent) {
 <body style="font-family: Arial, sans-serif; background-color: #f0f0f0; margin: 0; padding: 0;">
   <div class="container">
     <header>
-      <img src="${process.env.SITE_URL}/assets/images/logo2.png" alt="Store Logo">
+      <img src="${settings.email_image_url}" alt="Store Logo">
     </header>
     <p>${htmlContent}</p>
     <p>Feel free to contact us for support or any questions you may have.</p>

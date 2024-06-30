@@ -22,6 +22,7 @@
                     <li>
                         <div class="text-tiny">All User</div>
                     </li>
+                    <li></li>
                 </ul>
             </div>
             <!-- all-user -->
@@ -45,15 +46,16 @@
                             <div class="body-title">User</div>
                         </li>
                         <li>
+                            <div class="body-title">Action</div>
+                        </li>
+                        <li>
                             <div class="body-title">Email</div>
                         </li>
                     
                         <li>
                             <div class="body-title">Is Verified</div>
                         </li>
-                        <li>
-                            <div class="body-title">Action</div>
-                        </li>
+                        <li></li>
                     </ul>
                     <ul class="flex flex-column">
                         <% if (users.length > 0) { %>
@@ -67,10 +69,7 @@
                                             <a href="/dashboard/user-report/<%= data._id %>" class="body-title-2"><%= data.name ? data.name : 'Name' %></a>
                                             <div class="text-tiny mt-3"><%= data.role %></div>
                                         </div>
-                                        <div class="body-text"><%= data.email %></div>
-                                      
-                                        <div class="body-text"><%= data.is_verified %></div>
-                                        <div class="list-icon-function">
+                                         <div class="list-icon-function">
                                             <a href="/dashboard/edit-user/<%= data._id %>">
                                                 <div class="item edit">
                                                     <i class="icon-edit-3"></i>
@@ -80,6 +79,10 @@
                                                 <i class="icon-trash-2"></i>
                                             </div> -->
                                         </div>
+                                        <div class="body-text"><%= data.email %></div>
+                                      
+                                        <div class="body-text"><%= data.is_verified %></div>
+                                        <div></div>
                                     </div>
                                 </li>
                             <% }); %>

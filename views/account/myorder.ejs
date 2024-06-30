@@ -100,7 +100,7 @@
 </style>
 
 <!-- My Account -->
-<div class="blog-section">
+<div class="">
     <div class="container">
         <div class="row">
             <%- include('../includes/customerSidebar.ejs') %>
@@ -122,7 +122,7 @@
                                 <th class="text-center">Date</th>
                                 <th class="text-center">Order ID</th>
                                 <th class="text-center">Total Amount</th>
-                                <th class="text-center">Payment Id</th>
+                                <th class="text-center">Order Status</th>
                                 <th class="text-center">Action</th>
                             </tr>
                         </thead>
@@ -134,7 +134,22 @@
                                     <td class="text-center"><%- new Date(order.created_at).toLocaleDateString('en-IN') %></td>
                                     <td class="text-center"><%= order.order_id %></td>
                                     <td class="text-center">₹ <%= order.total_amount %></td>
-                                    <td class="text-center"><%= order.payment_id %></td>
+                                   <td class="text-center">
+                                        <% if (order.status === 'approved') { %>
+                                            <p class="text-primary">Approved by Seller</p>
+                                        <% } else if (order.status === 'shipped') { %>
+                                            <p class="text-warning">Order Shipped</p>
+                                        <% } else if (order.status === 'out_of_delivery') { %>
+                                            <p class="text-warning">Out Of Delivery</p>
+                                        <% } else if (order.status === 'delivered') { %>
+                                            <p class="text-success">Delivered</p>
+                                        <% } else if (order.status === 'cancelled') { %>
+                                            <p class="text-danger">Cancelled</p>
+                                        <% } else { %>
+                                            Pending
+                                        <% } %>
+                                    </td>
+
                                     <td class="text-center">
                                         <a href="/orderDetails/<%= order.id %>" class="btn btn-custom"><img src="../../assets/images/track.png" width="42px" alt=""></a>
                                         <!-- Add more actions as needed -->

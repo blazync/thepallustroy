@@ -16,6 +16,7 @@ const orderSchema = new Schema({
     shipping_address: String,
     payment_id: String,
     status:String,
+    payment_method:String,
     payment_status: String,
     serviceFee:Number,
     deliveryCharges:Number,

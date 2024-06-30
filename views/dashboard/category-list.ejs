@@ -33,37 +33,28 @@
                                     <div class="wg-table table-all-category">
                                         <ul class="table-title flex gap14 mb-14">
                                             <li>
-                                                <div class="body-title">Category Image</div>
+                                                <div class="body-title">Category</div>
                                             </li> 
-                                            <li>
-                                                <div class="body-title">Category Name</div>
-                                            </li>
-                                            <li>
-                                                <div class="body-title">Start date</div>
-                                            </li>
                                             <li>
                                                 <div class="body-title">Action</div>
                                             </li>
+                                            <li>
+                                                <div class="body-title">Description</div>
+                                            </li> 
+                                          
+                                        
                                         </ul>
                                         <ul class="flex flex-column">
                                            
                                             <% if (categories.length > 0) { %>
                                                 <% categories.forEach(data => { %>
                                                     <li class="product-item gap14">
-                                                        <div class="image no-bg">
-                                                            <img src="../../upload/<%= data.images %>" alt="">
-                                                        </div>
-                                                        <div class="flex items-center justify-between gap20 flex-grow">
+                                                     
+                                                        <div class="flex items-center gap20 flex-grow">
                                                             <div class="name">
                                                                 <a href="product-list" class="body-title-2"><%= data.name %></a>
                                                             </div>
-                                                            <div class="name">
-                                                                <a class="body-title-2"><%= data.description %></a>
-                                                            </div>
-                                                            <div class="name">
-                                                                <a class="body-title-2"><%= data.created_at %></a>
-                                                            </div>
-                                                            <div class="list-icon-function">
+                                                             <div class="list-icon-function">
                                                                 <a href="/dashboard/editcategory/<%= data._id %>">
                                                                     <div class="item edit">
                                                                         <i class="icon-edit-3"></i>
@@ -75,6 +66,9 @@
                                                                     </div>
                                                                 </a>
                                                                 
+                                                            </div>
+                                                            <div class="description">
+                                                                <a href="" class="body-title-2"><%= data.description %></a>
                                                             </div>
                                                         </div>
                                                     </li>

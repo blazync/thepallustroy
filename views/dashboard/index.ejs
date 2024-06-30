@@ -15,15 +15,15 @@
                                                     </svg>
                                                     <i class="icon-shopping-bag"></i>
                                                 </div>
-                                                <div>
+                                                <a href="/dashboard/order-list">
                                                     <div class="body-text mb-2">Total order</div>
                                                     <h4><%= totalOrders %></h4>
-                                                </div>
+                                                </a>
                                             </div>
-                                            <div class="box-icon-trending up">
+                                         <!-- <div class="box-icon-trending up">
                                                 <i class="icon-trending-up"></i>
                                                 <div class="body-title number">1.56%</div>
-                                            </div>
+                                            </div    -->
                                         </div>
                                         <div class="wrap-chart">
                                             <div id="line-chart-1"></div>
@@ -42,13 +42,13 @@
                                                 </div>
                                                 <div>
                                                     <div class="body-text mb-2">Total Income/payment</div>
-                                                    <h4>₹ <%= totalPaymentEarned %></h4>
+                                                    <a href="/dashboard/order-list"><h4>₹ <%= totalPaymentEarned %></h4></a>
                                                 </div>
                                             </div>
-                                            <div class="box-icon-trending down">
+                                            <!-- <div class="box-icon-trending down">
                                                 <i class="icon-trending-down"></i>
                                                 <div class="body-title number">1.56%</div>
-                                            </div>
+                                            </div> -->
                                         </div>
                                         <div class="wrap-chart">
                                             <div id="line-chart-2"></div>
@@ -73,10 +73,10 @@
                                                     <h4><%=  totalUsers %></h4>
                                                 </div>
                                             </div>
-                                            <div class="box-icon-trending up">
+                                            <!-- <div class="box-icon-trending up">
                                                 <i class="icon-trending-up"></i>
                                                 <div class="body-title number">1.56%</div>
-                                            </div>
+                                            </div> -->
                                         </div>
                                         <div class="wrap-chart">
                                             <div id="line-chart-4"></div>
@@ -124,10 +124,10 @@
                                                         
                                                         <div class="flex-grow flex items-center justify-between gap20">
                                                             <div>
-                                                                <a href="#" class="body-text name"># <%= (orderItem.id).slice(0,5) %></a>
-                                                                <div class="text-tiny mt-4"> <%= orderItem.user_id %></div>
+                                                                <a href="/dashboard/order-detail/<%= orderItem._id %>" class="body-text name"># <%= (orderItem.id).slice(0,10) %>...</a>
+                                                               
                                                             </div>
-                                                            <div class="body-text"><%= new Date(new Date(orderItem.created_at).getTime() + 7 * 24 * 60 * 60 * 1000).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) %></div>
+                                                            <div class="body-text"><%= new Date(orderItem.created_at).toLocaleDateString('en-IN') %></div>
                                                             <div class="body-text">₹ <%= orderItem.total_amount %></div>
                                                             <div class="flex items-center justify-between gap10">
                                                                 <div class="progress-level-bar">
@@ -158,9 +158,9 @@
                                             <tbody>
                                                 <% userOrders.slice(0, 20).forEach(orderItem => { %>
                                                     <tr>
-                                                        <td><%= orderItem.order_id %></td>
+                                                        <td><a href="/dashboard/order-detail/<%= orderItem._id %>"><%= orderItem.order_id %></a></td>
                                                     
-                                                        <td>$<%= orderItem.total_amount %></td>
+                                                        <td>₹<%= orderItem.total_amount %></td>
                                                         <td><%= orderItem.payment_status %></td>
                                                         <td><%= orderItem.created_at.toDateString() %></td>
                                                     </tr>

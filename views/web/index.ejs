@@ -37,18 +37,18 @@
 
 
 									<%
-									const shuffledProducts = products.filter(product => product.status).slice(0, 20).sort(() => Math.random() - 0.5)
+									const shuffledProducts = products.filter(product => product.status && product.stock>0).slice(0, 20).sort(() => Math.random() - 0.5)
 									shuffledProducts.forEach(product => { %>
 									<div class="product-layout product-grid col-xl-3 col-lg-4 col-md-4 col-sm-6 col-xs-6">
 										<div class="product-thumb">
 										<div class="image">
 											<a href="/product/<%= product.name.replace(/ /g, '-') %>" class="thumb-image">
-											<img src="<%= product.images[0] ? '../../upload/' + product.images[0] : 'assets/images/products/placeholder.jpg' %>"
+											<img src="<%= product.images[0] ? '../../upload/multiple/' + product.images[0] : 'assets/images/products/placeholder.jpg' %>"
 												alt="<%= product.name %>" title="<%= product.name %>"
 												class="img-responsive zoomInImage">
 											</a>
 											<div class="button-group">
-											   <% if (product.status) { %>
+											   <% if (product.status && product.stock>0) { %>
 																<button class="addcart" type="button" title="Add to Cart" 
 																		onclick='handleAddToCart({
 																			userData: <%= JSON.stringify(userData) %>, 
@@ -84,7 +84,7 @@
 													</p>
 												</div>
 													<div>
-														<% if (product.status) { %>
+														<% if (product.status && product.stock>0) { %>
 															<button class="btn btn-cart" type="button"
 																	title="Add to Cart"
 																	data-id="<%= product._id %>"
@@ -171,14 +171,14 @@
 										<div class="category-box">
 											<div class="category-feature-list ">
 												<div class="product-carousel owl-carousel">
-													<% products.filter(product => product.status).slice(0, 20).forEach(product => { %>
+													<% products.filter(product => (product.status && product.stock>0)).slice(0, 20).forEach(product => { %>
 														<div class="single-column">
 															<div class="product-layout col-xs-12">
 																<div class="product-thumb transition">
 																	<div class="image">
 																		<a href="/product/<%= product.name.replace(/ /g, '-') %>"
 																			class="thumb-image">
-																			<img src="<%= product.images[0] ? '../../upload/' + product.images[0] : '../../assets/images/products/noimage.png' %>"
+																			<img src="<%= product.images[0] ? '../../upload/multiple/' + product.images[0] : '../../assets/images/products/noimage.png' %>"
 																				alt="<%= product.name %>"
 																				title="<%= product.name %>"
 																				class="img-responsive zoomInImage">
@@ -187,7 +187,7 @@
 																			size="2" id="input-quantity"
 																			class="form-control" hidden>
 																		<div class="button-group">
-																			   <% if (product.status) { %>
+																			   <% if (product.status && product.stock>0) { %>
 																<button class="addcart" type="button" title="Add to Cart" 
 																		onclick='handleAddToCart({
 																			userData: <%= JSON.stringify(userData) %>, 

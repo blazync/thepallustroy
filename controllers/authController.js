@@ -7,9 +7,6 @@ const dotenv = require('dotenv');
 dotenv.config();
 const { generateAccessToken, saveTokenInCookie } = require('../middlewares/jwt');
 
-
-
-
 exports.postlogin = async (req, res) => {
     const { email, password } = req.body;
     console.log(req.body);

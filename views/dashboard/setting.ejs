@@ -33,7 +33,7 @@
                                             </fieldset>
                                         
                                             <fieldset class="contactNumber mb-24">
-                                                <div class="body-title mb-10">Contact Number</div>
+                                                <div class="body-title mb-10">Contat Support Number</div>
                                                 <input class="flex-grow" type="text" placeholder="Enter contact number" name="contactNumber" value="<%= settings.contactNumber %>" aria-required="true" required>
                                             </fieldset>
                                         
@@ -49,77 +49,78 @@
                                         
                                             <fieldset class="serviceFee mb-24">
                                                 <div class="body-title mb-10">Service Fee</div>
-                                                <input class="flex-grow" type="number" placeholder="Enter service fee" name="serviceFee" value="<%= settings.serviceFee %>" aria-required="true" required>
+                                                <input class="flex-grow" type="number" placeholder="Enter smtp_service fee" name="serviceFee" value="<%= settings.serviceFee %>" aria-required="true" required>
                                             </fieldset>
-                                        
+                                            <h6 class="mt-10 mb-20 text-primary">Update Global Charges</h6>
                                             <fieldset class="deliveryCharges mb-24">
                                                 <div class="body-title mb-10">Delivery Charges</div>
                                                 <input class="flex-grow" type="number" placeholder="Enter delivery charges" name="deliveryCharges" value="<%= settings.deliveryCharges %>" aria-required="true" required>
                                             </fieldset>
                                         
-                                            <fieldset class="service mb-24">
+                                            <fieldset class="smtp_service mb-24">
                                                 <div class="body-title mb-10">Service</div>
-                                                <input class="flex-grow" type="text" placeholder="Enter service" name="service" value="<%= settings.service %>" aria-required="true" required>
+                                                <input class="flex-grow" type="text" placeholder="Enter smtp_service" name="smtp_service" value="<%= settings.smtp_service %>" aria-required="true" required>
+                                            </fieldset>
+                                            
+                                            <h6 class="mt-10 mb-20 text-primary">Update Your SMTP Setting</h6>
+                                            <fieldset class="smtp_host mb-24">
+                                                <div class="body-title mb-10">SMTP Host</div>
+                                                <input class="flex-grow" type="text" placeholder="Enter smtp_host" name="smtp_host" value="<%= settings.smtp_host %>" aria-required="true" required>
                                             </fieldset>
                                         
-                                            <fieldset class="host mb-24">
-                                                <div class="body-title mb-10">Host</div>
-                                                <input class="flex-grow" type="text" placeholder="Enter host" name="host" value="<%= settings.host %>" aria-required="true" required>
+                                            <fieldset class="smtp_port mb-24">
+                                                <div class="body-title mb-10">SMTP Port</div>
+                                                <input class="flex-grow" type="number" placeholder="Enter smtp_port" name="smtp_port" value="<%= settings.smtp_port %>" aria-required="true" required>
                                             </fieldset>
                                         
-                                            <fieldset class="port mb-24">
-                                                <div class="body-title mb-10">Port</div>
-                                                <input class="flex-grow" type="number" placeholder="Enter port" name="port" value="<%= settings.port %>" aria-required="true" required>
-                                            </fieldset>
-                                        
-                                            <fieldset class="secure mb-24">
-                                                <div class="body-title mb-10">Secure</div>
-                                                <select name="secure" class="flex-grow" aria-required="true" required>
-                                                    <option value="true" <% if (settings.secure === true) { %> selected <% } %>>True</option>
-                                                    <option value="false" <% if (settings.secure === false) { %> selected <% } %>>False</option>
+                                            <fieldset class="smtp_secure mb-24">
+                                                <div class="body-title mb-10">SMTP Secure</div>
+                                                <select name="smtp_secure" class="flex-grow" aria-required="true" required>
+                                                    <option value="true" <% if (settings.smtp_secure === true) { %> selected <% } %>>True</option>
+                                                    <option value="false" <% if (settings.smtp_secure === false) { %> selected <% } %>>False</option>
                                                 </select>
                                             </fieldset>
                                         
-                                            <fieldset class="user mb-24">
-                                                <div class="body-title mb-10">User</div>
-                                                <input class="flex-grow" type="text" placeholder="Enter user" name="user" value="<%= settings.user %>" aria-required="true" required>
+                                            <fieldset class="smtp_user mb-24">
+                                                <div class="body-title mb-10">SMTP User</div>
+                                                <input class="flex-grow" type="text" placeholder="Enter smtp_user" name="smtp_user" value="<%= settings.smtp_user %>" aria-required="true" required>
                                             </fieldset>
                                         
-                                            <fieldset class="pass mb-24">
-                                                <div class="body-title mb-10">Password</div>
-                                                <input class="flex-grow" type="password" placeholder="Enter password" name="pass" value="<%= settings.pass %>" aria-required="true" required>
+                                            <fieldset class="smtp_pass mb-24">
+                                                <div class="body-title mb-10">SMTP Password</div>
+                                                <input class="flex-grow" type="password" placeholder="Enter password" name="smtp_pass" value="<%= settings.smtp_pass %>" aria-required="true" required>
                                             </fieldset>
-                                        
+
+                                              <fieldset class="from_email mb-24">
+                                                <div class="body-title mb-10">From Email</div>
+                                                <input class="flex-grow" type="email" placeholder="Enter from email" name="from_email" value="<%= settings.from_email %>" aria-required="true" required>
+                                            </fieldset>
+                                            <h6 class="mt-10 mb-20 text-primary">Update Social Links in Email</h6>
                                             <fieldset class="facebook mb-24">
                                                 <div class="body-title mb-10">Facebook</div>
-                                                <input class="flex-grow" type="text" placeholder="Enter Facebook URL" name="facebook" value="<%= settings.facebook %>">
+                                                <input class="flex-grow" type="text" placeholder="Enter Facebook URL" name="facebook" value="<%= settings.facebook %>" aria-required="true" required>
                                             </fieldset>
-                                        
-                                            <fieldset class="instagram mb-24">
-                                                <div class="body-title mb-10">Instagram</div>
-                                                <input class="flex-grow" type="text" placeholder="Enter Instagram URL" name="instagram" value="<%= settings.instagram %>">
-                                            </fieldset>
-                                        
+
                                             <fieldset class="twitter mb-24">
                                                 <div class="body-title mb-10">Twitter</div>
-                                                <input class="flex-grow" type="text" placeholder="Enter Twitter URL" name="twitter" value="<%= settings.twitter %>">
+                                                <input class="flex-grow" type="text" placeholder="Enter Twitter URL" name="twitter" value="<%= settings.twitter %>" aria-required="true" required>
                                             </fieldset>
-                                        
-                                            <fieldset class="linkedin mb-24">
-                                                <div class="body-title mb-10">LinkedIn</div>
-                                                <input class="flex-grow" type="text" placeholder="Enter LinkedIn URL" name="linkedin" value="<%= settings.linkedin %>">
+
+                                            <fieldset class="instagram mb-24">
+                                                <div class="body-title mb-10">Instagram</div>
+                                                <input class="flex-grow" type="text" placeholder="Enter Instagram URL" name="instagram" value="<%= settings.instagram %>" aria-required="true" required>
                                             </fieldset>
-                                        
-                                            <fieldset class="threads mb-24">
-                                                <div class="body-title mb-10">Threads</div>
-                                                <input class="flex-grow" type="text" placeholder="Enter threads" name="threads" value="<%= settings.threads %>">
-                                            </fieldset>
-                                        
+
                                             <fieldset class="whatsapp mb-24">
                                                 <div class="body-title mb-10">WhatsApp</div>
-                                                <input class="flex-grow" type="text" placeholder="Enter WhatsApp number" name="whatsapp" value="<%= settings.whatsapp %>">
+                                                <input class="flex-grow" type="text" placeholder="Enter WhatsApp URL" name="whatsapp" value="<%= settings.whatsapp %>" aria-required="true" required>
                                             </fieldset>
-                                        
+
+                                            <fieldset class="email_image_url mb-24">
+                                                <div class="body-title mb-10">Email Image URL</div>
+                                                <input class="flex-grow" type="text" placeholder="Enter Email Image URL" name="email_image_url" value="<%= settings.email_image_url %>" aria-required="true" required>
+                                            </fieldset>
+
                                             <!-- <div class="text-tiny tf-color-1 mb-10">Note: Your site IP will be added to blacklist after 5 failed attempts.</div>
                                             <div class="body-text">A purchase code (license) is only valid for One Domain. Are you using this theme on a new domain? Purchase a new license here to get a new purchase code.</div> -->
                                         </div>

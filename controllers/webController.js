@@ -768,7 +768,9 @@ exports.account = async (req, res) => {
         const orders = await Order.find({ user_id: userData.userId });
 
         // Calculate total spend
-        const totalSpend = orders.reduce((sum, order) => sum + order.total_amount, 0);
+        const totalSpend = orders
+            .filter(order => order.payment_status === 'Paid')
+            .reduce((sum, order) => sum + order.total_amount, 0);
 
         // Get total orders count
         const totalOrders = orders.length;

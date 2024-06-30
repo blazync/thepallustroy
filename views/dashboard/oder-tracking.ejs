@@ -25,6 +25,11 @@
                                     </ul>
                                 </div>
                                 <!-- order-track -->
+                                 <% if (order.status === 'cancelled') { %>
+                                    <div>
+                                        <h5 class="text-danger mt-5 mb-5">This Order has been cancelled.</h5>
+                                    </div>
+                                 <% } %>
                                 <div class="wg-box mb-20">
                                     <div class="order-track">
                                         <div class="image">
@@ -55,25 +60,62 @@
                                                 <div class="body-title-2"><%= order.payment_status %></div>
                                             </div>
                                             <div class="infor mb-20">
+                                                <div class="body-text">Payment Method:</div>
+                                                <div class="body-title-2"><%= order.payment_method %></div>
+                                            </div>
+                                            <div class="infor mb-20">
                                                 <div class="body-text">Customer Name:</div>
                                                 <div class="body-title-2"><%= user.name %></div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                             
-                                <!-- /order-track -->
-                                 <div>
-                                       <form id="updateStatusForm_<%= orderItem._id %>">
-                                                <select name="status" id="statusSelect_<%= orderItem._id %>">
-                                                    <option value="receiving_orders">Receiving Orders</option>
-                                                    <option value="order_processing">Order Processing</option>
-                                                    <option value="being_delivered">Being Delivered</option>
+
+                                <div class=" gap10">
+                                    <div>
+                                        <% if (order.status !== 'cancelled') { %>
+                                        <div class="wg-box mb-20">
+                                        <h5 class="">Update Order Status</h5>
+                                        <form id="updateStatusForm_<%= order._id %>" >
+                                            <p>You can update status of your customer's order from here. Cancellation is not allowed for user, He can contact support for order cancellation and in that you can mark order as cancelled. Never reactive the order once its cancelled.</p>
+                                                <select name="status" id="statusSelect_<%= order._id %>" class="tf-color-2">
+                                                    <option>Update order Status</option>
+                                                    <option value="approved">Order Approved</option>
+                                                    <option value="shipped">Product Shipped</option>
+                                                    <option value="out_of_delivery">Out Of Delivery</option>
                                                     <option value="delivered">Delivered</option>
+                                                    <option value="cancelled">Cancelled</option>
                                                 </select>
-                                                <input type="hidden" name="orderId" value="<%= orderItem._id %>"> 
+                                                <input type="hidden" name="orderId" value="<%= order._id %>"> 
                                             </form>
-                                 </div>
+                                        </div>
+                                        <% } %>
+                                    </div>
+                                  <% if (order.payment_status !== 'Paid') { %>
+                                    <div class="wg-box mb-20">
+                                    <h5 class="">Update Order Status</h5>
+                                        <form id="updatePaymentStatusForm_<%= order._id %>">
+                                            <select name="payment_status" id="PaymentStatusSelect_<%= order._id %>" class="text-success">
+                                                <option disabled selected>Update Payment Status</option>
+                                                <option value="Paid">Paid</option>
+                                                <option value="Pending">Pending</option>
+                                                <option value="Failed">Failed</option>
+                                            </select>
+                                            <select name="payment_method" id="PaymentMethodSelect_<%= order._id %>" class="text-success" hidden>
+                                                <option value="Manual" selected>Manual</option>
+                                            </select>
+                                            <input type="text" name="payment_id" id="PaymentIdInput_<%= order._id %>" placeholder="Enter Payment ID(Optional- Required for manual payments)">
+                                            <input type="hidden" name="orderId" value="<%= order._id %>"> 
+                                            <div class="mt-10">
+                                                <button type="submit" class="tf-button style-1 w-full">Update Payment Status</button>
+                                            </div>
+                                        </form>
+                                </div>
+                                <% } %>
+                                </div>
+                             
+
+                              
                                 <!-- detail -->
                                 <div class="wg-box mb-20">
                                     <div>
@@ -81,19 +123,19 @@
                                         <div class="body-text">Your item is on the way. Tracking information will be available within 24 hours.</div>
                                     </div>
                                     <div class="road-map">
-                                        <div class="road-map-item <%= order.status === 'receiving_orders' || order.status === 'order_processing' || order.status === 'being_delivered' || order.status === 'delivered' ? 'active' : '' %>">
-                                            <div class="icon"><i class="<%= order.status === 'receiving_orders' || order.status === 'order_processing' || order.status === 'being_delivered' || order.status === 'delivered' ? 'icon-check' : 'icon-clock' %>"></i></div>
-                                            <h6>Receiving orders</h6>
+                                        <div class="road-map-item <%= order.status === 'approved' || order.status === 'shipped' || order.status === 'out_of_delivery' || order.status === 'delivered' ? 'active' : '' %>">
+                                            <div class="icon"><i class="<%= order.status === 'approved' || order.status === 'shipped' || order.status === 'out_of_delivery' || order.status === 'delivered' ? 'icon-check' : 'icon-clock' %>"></i></div>
+                                            <h6>Order Approved</h6>
                                             <!-- <div class="body-text">05:43 AM</div> -->
                                         </div>
-                                        <div class="road-map-item <%= order.status === 'order_processing' || order.status === 'being_delivered' || order.status === 'delivered' ? 'active' : '' %>">
-                                            <div class="icon"><i class="<%= order.status === 'order_processing' || order.status === 'being_delivered' || order.status === 'delivered' ? 'icon-check' : 'icon-clock' %>"></i></div>
-                                            <h6>Order processing</h6>
+                                        <div class="road-map-item <%= order.status === 'shipped' || order.status === 'out_of_delivery' || order.status === 'delivered' ? 'active' : '' %>">
+                                            <div class="icon"><i class="<%= order.status === 'shipped' || order.status === 'out_of_delivery' || order.status === 'delivered' ? 'icon-check' : 'icon-clock' %>"></i></div>
+                                            <h6>Order Shipped</h6>
                                             <!-- <div class="body-text">01:21 PM</div> -->
                                         </div>
-                                        <div class="road-map-item <%= order.status === 'being_delivered' || order.status === 'delivered' ? 'active' : '' %>">
-                                            <div class="icon"><i class="<%= order.status === 'being_delivered' || order.status === 'delivered' ? 'icon-check' : 'icon-clock' %>"></i></div>
-                                            <h6>Being delivered</h6>
+                                        <div class="road-map-item <%= order.status === 'out_of_delivery' || order.status === 'delivered' ? 'active' : '' %>">
+                                            <div class="icon"><i class="<%= order.status === 'out_of_delivery' || order.status === 'delivered' ? 'icon-check' : 'icon-clock' %>"></i></div>
+                                            <h6>Out of Delivery</h6>
                                             <!-- <div class="body-text"><%= order.status %></div> -->
                                         </div>
                                         <div class="road-map-item <%= order.status === 'delivered' ? 'active' : '' %>">
@@ -101,13 +143,8 @@
                                             <h6>Delivered</h6>
                                             <!-- <div class="body-text">Pending</div> -->
                                         </div>
-                                        
-                                        
-                                       
                                     </div>
                                 </div>
-                                
-                                
                                 
                                 <!-- /detail -->
                                 <!-- table -->
@@ -179,7 +216,8 @@
                         <!-- /main-content-wrap -->
                         <!-- bottom-page -->
 
-                        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- Script for Order Status -->
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
     $(document).ready(function(){
         $('[id^=updateStatusForm_]').change(function(e){
@@ -191,6 +229,7 @@
                 data: formData,
                 success: function(response) {
                     $('#updateStatusForm_' + response.orderId + ' .block-available').text(response.status);
+                    location.reload()
                 },
                 error: function(err) {
                     console.error(err);
@@ -198,7 +237,47 @@
             });
         });
     });
-</script>                   
+</script>   
+
+<!-- Script for Payment Status -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('updatePaymentStatusForm_<%= order._id %>');
+
+    form.addEventListener('submit', async function(event) {
+        event.preventDefault(); // Prevent the default form submission
+
+        const formData = new FormData(form);
+        const data = {};
+        formData.forEach((value, key) => {
+            data[key] = value;
+        });
+
+        try {
+            const response = await fetch('/dashboard/update-payment-status', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            });
+
+            if (response.ok) {
+                const result = await response.json();
+                alert('Payment status updated successfully!');
+                setTimeout(()=>{
+                    location.reload()
+                },1000)
+            } else {
+                const errorData = await response.json();
+                alert(errorData.error || 'An error occurred');
+            }
+        } catch (error) {
+            alert('An error occurred');
+        }
+    });
+});
+</script>
 <%- include('../includes/adminFooter.ejs') %>
 <!-- /bottom-page -->
                    

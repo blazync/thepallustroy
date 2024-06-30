@@ -68,7 +68,7 @@ const createOrder = async (req, res) => {
             products: orderItems,
             total_amount: totalOrderAmount,
             shipping_address, // Replace with actual shipping address if available
-            status: "receiving_orders",
+            status: "pending",
             payment_status: "Pending",
             payment_id:null,
             serviceFee,
@@ -130,7 +130,6 @@ const createOrder = async (req, res) => {
 };
 const verifyOrder = async (req, res) => {
     const order_id = req.query.order_id;
-    console.log(order_id);
     const userData = decodeToken(req.cookies.token);
     try {
         // Fetch order payments from Cashfree
@@ -140,72 +139,70 @@ const verifyOrder = async (req, res) => {
         // Process the response data to determine the order status
         const transactions = response.data || [];
         let orderStatus;
-  
-        console.log(transactions);
         if (transactions.filter(transaction => transaction.payment_status === 'SUCCESS').length > 0) {
-            orderStatus = 'Success';        
+            orderStatus = 'approved';        
             const orderConfirmationEmail = `
-    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-        <h2>Order Confirmation</h2>
-        <p>Dear ${userData.name},</p>
-        <p>Thank you for your order!</p>
-        
-        <h3>Order Details:</h3>
-        <ul>
-            <li><strong>Order ID:</strong> ${transactions[0].order_id}</li>
-            <li><strong>Order Amount:</strong> ${transactions[0].order_amount} ${transactions[0].payment_currency}</li>
-            <li><strong>Payment Method:</strong> ${transactions[0].payment_group}</li>
-            <li><strong>Payment Status:</strong> ${transactions[0].payment_status}</li>
-            <li><strong>Payment Time:</strong> ${new Date(transactions[0].payment_time).toLocaleString()}</li>
-        </ul>
-        
-        <p>We have received your payment and will process your order shortly.</p>
-        
-        <p>You can track your order by visiting <a href="${process.env.SITE_URL}/myorder" target="_blank">Track Order</a>.</p>
-        
-        <p>Thank you for shopping with us!</p>
-        
-    </div>
-`;
+                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                    <h2>Order Confirmation</h2>
+                    <p>Dear ${userData.name},</p>
+                    <p>Thank you for your order!</p>
+                    
+                    <h3>Order Details:</h3>
+                    <ul>
+                        <li><strong>Order ID:</strong> ${transactions[0].order_id}</li>
+                        <li><strong>Order Amount:</strong> ${transactions[0].order_amount} ${transactions[0].payment_currency}</li>
+                        <li><strong>Payment Method:</strong> ${transactions[0].payment_group}</li>
+                        <li><strong>Payment Status:</strong> ${transactions[0].payment_status}</li>
+                        <li><strong>Payment Time:</strong> ${new Date(transactions[0].payment_time).toLocaleString()}</li>
+                    </ul>
+                    
+                    <p>We have received your payment and will process your order shortly.</p>
+                    
+                    <p>You can track your order by visiting <a href="${process.env.SITE_URL}/myorder" target="_blank">Track Order</a>.</p>
+                    
+                    <p>Thank you for shopping with us!</p>
+                    
+                </div>
+            `;
 
-// Example usage with mailer function
-mailer(userData.email, 'Order Confirmation', '', 'Thanks For Your Order!', orderConfirmationEmail);
+            // Example usage with mailer function
+             mailer(userData.email, 'Order Confirmation', '', 'Thanks For Your Order!', orderConfirmationEmail);
 
         } else if (transactions.filter(transaction => transaction.payment_status === 'PENDING').length > 0) {
-            orderStatus = 'Pending';
+            orderStatus = 'pending';
             const orderFailedEmail = `
-    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-        <h2>Order Status Update</h2>
-        <p>Dear ${userData.name},</p>
-        <p>We regret to inform you that your recent order could not be processed successfully.</p>
-        
-        <p>Please contact our support team for further assistance regarding your order.</p>
-        
-        <p>We apologize for any inconvenience caused.</p>
-        
-    </div>
-`;
+                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                    <h2>Order Status Update</h2>
+                    <p>Dear ${userData.name},</p>
+                    <p>We regret to inform you that your recent order could not be processed successfully.</p>
+                    
+                    <p>Please contact our support team for further assistance regarding your order.</p>
+                    
+                    <p>We apologize for any inconvenience caused.</p>
+                    
+                </div>
+            `;
 
-// Example usage with mailer function
-mailer(userData.email, 'Order Status Update', '', 'Order Pending', orderFailedEmail);
+            // Example usage with mailer function
+            mailer(userData.email, 'Order Status Update', '', 'Order Pending', orderFailedEmail);
 
         } else {
-            orderStatus = 'Failure';
+            orderStatus = 'cancelled';
             const orderFailedEmail = `
-    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-        <h2>Order Status Update</h2>
-        <p>Dear ${userData.name},</p>
-        <p>We regret to inform you that your recent order could not be processed.</p>
-        
-        <p>Please contact our support team for further assistance regarding your order.</p>
-        
-        <p>We apologize for any inconvenience caused.</p>
-        
-    </div>
-`;
+                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                    <h2>Order Status Update</h2>
+                    <p>Dear ${userData.name},</p>
+                    <p>We regret to inform you that your recent order could not be processed.</p>
+                    
+                    <p>Please contact our support team for further assistance regarding your order.</p>
+                    
+                    <p>We apologize for any inconvenience caused.</p>
+                    
+                </div>
+            `;
 
-// Example usage with mailer function
-mailer(userData.email, 'Order Status Update', '', 'Order Failed', orderFailedEmail);
+            // Example usage with mailer function
+            mailer(userData.email, 'Order Status Update', '', 'Order Failed', orderFailedEmail);
 
         }
         
@@ -214,11 +211,13 @@ mailer(userData.email, 'Order Status Update', '', 'Order Failed', orderFailedEma
         const payment_id = successfulTransaction ? successfulTransaction.cf_payment_id : null;
 
         // Update order status in the database
-        if (orderStatus === 'Success') {
+        if (orderStatus === 'approved') {
             const orderInfo =await Order.findOneAndUpdate(
                 { order_id: order_id },
                 {  
+                    status: 'approved', 
                     payment_status: 'Paid',
+                    payment_method:'Cashfree',
                     payment_id: payment_id 
                 }
             );
@@ -254,26 +253,26 @@ mailer(userData.email, 'Order Status Update', '', 'Order Failed', orderFailedEma
             res.render('web/order-confirmation',{paymentSuccess:true,   order_info:orderInfo,
                     userData:userData
 } );
-        } else if (orderStatus === 'Pending') {
+        } else if (orderStatus === 'pending') {
             await Order.findOneAndUpdate(
                 { order_id: order_id },
                 { 
-                    status: 'Pending', 
+                    status: 'pending', 
                     payment_status: 'Pending' 
                 }
             );
             // Redirect to the order page with pending status
-            res.redirect('/web/shopping-cart');
+            res.redirect('/shopping-cart');
         } else {
             await Order.findOneAndUpdate(
                 { order_id: order_id },
                 { 
-                    status: 'Failed', 
+                    status: 'pending', 
                     payment_status: 'Failed' 
                 }
             );
             // Redirect to a payment failure page
-            res.redirect('/web/shopping-cart');
+            res.redirect('/shopping-cart');
         }
     } catch (error) {
         console.error('Payment verification failed:', error.message);

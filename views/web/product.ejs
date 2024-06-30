@@ -47,12 +47,12 @@
 										<div class="product-thumb">
 											<div class="image">
 												<a href="/product/<%= product.name.replace(/ /g, '-') %>" class="thumb-image">
-													<img src="<%= product.images[0] ? '../../upload/' + product.images[0] : '../../images/products/noimage.png' %>"
+													<img src="<%= product.images[0] ? '../../upload/multiple/' + product.images[0] : '../../images/products/noimage.png' %>"
 														alt="<%= product.name %>" title="<%= product.name %>"
 														class="img-responsive zoomInImage">
 												</a>
 												<div class="button-group">
-													    <% if (product.status) { %>
+													    <% if (product.status && product.stock>0) { %>
 																<button class="addcart" type="button" title="Add to Cart" 
 																		onclick='handleAddToCart({
 																			userData: <%= JSON.stringify(userData) %>, 
@@ -93,7 +93,7 @@
 													</div>
 				
 														<div>
-														<% if (product.status) { %>
+														<% if (product.status && product.stock>0) { %>
 															<button class="btn btn-cart" type="button"
 																	title="Add to Cart"
 																	data-id="<%= product._id %>"

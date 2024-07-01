@@ -23,7 +23,7 @@
 			</div>
 		</div>
 	</section>
-	<div class="blog-section Chikankari Saree">
+	<div class="blog-section <%= product.name %>">
 		<div class="container">
 			<div class="row">
 				<div id="content" class="col-sm-12">
@@ -34,21 +34,28 @@
 									<div class="pro-image" id="img-1">
 										<a class="thumbnail" href="#">
 											<img src="<%= product.images[0] ? '../../upload/multiple/' + product.images[0] : '../../assets/images/products/noimage.png' %>"
-												title="Chikankari Saree" id="prozoom" alt="Chikankari Saree"
+												title="<%= product.name %>" id="prozoom" alt="<%= product.name %>"
 												data-zoom-image="assets/images/products/7-570x570.jpg" class="product-main-image">
 										</a>
 									</div>
 									<div id="additional-carousel" class="additional-carousel owl-carousel">
-										<div class="category-layout col-xs-12">
-											<div class="image-additional">
-												<a href="#" title="Chikankari Saree" class="elevatezoom-gallery"
-													data-image="assets/images/products/7.jpg"
-													data-zoom-image="assets/images/products/7.jpg">
-													<img src="<%= product.images[0] ? '../../upload/multiple/' + product.images[0] : '../../assets/images/products/noimage.png' %>"
-														title="Chikankari Saree" alt="Chikankari Saree" class="w-100">
-												</a>
-											</div>
-										</div>
+										<% if (product.images && product.images.length > 0) { %>
+											<% product.images.forEach(function(image) { %>
+												<div class="category-layout col-xs-12">
+													<div class="image-additional">
+														<a href="#" title="<%= product.name %>" class="elevatezoom-gallery"
+															data-image="assets/images/upload/multiple/7.jpg"
+															data-zoom-image="<%= '../../upload/multiple/' + image %>">
+															  <img src="<%= '../../upload/multiple/' + image %>" title="<%= product.name %>" alt="<%= product.name %>" class="w-100">
+														</a>
+														
+													</div>
+													
+												</div>
+											<% }); %>
+													
+										<% } %>
+										
 									</div>
 								</div>
 							</div>
